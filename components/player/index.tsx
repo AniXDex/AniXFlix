@@ -60,19 +60,11 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
     <div className="flex flex-col w-full h-full flex-1 relative bg-black">
       
       {/* Player Frame */}
-      <div className="relative w-full flex-1 min-h-[50vh] md:min-h-[85vh] bg-black overflow-hidden group">
+      <div className="relative w-full flex-1 min-h-[40vh] md:min-h-[85vh] bg-black overflow-hidden group">
         
-        {/* Floating Back Button */}
-        <button 
-          onClick={() => router.back()}
-          className={`absolute top-4 md:top-8 left-4 md:left-8 z-50 bg-black/60 hover:bg-black/90 backdrop-blur-md text-white p-3 rounded-full transition-all duration-500 hover:scale-110 ${isMouseIdle ? 'opacity-0' : 'opacity-100'}`}
-        >
-          <ArrowLeft size={24} />
-        </button>
-
         <iframe
           src={tmdbId ? SERVERS[selectedServer].url(tmdbId, mediaType === "tv", season, episode) : ""}
-          className="absolute inset-0 w-full h-full border-none"
+          className="absolute inset-0 w-full h-full border-none z-10"
           allowFullScreen
           frameBorder="0"
           scrolling="no"

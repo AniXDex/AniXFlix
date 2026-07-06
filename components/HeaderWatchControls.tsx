@@ -15,7 +15,7 @@ export default function HeaderWatchControls() {
   if (type !== "tv") return null;
 
   return (
-    <div className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2 z-50">
+    <div className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
       <div className="flex items-center gap-3">
         <span className="text-[11px] text-white/40 font-bold uppercase tracking-widest">Season</span>
         <button 

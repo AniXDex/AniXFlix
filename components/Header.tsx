@@ -35,10 +35,10 @@ function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <header className="absolute w-full min-h-20 px-4 sm:px-6 md:px-14 top-0 z-50 flex items-center justify-between bg-transparent">
+    <header className="absolute w-full min-h-20 px-4 sm:px-6 md:px-14 top-0 z-[100] flex items-center justify-between bg-transparent pointer-events-none">
       
       {/* LEFT: Logo & Back Button */}
-      <div className="flex items-center gap-4 z-50">
+      <div className="flex items-center gap-4 z-50 pointer-events-auto">
         {pathname?.startsWith("/watch") && (
           <button onClick={() => window.history.back()} className="text-white hover:text-[#ff9d00] transition-colors p-2 -ml-2 rounded-full hover:bg-white/5">
             <ArrowLeft size={24} />
@@ -55,7 +55,7 @@ function Header() {
       </Suspense>
 
       {/* RIGHT: Navigation & Icons */}
-      <div className="flex items-center gap-5 text-sm font-medium">
+      <div className="flex items-center gap-5 text-sm font-medium pointer-events-auto">
         
         <Link href="/" className={`hidden md:flex items-center gap-2 transition-colors ${pathname === '/' ? 'text-white' : 'text-white/70 hover:text-white'}`}>
           <Home size={18} /> Home
