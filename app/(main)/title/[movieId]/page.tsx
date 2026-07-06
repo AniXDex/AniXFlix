@@ -4,7 +4,7 @@ import { tmdb } from "@/lib/tmdb";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Play, Sparkles } from "lucide-react";
+import { Play, Sparkles, Star } from "lucide-react";
 import MovieCard from "@/components/movie/MovieCard";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
