@@ -1,3 +1,4 @@
+import React from "react";
 import Header from "@/components/Header";
 import { tmdb } from "@/lib/tmdb";
 import { notFound } from "next/navigation";
