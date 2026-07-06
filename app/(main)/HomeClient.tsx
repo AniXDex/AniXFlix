@@ -27,7 +27,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
     if (heroMovies.length === 0) return;
     const interval = setInterval(() => {
       setFeaturedIndex((prev) => (prev + 1) % heroMovies.length);
-    }, 10000); // 10-second smooth rotation
+    }, 20000); // 20-second smooth rotation
     return () => clearInterval(interval);
   }, [heroMovies.length]);
 
@@ -116,10 +116,10 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
       </div>
 
       <div className="relative z-30 flex flex-col gap-14 mt-4 md:mt-8 px-4 md:px-14 pb-20">
-        <MoviesRow title="TOP 10 Trending" movies={trending} isTop10={true} />
-        <MoviesRow title="Top Rated Masterpieces" movies={topRated} />
-        <MoviesRow title="Action Packed" movies={action} />
-        <MoviesRow title="Laugh Out Loud" movies={comedy} />
+        <MoviesRow title="TOP 10 Today" movies={trending} isTop10={true} />
+        <MoviesRow title="Trending Today" movies={topRated} />
+        <MoviesRow title="New Release Movies" movies={action} />
+        <MoviesRow title="Comedy Movies" movies={comedy} />
         <MoviesRow title="Sci-Fi & Fantasy" movies={animation} />
       </div>
     </div>

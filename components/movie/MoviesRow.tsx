@@ -30,6 +30,24 @@ function MoviesRow({ title, movies, isTop10 = false }: Props) {
           <div className="w-1 h-6 md:h-7 bg-red-600 rounded-full"></div>
           <h2 className="font-bold text-xl md:text-2xl text-white tracking-tight">{title}</h2>
         </div>
+
+        {/* Tabs for Trending Today */}
+        {title === "Trending Today" && (
+          <div className="flex items-center gap-4 border-b border-white/10 pb-1">
+            <button 
+              onClick={() => setActiveTab("movies")}
+              className={`text-sm font-bold pb-2 border-b-2 transition-colors ${activeTab === 'movies' ? 'text-white border-red-600' : 'text-white/50 border-transparent hover:text-white'}`}
+            >
+              Movies
+            </button>
+            <button 
+              onClick={() => setActiveTab("series")}
+              className={`text-sm font-bold pb-2 border-b-2 transition-colors ${activeTab === 'series' ? 'text-white border-red-600' : 'text-white/50 border-transparent hover:text-white'}`}
+            >
+              Series
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Carousel */}
@@ -38,7 +56,7 @@ function MoviesRow({ title, movies, isTop10 = false }: Props) {
           {movies.map((movie, index) => (
             <CarouselItem
               key={movie.id}
-              className={`pl-0 ${isTop10 ? 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-[14.28%]' : 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/5'}`}
+              className={`pl-0 ${isTop10 ? 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-[14.28%]' : 'basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4'}`}
             >
               <MovieCard movie={movie} isPortrait={isTop10} rank={isTop10 ? index + 1 : undefined} />
             </CarouselItem>
