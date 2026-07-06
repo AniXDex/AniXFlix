@@ -29,7 +29,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
     if (heroMovies.length === 0) return;
     const interval = setInterval(() => {
       setFeaturedIndex((prev) => (prev + 1) % heroMovies.length);
-    }, 20000); // 20-second smooth rotation
+    }, 8000); // 8-second rotation
     return () => clearInterval(interval);
   }, [heroMovies.length]);
 
@@ -47,7 +47,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               className="absolute inset-0"
             >
               <img 
@@ -72,7 +72,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
                 className="flex flex-col gap-4"
               >
                 <h1 className="font-black text-4xl md:text-5xl lg:text-6xl uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left line-clamp-3 md:line-clamp-2">
