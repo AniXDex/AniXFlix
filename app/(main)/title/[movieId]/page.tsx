@@ -4,7 +4,7 @@ import { tmdb } from "@/lib/tmdb";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Play, Plus, List, ArrowDownToLine, Star } from "lucide-react";
+import { Play, Sparkles } from "lucide-react";
 import MovieCard from "@/components/movie/MovieCard";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
@@ -124,15 +124,9 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
             </Link>
             
             <WatchlistButton movie={mappedMovie} />
-
-            {isTv && episodes.length > 0 && (
-              <a href="#episodes" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-5 py-2.5 rounded-full font-semibold border border-white/10 flex items-center gap-2 transition-colors">
-                <List size={18} /> Episodes
-              </a>
-            )}
             
             <a href="#similar" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-5 py-2.5 rounded-full font-semibold border border-white/10 flex items-center gap-2 transition-colors">
-              <Plus size={18} className="rotate-45" /> Similars
+              <Sparkles size={18} /> Similars
             </a>
           </div>
         </div>
