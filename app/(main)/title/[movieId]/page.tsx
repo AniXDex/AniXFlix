@@ -8,6 +8,7 @@ import { Play, Plus, List, ArrowDownToLine, Star } from "lucide-react";
 import MovieCard from "@/components/movie/MovieCard";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
+import SeasonEpisodesClient from "@/components/movie/SeasonEpisodesClient";
 
 export default async function TitlePage({ params, searchParams }: { params: Promise<{ movieId: string }>, searchParams: Promise<{ type?: string }> }) {
   const { movieId } = await params;
@@ -51,9 +52,12 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
 
   // Episodes
   let episodes: any[] = [];
-  if (isTv) {
-    const season1 = await tmdb.getSeasonDetails(movieId, 1);
-    episodes = season1?.episodes || [];
+  if (isTv && details.seasons) {
+    const defaultSeason = details.seasons.find((s: any) => s.season_number > 0) || details.seasons[0];
+    if (defaultSeason) {
+      const seasonData = await tmdb.getSeasonDetails(movieId, defaultSeason.season_number);
+      episodes = seasonData?.episodes || [];
+    }
   }
 
   return (
@@ -137,41 +141,12 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
       <div className="px-4 md:px-14 flex flex-col gap-12 md:gap-16 mt-4 md:-mt-8 relative z-20">
         
         {/* Episodes Section */}
-        {isTv && episodes.length > 0 && (
-          <section id="episodes" className="flex flex-col gap-6">
-            <div className="flex items-center gap-2">
-              <div className="w-1 h-6 bg-red-600 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-white">Episodes</h2>
-            </div>
-            
-            <div className="flex flex-col gap-4">
-              {episodes.map((ep: any) => (
-                <div key={ep.id} className="flex flex-col md:flex-row gap-4 bg-[#141414] rounded-2xl border border-white/5 overflow-hidden hover:bg-[#1f1f1f] transition-colors">
-                  <div className="relative w-full md:w-64 aspect-video shrink-0 bg-black/50">
-                    {ep.still_path ? (
-                      <Image 
-                        src={`https://image.tmdb.org/t/p/w500${ep.still_path}`} 
-                        alt={ep.name} 
-                        fill 
-                        className="object-cover" 
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-white/20">No Image</div>
-                    )}
-                    <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 rounded text-xs font-bold text-white">
-                      {ep.episode_number}
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 md:p-6 flex flex-col justify-center flex-1">
-                    <h3 className="text-lg font-bold text-white mb-1">{ep.name}</h3>
-                    <span className="text-xs text-white/50 mb-3">{ep.runtime ? `${ep.runtime} min` : '45 min'}</span>
-                    <p className="text-sm text-white/70 line-clamp-2 md:line-clamp-3">{ep.overview || "No description available."}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+        {isTv && details.seasons && details.seasons.length > 0 && (
+          <SeasonEpisodesClient 
+            movieId={movieId} 
+            seasons={details.seasons} 
+            initialEpisodes={episodes} 
+          />
         )}
 
         {/* Actors Section */}

@@ -1,0 +1,148 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ChevronDown } from "lucide-react";
+import { getSeasonEpisodes } from "@/app/actions/tv";
+
+interface Season {
+  id: number;
+  name: string;
+  season_number: number;
+  episode_count: number;
+}
+
+interface SeasonEpisodesClientProps {
+  movieId: string;
+  seasons: Season[];
+  initialEpisodes: any[];
+}
+
+export default function SeasonEpisodesClient({ movieId, seasons, initialEpisodes }: SeasonEpisodesClientProps) {
+  // Find the first season that actually has episodes (often season 1, but sometimes season 0 is specials)
+  const defaultSeason = seasons.find(s => s.season_number > 0) || seasons[0];
+  
+  const [selectedSeason, setSelectedSeason] = useState<number>(defaultSeason?.season_number || 1);
+  const [episodes, setEpisodes] = useState<any[]>(initialEpisodes);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Valid seasons that have episodes
+  const validSeasons = seasons.filter(s => s.season_number > 0 && s.episode_count > 0);
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    // Don't fetch if we're on the default season and already have the initial episodes
+    if (selectedSeason === defaultSeason?.season_number && episodes === initialEpisodes) {
+      return;
+    }
+
+    const fetchEpisodes = async () => {
+      setIsLoading(true);
+      const data = await getSeasonEpisodes(movieId, selectedSeason);
+      if (isMounted) {
+        setEpisodes(data);
+        setIsLoading(false);
+      }
+    };
+
+    fetchEpisodes();
+    return () => { isMounted = false; };
+  }, [selectedSeason, movieId, defaultSeason, initialEpisodes]);
+
+  if (validSeasons.length === 0) return null;
+
+  return (
+    <section id="episodes" className="flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-6 bg-red-600 rounded-full"></div>
+          <h2 className="text-2xl font-bold text-white">Episodes</h2>
+        </div>
+        
+        {/* Season Dropdown */}
+        <div className="relative">
+          <button 
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="flex items-center gap-2 bg-[#141414] border border-white/10 hover:border-white/30 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all w-full sm:w-auto"
+          >
+            {validSeasons.find(s => s.season_number === selectedSeason)?.name || `Season ${selectedSeason}`}
+            <ChevronDown size={16} className={`transition-transform ml-auto sm:ml-4 ${isDropdownOpen ? "rotate-180" : ""}`} />
+          </button>
+          
+          {isDropdownOpen && (
+            <div className="absolute top-full right-0 mt-2 w-full sm:w-48 bg-[#141414] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-50 flex flex-col max-h-64 overflow-y-auto">
+              {validSeasons.map((season) => (
+                <button
+                  key={season.id}
+                  onClick={() => {
+                    setSelectedSeason(season.season_number);
+                    setIsDropdownOpen(false);
+                  }}
+                  className={`px-4 py-3 text-left text-sm font-semibold hover:bg-white/10 transition-colors ${
+                    selectedSeason === season.season_number ? 'text-red-500 bg-white/5' : 'text-white'
+                  }`}
+                >
+                  {season.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Episodes List */}
+      <div className="flex flex-col gap-4">
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="w-8 h-8 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : episodes.length > 0 ? (
+          episodes.map((ep: any) => (
+            <Link 
+              href={`/watch/${movieId}?type=tv&season=${selectedSeason}&episode=${ep.episode_number}`}
+              key={ep.id} 
+              className="group flex flex-col md:flex-row gap-4 bg-[#141414] rounded-2xl border border-white/5 overflow-hidden hover:border-white/20 hover:bg-[#1a1a1a] transition-all"
+            >
+              <div className="relative w-full md:w-64 aspect-video shrink-0 bg-black/50 overflow-hidden">
+                {ep.still_path ? (
+                  <Image 
+                    src={`https://image.tmdb.org/t/p/w500${ep.still_path}`} 
+                    alt={ep.name} 
+                    fill 
+                    className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-white/20">No Image</div>
+                )}
+                
+                {/* Play overlay on hover */}
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/40">
+                    <div className="w-0 h-0 border-t-6 border-b-6 border-l-8 border-transparent border-l-white ml-1"></div>
+                  </div>
+                </div>
+
+                <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 rounded text-xs font-bold text-white shadow-lg">
+                  E{ep.episode_number}
+                </div>
+              </div>
+              
+              <div className="p-4 md:p-6 md:pl-2 flex flex-col justify-center flex-1">
+                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-red-500 transition-colors">{ep.name}</h3>
+                <span className="text-xs text-white/50 mb-3 font-semibold">{ep.runtime ? `${ep.runtime} min` : '45 min'}</span>
+                <p className="text-sm text-white/70 line-clamp-2 md:line-clamp-3 leading-relaxed">{ep.overview || "No description available for this episode."}</p>
+              </div>
+            </Link>
+          ))
+        ) : (
+          <div className="flex items-center justify-center py-12 text-white/40">
+            No episodes found for this season.
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}

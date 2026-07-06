@@ -6,12 +6,15 @@ import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 
 interface Props {
   params: Promise<{ movieId: string }>;
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ type?: string, season?: string, episode?: string }>;
 }
 
 async function Page({ params, searchParams }: Props) {
   const { movieId } = await params;
-  const { type } = await searchParams;
+  const { type, season, episode } = await searchParams;
+
+  const s = season ? parseInt(season, 10) : 1;
+  const e = episode ? parseInt(episode, 10) : 1;
 
   let isTv = type === "tv";
   let tmdbData = null;
@@ -39,7 +42,7 @@ async function Page({ params, searchParams }: Props) {
   return (
     <div className="flex flex-col min-h-screen bg-black">
       <HistoryTracker movie={mappedMovie} />
-      <MyPlayer src={""} title={title} thumbnails={[]} tmdbId={movieId} mediaType={isTv ? "tv" : "movie"} />
+      <MyPlayer src={""} title={title} thumbnails={[]} tmdbId={movieId} mediaType={isTv ? "tv" : "movie"} season={s} episode={e} />
     </div>
   );
 }
