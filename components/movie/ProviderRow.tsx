@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
 } from "../ui/carousel";
 import MovieCard from "./MovieCard";
-import { getMoviesByProvider } from "@/app/actions/provider";
+import { getMoviesByProvider, getSeriesByProvider } from "@/app/actions/provider";
 import { ChevronDown } from "lucide-react";
 
 // TMDB Watch Provider IDs for US
@@ -26,10 +26,13 @@ const PROVIDERS = [
 
 interface Props {
   initialMovies: Movie[];
+  initialSeries: Movie[];
 }
 
-function ProviderRow({ initialMovies }: Props) {
+function ProviderRow({ initialMovies, initialSeries }: Props) {
   const [movies, setMovies] = useState<Movie[]>(initialMovies);
+  const [series, setSeries] = useState<Movie[]>(initialSeries);
+  const [activeTab, setActiveTab] = useState<"movies" | "series">("movies");
   const [activeProvider, setActiveProvider] = useState(PROVIDERS[0]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,14 +76,20 @@ function ProviderRow({ initialMovies }: Props) {
     setIsLoading(true);
     
     try {
-      const newMovies = await getMoviesByProvider(provider.id);
+      const [newMovies, newSeries] = await Promise.all([
+        getMoviesByProvider(provider.id),
+        getSeriesByProvider(provider.id)
+      ]);
       setMovies(newMovies);
+      setSeries(newSeries);
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  const currentList = activeTab === "series" ? series : movies;
 
   return (
     <section ref={rowRef} className="flex flex-col gap-5 md:gap-7 relative min-h-[300px]">
@@ -128,6 +137,22 @@ function ProviderRow({ initialMovies }: Props) {
             </div>
           </div>
         </div>
+
+        {/* Tabs for Movies / Series */}
+        <div className="flex items-center gap-4 border-b border-white/10 pb-1 z-40 relative mr-4 ml-auto">
+          <button 
+            onClick={() => setActiveTab("movies")}
+            className={`text-sm font-bold pb-2 border-b-2 transition-colors ${activeTab === 'movies' ? 'text-white border-red-600' : 'text-white/50 border-transparent hover:text-white'}`}
+          >
+            Movies
+          </button>
+          <button 
+            onClick={() => setActiveTab("series")}
+            className={`text-sm font-bold pb-2 border-b-2 transition-colors ${activeTab === 'series' ? 'text-white border-red-600' : 'text-white/50 border-transparent hover:text-white'}`}
+          >
+            Series
+          </button>
+        </div>
       </div>
 
       {/* Carousel */}
@@ -135,7 +160,7 @@ function ProviderRow({ initialMovies }: Props) {
         {isVisible ? (
           <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full relative group/carousel">
             <CarouselContent className="">
-              {movies.map((movie) => (
+              {currentList.map((movie) => (
                 <CarouselItem
                   key={movie.id}
                   className="basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4"

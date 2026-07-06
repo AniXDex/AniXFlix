@@ -13,3 +13,13 @@ export async function getMoviesByProvider(providerId: string): Promise<Movie[]> 
     return [];
   }
 }
+
+export async function getSeriesByProvider(providerId: string): Promise<Movie[]> {
+  try {
+    const data = await tmdb.getDiscover("tv", { withWatchProviders: providerId });
+    return (data || []).slice(0, 20).map(m => mapTmdbToAnix(m));
+  } catch (error) {
+    console.error("Error fetching provider series:", error);
+    return [];
+  }
+}

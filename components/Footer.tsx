@@ -17,8 +17,8 @@ function Footer() {
             This site does not store any files on our server, we only linked to the media which is hosted on 3rd party services.
           </p>
           <div className="flex items-center gap-4 text-sm text-white/50 mt-1">
-            <Link href="mailto:contact@anixflix.com" className="hover:text-white transition-colors">
-              contact@anixflix.com
+            <Link href="https://github.com/anixdex" target="_blank" className="hover:text-white transition-colors">
+              GitHub
             </Link>
             <span>&middot;</span>
             <Link href="/privacy" className="hover:text-white transition-colors">

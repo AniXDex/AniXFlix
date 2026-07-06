@@ -90,7 +90,7 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
                   onClick={() => setSelectedServer(idx)}
                   className={`px-4 py-1.5 rounded-lg text-xs md:text-[13px] font-bold transition-all whitespace-nowrap ${
                     selectedServer === idx
-                      ? "bg-[#ff9d00] text-black shadow-[0_0_15px_rgba(255,157,0,0.15)]"
+                      ? "bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]"
                       : "bg-transparent text-white/60 hover:text-white"
                   }`}
                 >

@@ -48,7 +48,7 @@ export default async function Page({ params, searchParams }: Props) {
 
   // Render MyPlayer immediately without waiting for TMDB data
   return (
-    <div className="flex flex-col min-h-screen bg-black pt-20 md:pt-24 relative">
+    <div className="flex flex-col min-h-screen bg-black relative">
       
       {/* Background history update */}
       <Suspense fallback={null}>

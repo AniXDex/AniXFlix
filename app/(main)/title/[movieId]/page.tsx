@@ -76,7 +76,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
       <Header />
 
       {/* Hero Section */}
-      <div className="relative w-full aspect-[4/5] md:aspect-[21/9] lg:aspect-[2.5/1]">
+      <div className="relative w-full h-[70vh] md:h-[90vh] -mt-20 overflow-hidden bg-[#09090b]">
         <Image
           src={heroBackdropUrl}
           alt={mappedMovie.title || "Backdrop"}
@@ -143,7 +143,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
         </div>
       </div>
 
-      <div className="px-4 md:px-14 flex flex-col gap-12 md:gap-16 mt-4 md:mt-8 relative z-20">
+      <div className="px-4 md:px-14 flex flex-col gap-16 md:gap-20 mt-4 md:mt-8 relative z-20">
         
         {/* Episodes Section */}
         {isTv && details.seasons && details.seasons.length > 0 && (

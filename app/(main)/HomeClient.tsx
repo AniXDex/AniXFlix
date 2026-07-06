@@ -21,6 +21,7 @@ interface HomeClientProps {
   animationMovies: Movie[];
   animationSeries: Movie[];
   netflix: Movie[];
+  netflixSeries: Movie[];
 }
 
 export default function HomeClient({ 
@@ -29,7 +30,7 @@ export default function HomeClient({
   actionMovies, actionSeries,
   comedyMovies, comedySeries,
   animationMovies, animationSeries,
-  netflix 
+  netflix, netflixSeries
 }: HomeClientProps) {
   const router = useRouter();
   const { openModal } = useGlobalContext();
@@ -137,7 +138,7 @@ export default function HomeClient({
       <div className="relative z-30 flex flex-col gap-16 md:gap-20 mt-4 md:mt-8 px-4 md:px-14 pb-20">
         <MoviesRow title="TOP 10 Today" movies={trendingMovies} series={trendingSeries} isTop10={true} />
         <MoviesRow title="Trending Today" movies={topRatedMovies} series={topRatedSeries} />
-        <ProviderRow initialMovies={netflix} />
+        <ProviderRow initialMovies={netflix} initialSeries={netflixSeries} />
         <MoviesRow title="Sci-Fi & Fantasy" movies={animationMovies} series={animationSeries} />
         <MoviesRow title="Action & Adventure" movies={actionMovies} series={actionSeries} />
         <MoviesRow title="Comedy" movies={comedyMovies} series={comedySeries} />

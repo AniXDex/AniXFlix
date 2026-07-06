@@ -17,28 +17,7 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
   const [localMovie, setLocalMovie] = useState(movie);
   const isSaved = isInWatchlist(localMovie.publicId || localMovie.id?.toString());
 
-  useEffect(() => {
-    // ONLY fetch for horizontal cards to perfectly replace textless backdrops with Titled English Backdrops
-    if (!isPortrait) {
-      let isMounted = true;
-      const fetchTitledBackdrop = async () => {
-        try {
-          // This hits the internal Next.js API, which resolves from the massive Vercel Edge Cache instantly (0ms)
-          const res = await fetch(`/api/movies/${movie.publicId || movie.id}`);
-          if (res.ok && isMounted) {
-            const data = await res.json();
-            if (data && data.backdropUrl) {
-              setLocalMovie((prev: any) => ({ ...prev, backdropUrl: data.backdropUrl }));
-            }
-          }
-        } catch (e) {
-          // Fallback to original image on error
-        }
-      };
-      fetchTitledBackdrop();
-      return () => { isMounted = false; };
-    }
-  }, [isPortrait, movie.publicId, movie.id]);
+
 
   const handleWatchlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -53,9 +32,12 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
   return (
     <Link href={`/title/${localMovie.publicId}?type=${localMovie.mediaType || 'movie'}`} className="group flex flex-col gap-3 w-full cursor-pointer">
       {/* Poster Image Container */}
-      <div className={`relative w-full overflow-hidden rounded-2xl ${isPortrait ? 'aspect-[2/3]' : 'aspect-video'} bg-white/5`}>
+      <div className={`relative w-full overflow-hidden rounded-2xl ${isPortrait ? 'aspect-[2/3]' : 'aspect-video'} bg-[#141417]`}>
         <Image
-          src={isPortrait ? (localMovie.thumbnailUrl || localMovie.backdropUrl || "") : (localMovie.backdropUrl || localMovie.thumbnailUrl || "")}
+          src={isPortrait 
+            ? (localMovie.thumbnailUrl || localMovie.backdropUrl || "") 
+            : `/api/images/${localMovie.mediaType || 'movie'}/${localMovie.publicId || localMovie.id}?fallback=${encodeURIComponent(localMovie.backdropUrl || localMovie.thumbnailUrl || "")}`
+          }
           alt={localMovie.title}
           fill
           sizes={isPortrait ? "(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 15vw" : "(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"}

@@ -19,6 +19,7 @@ export default async function Home() {
     animationMovieData,
     animationTvData,
     netflixData,
+    netflixSeriesData,
   ] = await Promise.all([
     tmdb.getTrending("movie"),
     tmdb.getTrending("tv"),
@@ -30,7 +31,8 @@ export default async function Home() {
     tmdb.getDiscover("tv", { genreId: "35" }), // Comedy TV
     tmdb.getDiscover("movie", { genreId: "878" }), // Sci-Fi Movie
     tmdb.getDiscover("tv", { genreId: "10765" }), // Sci-Fi & Fantasy TV
-    tmdb.getDiscover("movie", { withWatchProviders: "8" }), // Netflix
+    tmdb.getDiscover("movie", { withWatchProviders: "8" }), // Netflix Movies
+    tmdb.getDiscover("tv", { withWatchProviders: "8" }), // Netflix Series
   ]);
 
   // Map to AniXFlix internal format
@@ -70,6 +72,7 @@ export default async function Home() {
   const animationSeries = animationTvData.slice(0, 20).map((m) => mapTmdbToAnix(m));
   
   const netflix = netflixData.slice(0, 20).map((m) => mapTmdbToAnix(m));
+  const netflixSeries = netflixSeriesData.slice(0, 20).map((m) => mapTmdbToAnix(m));
 
   return (
     <HomeClient 
@@ -84,6 +87,7 @@ export default async function Home() {
       animationMovies={animationMovies}
       animationSeries={animationSeries}
       netflix={netflix}
+      netflixSeries={netflixSeries}
     />
   );
 }
