@@ -29,7 +29,11 @@ const SERVERS = [
   { name: "PrimeSRC", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` : `https://primesrc.me/embed/movie?tmdb=${id}` },
   { name: "VidSrc Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}` : `https://vidsrc-embed.ru/embed/movie/${id}` },
   { name: "Vidrock", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidrock.net/embed/tv/${id}/${s}/${e}` : `https://vidrock.net/embed/movie/${id}` },
-  { name: "VidSrc CC", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` }
+  { name: "VidSrc CC", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
+  { name: "Vidify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidify.to/embed/tv/${id}/${s}/${e}` : `https://vidify.to/embed/movie/${id}` },
+  { name: "Vidzee", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidzee.to/embed/tv/${id}/${s}/${e}` : `https://vidzee.to/embed/movie/${id}` },
+  { name: "2Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` },
+  { name: "HNEmbed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://hnembed.cc/embed/tv/${id}/${s}/${e}` : `https://hnembed.cc/embed/movie/${id}` }
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
@@ -77,28 +81,75 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
         ></iframe>
       </div>
 
-      {/* Control Bar (Servers) */}
-      <div className="bg-black py-4 px-4 w-full flex flex-col justify-center">
-        <div className="flex items-center space-x-4 overflow-x-auto scrollbar-hide w-full max-w-full pb-2">
-          <div className="flex items-center text-white/50 shrink-0">
-            <Server className="h-4 w-4 mr-1.5" />
-            <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider">Source</span>
+      {/* Control Bar (Servers & Details) */}
+      <div className="bg-[#0f0f0f] border-t border-white/5 w-full flex flex-col justify-center px-4 md:px-8 py-3 z-20">
+        
+        {/* Top Row: Sources & Share */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/5 pb-4 mb-4">
+          <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide w-full md:w-auto">
+            <div className="flex items-center text-white/50 shrink-0 font-medium">
+              <Server className="h-4 w-4 mr-2" />
+              <span className="text-[11px] md:text-xs font-bold uppercase tracking-wider">Source</span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0 pr-4">
+              {SERVERS.map((server, idx) => (
+                <button
+                  key={server.name}
+                  onClick={() => setSelectedServer(idx)}
+                  className={`px-4 py-1.5 rounded-lg text-xs md:text-[13px] font-bold transition-all whitespace-nowrap ${
+                    selectedServer === idx
+                      ? "bg-[#ff9d00] text-black shadow-[0_0_15px_rgba(255,157,0,0.15)]"
+                      : "bg-transparent text-white/60 hover:text-white"
+                  }`}
+                >
+                  {server.name}
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0 pr-4">
-            {SERVERS.map((server, idx) => (
-              <button
-                key={server.name}
-                onClick={() => setSelectedServer(idx)}
-                className={`px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-bold transition-all whitespace-nowrap ${
-                  selectedServer === idx
-                    ? "bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]"
-                    : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
-                }`}
-              >
-                {server.name}
-              </button>
-            ))}
+
+          <div className="flex items-center gap-4 shrink-0 self-end md:self-auto">
+            <button className="text-white/50 hover:text-white transition-colors" title="Refresh Player" onClick={() => setSelectedServer(selectedServer)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+            </button>
+            <button className="flex items-center gap-2 bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-white/5 px-4 py-1.5 rounded-lg text-xs font-bold text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              Share Link
+            </button>
           </div>
+        </div>
+
+        {/* Bottom Row: Theater & Selection */}
+        <div className="flex items-center gap-6">
+          <button className="flex items-center gap-2 text-white/50 hover:text-white text-xs font-bold transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+            Theater
+          </button>
+          
+          {mediaType === "tv" && (
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Season</span>
+                <button 
+                  onClick={() => document.getElementById('episodes')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex items-center gap-2 bg-[#1f1f23] hover:bg-[#2a2a2f] border border-white/5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-colors"
+                >
+                  Season {season}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Episode</span>
+                <button 
+                  onClick={() => document.getElementById('episodes')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="flex items-center gap-2 bg-[#1f1f23] hover:bg-[#2a2a2f] border border-white/5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-colors"
+                >
+                  Episode {episode}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
