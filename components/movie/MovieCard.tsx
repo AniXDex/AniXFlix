@@ -47,6 +47,15 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
           </div>
         )}
 
+        {/* Title Overlay for Horizontal Cards */}
+        {!isPortrait && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3 z-10">
+            <span className="text-white font-black text-sm md:text-base leading-tight drop-shadow-md line-clamp-2">
+              {movie.title}
+            </span>
+          </div>
+        )}
+
         {/* Watchlist Button */}
         <button
           onClick={handleWatchlist}

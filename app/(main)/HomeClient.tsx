@@ -103,7 +103,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
                   </button>
                   <button
                     className="h-10 md:h-12 px-6 md:px-8 text-white bg-transparent border border-white/30 hover:bg-white/10 flex items-center gap-2 font-bold text-sm rounded-full transition-colors"
-                    onClick={() => openModal("movie-info", featured)}
+                    onClick={() => router.push(`/title/${featured.publicId}`)}
                   >
                     <Info size={18} /> See More
                   </button>

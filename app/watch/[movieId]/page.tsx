@@ -14,9 +14,11 @@ async function Page({ params }: Props) {
   // Try fetching as movie
   let tmdbData = await tmdb.getDetails("movie", movieId);
   
+  let isTv = false;
   // If not found, try as TV show
   if (!tmdbData || tmdbData.success === false) {
     tmdbData = await tmdb.getDetails("tv", movieId);
+    isTv = true;
   }
 
   if (!tmdbData || tmdbData.success === false) {
@@ -29,7 +31,7 @@ async function Page({ params }: Props) {
   return (
     <div className="flex flex-col min-h-screen bg-black">
       <HistoryTracker movie={mappedMovie} />
-      <MyPlayer src={""} title={title} thumbnails={[]} tmdbId={movieId} />
+      <MyPlayer src={""} title={title} thumbnails={[]} tmdbId={movieId} mediaType={isTv ? "tv" : "movie"} />
     </div>
   );
 }
