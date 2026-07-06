@@ -17,6 +17,7 @@ export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = f
     maturityRating: null,
     isTrending,
     isFeatured,
+    mediaType: tmdbMovie.media_type || (tmdbMovie.first_air_date ? "tv" : "movie"),
     createdAt: new Date(),
   };
 };

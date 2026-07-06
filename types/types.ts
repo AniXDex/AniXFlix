@@ -20,6 +20,7 @@ export interface Movie {
   isFeatured: boolean;
   createdAt: Date;
   rating: string | null;
+  mediaType?: "movie" | "tv";
 }
 
 export interface User {
