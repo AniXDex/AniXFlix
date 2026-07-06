@@ -1,5 +1,6 @@
 "use client";
 import MoviesRow from "@/components/movie/MoviesRow";
+import ProviderRow from "@/components/movie/ProviderRow";
 import { useGlobalContext } from "@/context/globalContext";
 import { Star, Play, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,9 +14,10 @@ interface HomeClientProps {
   action: Movie[];
   comedy: Movie[];
   animation: Movie[];
+  netflix: Movie[];
 }
 
-export default function HomeClient({ trending, topRated, action, comedy, animation }: HomeClientProps) {
+export default function HomeClient({ trending, topRated, action, comedy, animation, netflix }: HomeClientProps) {
   const router = useRouter();
   const { openModal } = useGlobalContext();
   const [featuredIndex, setFeaturedIndex] = useState(0);
@@ -118,6 +120,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
       <div className="relative z-30 flex flex-col gap-14 mt-4 md:mt-8 px-4 md:px-14 pb-20">
         <MoviesRow title="TOP 10 Today" movies={trending} isTop10={true} />
         <MoviesRow title="Trending Today" movies={topRated} />
+        <ProviderRow initialMovies={netflix} />
         <MoviesRow title="New Release Movies" movies={action} />
         <MoviesRow title="Comedy Movies" movies={comedy} />
         <MoviesRow title="Sci-Fi & Fantasy" movies={animation} />

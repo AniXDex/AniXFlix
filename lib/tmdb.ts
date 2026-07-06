@@ -139,7 +139,7 @@ export const tmdb = {
         const data = await fetchTMDB(`/genre/${type}/list`);
         return data?.genres || [];
     },
-    getDiscover: async (type: "movie" | "tv", options: { genreId?: string, year?: string, sortBy?: string, originalLanguage?: string } = {}): Promise<Movie[]> => {
+    getDiscover: async (type: "movie" | "tv", options: { genreId?: string, year?: string, sortBy?: string, originalLanguage?: string, withWatchProviders?: string } = {}): Promise<Movie[]> => {
         const params: Record<string, string> = {
             sort_by: options.sortBy || "popularity.desc",
             include_adult: "false",
@@ -147,6 +147,10 @@ export const tmdb = {
         };
         if (options.genreId) params.with_genres = options.genreId;
         if (options.originalLanguage) params.with_original_language = options.originalLanguage;
+        if (options.withWatchProviders) {
+            params.with_watch_providers = options.withWatchProviders;
+            params.watch_region = "US"; // Required by TMDB when filtering by provider
+        }
         if (options.year) {
             const key = type === "movie" ? "primary_release_year" : "first_air_date_year";
             params[key] = options.year;
