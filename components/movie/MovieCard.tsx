@@ -52,7 +52,7 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
         {/* Watchlist Button */}
         <button
           onClick={handleWatchlist}
-          className="absolute top-2 right-2 p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 z-20"
+          className="absolute top-2 right-2 p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm rounded-full transition-all duration-300 z-20 opacity-100"
         >
           <Heart size={16} className={`${isSaved ? 'text-red-500 fill-red-500' : 'text-white'}`} />
         </button>

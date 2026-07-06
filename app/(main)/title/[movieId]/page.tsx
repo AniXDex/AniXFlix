@@ -78,7 +78,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
         <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/60 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#09090b] via-[#09090b]/60 to-transparent"></div>
 
-        <div className="absolute bottom-0 left-0 w-full px-4 md:px-14 pb-8 md:pb-16 pt-32 flex flex-col items-start max-w-4xl z-10">
+        <div className="absolute left-4 md:left-14 bottom-[12%] md:bottom-[15%] max-w-[90%] md:max-w-4xl z-10 flex flex-col items-start">
           
           {logoUrl ? (
             <Image 
@@ -89,7 +89,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
               className="w-48 md:w-80 object-contain mb-6 drop-shadow-2xl filter brightness-0 invert" 
             />
           ) : (
-            <h1 className="text-4xl md:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg uppercase leading-[0.95] line-clamp-3 md:line-clamp-2">
               {mappedMovie.title}
             </h1>
           )}
@@ -132,7 +132,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
         </div>
       </div>
 
-      <div className="px-4 md:px-14 flex flex-col gap-12 md:gap-16 mt-4 md:-mt-8 relative z-20">
+      <div className="px-4 md:px-14 flex flex-col gap-12 md:gap-16 mt-4 md:mt-8 relative z-20">
         
         {/* Episodes Section */}
         {isTv && details.seasons && details.seasons.length > 0 && (

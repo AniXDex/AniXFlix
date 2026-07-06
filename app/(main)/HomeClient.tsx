@@ -40,11 +40,11 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
         
         <AnimatePresence mode="wait">
           {featured && (
-            <motion.div
-              key={featured.id}
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
+              <motion.div
+                key={featured.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               transition={{ duration: 1.5, ease: "easeInOut" }}
               className="absolute inset-0"
             >
@@ -67,13 +67,13 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
             {featured && (
               <motion.div
                 key={`content-${featured.id}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
                 className="flex flex-col gap-4"
               >
-                <h1 className="font-black text-5xl md:text-[5.5rem] uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left">
+                <h1 className="font-black text-4xl md:text-5xl lg:text-6xl uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left line-clamp-3 md:line-clamp-2">
                   {featured.title}
                 </h1>
 
