@@ -6,6 +6,7 @@ import ContextProvider from "@/providers/ContextProvider";
 import ModalProvider from "@/providers/ModalProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import { Toaster } from "react-hot-toast";
+import DisableDevtoolWrapper from "@/components/DisableDevtoolWrapper";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
     >
       <ContextProvider>
         <body className="min-h-full flex flex-col w-full overflow-x-hidden">
+          <DisableDevtoolWrapper />
           <Toaster />
           <QueryProvider>
             <ModalProvider>

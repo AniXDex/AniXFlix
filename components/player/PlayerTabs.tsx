@@ -95,7 +95,7 @@ export default function PlayerTabs({
                   <div className="flex items-center gap-3 mt-auto">
                     {currentEpisodeData.episode_number > 1 && (
                       <Link 
-                        href={`/watch/${tmdbId}?type=tv&season=${season}&episode=${currentEpisodeData.episode_number - 1}`}
+                        href={`/play/${tmdbId}?s=${season}&e=${currentEpisodeData.episode_number - 1}`}
                         className="bg-white/5 hover:bg-white/10 text-white/70 hover:text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-2"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -104,7 +104,7 @@ export default function PlayerTabs({
                     )}
                     {currentEpisodeData.episode_number < episodes.length && (
                       <Link 
-                        href={`/watch/${tmdbId}?type=tv&season=${season}&episode=${currentEpisodeData.episode_number + 1}`}
+                        href={`/play/${tmdbId}?s=${season}&e=${currentEpisodeData.episode_number + 1}`}
                         className="bg-[#ff9d00] hover:bg-[#ffaa22] text-black px-6 py-2.5 rounded-lg text-xs font-black uppercase tracking-wider transition-colors shadow-[0_0_20px_rgba(255,157,0,0.2)] flex items-center gap-2"
                       >
                         Next Episode
@@ -121,7 +121,7 @@ export default function PlayerTabs({
               <div className="flex flex-col gap-3">
                 {episodes.map((ep: any) => (
                   <Link 
-                    href={`/watch/${tmdbId}?type=tv&season=${season}&episode=${ep.episode_number}`}
+                    href={`/play/${tmdbId}?s=${season}&e=${ep.episode_number}`}
                     key={ep.id}
                     className={`flex flex-col md:flex-row items-center gap-6 p-3 rounded-xl transition-all border border-transparent hover:bg-[#141417] hover:border-white/5 ${ep.episode_number === episode ? 'bg-[#141417] border-white/5' : ''}`}
                   >

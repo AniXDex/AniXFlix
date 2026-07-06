@@ -50,12 +50,12 @@ export default function HeaderWatchControls() {
 
   const handleSeasonSelect = (s: number) => {
     setIsSeasonOpen(false);
-    router.push(`/watch/${movieId}?type=tv&season=${s}&episode=1`);
+    router.push(`/play/${movieId}?s=${s}&e=1`);
   };
 
   const handleEpisodeSelect = (e: number) => {
     setIsEpisodeOpen(false);
-    router.push(`/watch/${movieId}?type=tv&season=${season}&episode=${e}`);
+    router.push(`/play/${movieId}?s=${season}&e=${e}`);
   };
 
   return (

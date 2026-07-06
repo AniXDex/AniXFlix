@@ -102,7 +102,7 @@ export default function SeasonEpisodesClient({ movieId, seasons, initialEpisodes
         ) : episodes.length > 0 ? (
           episodes.map((ep: any) => (
             <Link 
-              href={`/watch/${movieId}?type=tv&season=${selectedSeason}&episode=${ep.episode_number}`}
+              href={`/play/${movieId}?s=${selectedSeason}&e=${ep.episode_number}`}
               key={ep.id} 
               className="group flex flex-col md:flex-row gap-4 bg-[#141414] rounded-2xl border border-white/5 overflow-hidden hover:border-white/20 hover:bg-[#1a1a1a] transition-all"
             >

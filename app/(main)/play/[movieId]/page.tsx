@@ -7,7 +7,7 @@ import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 
 interface Props {
   params: Promise<{ movieId: string }>;
-  searchParams: Promise<{ type?: string, season?: string, episode?: string }>;
+  searchParams: Promise<{ s?: string, e?: string }>;
 }
 
 // Separate component for the HistoryTracker to avoid blocking MyPlayer
@@ -40,11 +40,13 @@ function PlayerDetailsSkeleton() {
 
 export default async function Page({ params, searchParams }: Props) {
   const { movieId } = await params;
-  const { type, season, episode } = await searchParams;
+  const { s, e } = await searchParams;
 
-  const s = season ? parseInt(season, 10) : 1;
-  const e = episode ? parseInt(episode, 10) : 1;
-  const mediaType = type === "tv" ? "tv" : "movie";
+  const parsedSeason = s ? parseInt(s, 10) : 1;
+  const parsedEpisode = e ? parseInt(e, 10) : 1;
+  
+  // Implicitly determine media type based on the presence of season/episode params
+  const mediaType = (s && e) ? "tv" : "movie";
 
   // Render MyPlayer immediately without waiting for TMDB data
   return (
@@ -56,11 +58,11 @@ export default async function Page({ params, searchParams }: Props) {
       </Suspense>
 
       {/* Instant Video Player */}
-      <MyPlayer src={""} title="" thumbnails={[]} tmdbId={movieId} mediaType={mediaType} season={s} episode={e} />
+      <MyPlayer src={""} title="" thumbnails={[]} tmdbId={movieId} mediaType={mediaType} season={parsedSeason} episode={parsedEpisode} />
       
       {/* Heavy Details Data loaded underneath */}
       <Suspense fallback={<PlayerDetailsSkeleton />}>
-        <PlayerDetails tmdbId={movieId} type={mediaType} season={s} episode={e} />
+        <PlayerDetails tmdbId={movieId} type={mediaType} season={parsedSeason} episode={parsedEpisode} />
       </Suspense>
     </div>
   );

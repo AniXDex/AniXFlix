@@ -62,7 +62,7 @@ export default function VideoPlayer({
     };
 
     const handleShare = () => {
-        const shareUrl = `${window.location.origin}/watch/${id}`;
+        const shareUrl = `${window.location.origin}/play/${id}`;
         navigator.clipboard.writeText(shareUrl)
             .then(() => {
                 setCopied(true);
