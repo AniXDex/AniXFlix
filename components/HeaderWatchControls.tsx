@@ -19,18 +19,19 @@ export default function HeaderWatchControls() {
   const episodeRef = useRef<HTMLDivElement>(null);
 
   const movieId = pathname?.split("/").pop();
-  const type = searchParams.get("type");
-  const season = parseInt(searchParams.get("season") || "1", 10);
-  const episode = parseInt(searchParams.get("episode") || "1", 10);
+  const sParam = searchParams.get("s");
+  const isTv = !!sParam;
+  const season = parseInt(sParam || "1", 10);
+  const episode = parseInt(searchParams.get("e") || "1", 10);
 
   useEffect(() => {
-    if (pathname?.startsWith("/watch") && type === "tv" && movieId) {
+    if (pathname?.startsWith("/play") && isTv && movieId) {
       getTvSeasonsAndEpisodes(movieId, season).then(data => {
         setSeasonsCount(data.numberOfSeasons);
         setEpisodesCount(data.episodesCount);
       });
     }
-  }, [pathname, type, movieId, season]);
+  }, [pathname, isTv, movieId, season]);
 
   // Click outside to close dropdowns
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function HeaderWatchControls() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (!pathname?.startsWith("/watch") || type !== "tv") return null;
+  if (!pathname?.startsWith("/play") || !isTv) return null;
 
   const handleSeasonSelect = (s: number) => {
     setIsSeasonOpen(false);
