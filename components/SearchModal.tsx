@@ -160,9 +160,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       <div className="flex flex-col flex-1 min-w-0">
                         <h4 className="text-sm font-bold text-white truncate">{movie.title}</h4>
                         <div className="flex items-center gap-2 text-[10px] text-white/50 font-medium mt-0.5">
-                          <span>{movie.mediaType === "tv" ? "TV Show" : "Movie"}</span>
+                          <span>{(movie as any).mediaType === "tv" ? "TV Show" : "Movie"}</span>
                           <span>&middot;</span>
-                          <span>{movie.releaseYear || (movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "N/A")}</span>
+                          <span>{movie.releaseYear || ((movie as any).releaseDate ? new Date((movie as any).releaseDate).getFullYear() : "N/A")}</span>
                           <span>&middot;</span>
                           <span className="flex items-center gap-0.5 text-yellow-500"><Star size={10} className="fill-yellow-500" /> {movie.rating || "N/A"}</span>
                         </div>
