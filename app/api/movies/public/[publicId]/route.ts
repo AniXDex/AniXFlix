@@ -1,27 +1,37 @@
-import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { tmdb } from "@/lib/tmdb";
+import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ publicId: string }> },
+  { params }: { params: Promise<{ publicId: string }> }
 ) {
   try {
     const { publicId } = await params;
-
-    const movie = await prisma.movie.findUnique({
-      where: { publicId },
-    });
-
-    if (!movie) {
-      return NextResponse.json({ error: "Movie not found" }, { status: 404 });
+    
+    // Attempt to fetch as movie first
+    let tmdbData = await tmdb.getDetails("movie", publicId);
+    
+    // If not found or error, try TV
+    if (!tmdbData || tmdbData.success === false) {
+      tmdbData = await tmdb.getDetails("tv", publicId);
     }
+
+    if (!tmdbData || tmdbData.success === false) {
+      return NextResponse.json(
+        { error: "Movie not found" },
+        { status: 404 }
+      );
+    }
+
+    const movie = mapTmdbToAnix(tmdbData);
 
     return NextResponse.json(movie);
   } catch (error) {
-    console.error("Error fetching movie details:", error);
+    console.error("Error fetching movie from TMDB:", error);
     return NextResponse.json(
-      { error: "Failed to fetch movie details" },
-      { status: 500 },
+      { error: "Internal Server Error" },
+      { status: 500 }
     );
   }
 }

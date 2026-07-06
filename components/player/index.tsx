@@ -35,7 +35,7 @@ const SERVERS = [
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId }: MyPlayerProps) {
-  const [selectedServer, setSelectedServer] = useState(0);
+  const [selectedServer, setSelectedServer] = useState(1);
 
   return (
     <div className="flex flex-col w-full h-full flex-1">
