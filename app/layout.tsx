@@ -31,7 +31,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        "h-full",
+        "h-full w-full overflow-x-hidden",
         "antialiased",
         inter.className,
         "font-sans",
@@ -39,11 +39,13 @@ export default function RootLayout({
       )}
     >
       <ContextProvider>
-        <body className="min-h-full flex flex-col overflow-x-hidden">
+        <body className="min-h-full flex flex-col w-full overflow-x-hidden">
           <Toaster />
           <QueryProvider>
             <ModalProvider>
-              <main>{children}</main>
+              <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
+                <main>{children}</main>
+              </div>
             </ModalProvider>
           </QueryProvider>
         </body>
