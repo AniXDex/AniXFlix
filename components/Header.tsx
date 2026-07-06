@@ -35,8 +35,8 @@ function Header() {
     <header className="absolute w-full min-h-20 px-4 sm:px-6 md:px-14 top-0 z-50 flex items-center justify-between bg-transparent">
       
       {/* LEFT: Logo */}
-      <Link href={"/"} className="flex items-center gap-2 text-2xl font-bold text-white tracking-tight z-50">
-        <Image src="/logo.svg" alt="AniXFlix" width={32} height={32} className="w-8 h-8 text-white ml-0.5" />
+      <Link href={"/"} className="flex items-center text-2xl font-bold text-white tracking-tight z-50">
+        <img src="/logo.svg" alt="AniXFlix" className="h-6 md:h-8 w-auto ml-0.5" />
       </Link>
 
       {/* RIGHT: Navigation & Icons */}
