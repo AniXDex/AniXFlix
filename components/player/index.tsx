@@ -108,15 +108,6 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
             </div>
           </div>
 
-          <div className="flex items-center gap-4 shrink-0 self-end md:self-auto">
-            <button className="text-white/50 hover:text-white transition-colors" title="Refresh Player" onClick={() => setSelectedServer(selectedServer)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-            </button>
-            <button className="flex items-center gap-2 bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-white/5 px-4 py-1.5 rounded-lg text-xs font-bold text-white transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-              Share Link
-            </button>
-          </div>
         </div>
 
         {/* Bottom Row: Theater & Selection */}
