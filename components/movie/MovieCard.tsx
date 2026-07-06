@@ -27,7 +27,7 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
   };
 
   return (
-    <Link href={`/watch/${movie.publicId}`} className="group flex flex-col gap-3 w-full cursor-pointer">
+    <Link href={`/title/${movie.publicId}?type=${movie.mediaType || 'movie'}`} className="group flex flex-col gap-3 w-full cursor-pointer">
       {/* Poster Image Container */}
       <div className={`relative w-full overflow-hidden rounded-2xl ${isPortrait ? 'aspect-[2/3]' : 'aspect-video'} bg-white/5`}>
         <Image

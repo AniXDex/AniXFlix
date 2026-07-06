@@ -6,19 +6,27 @@ import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 
 interface Props {
   params: Promise<{ movieId: string }>;
+  searchParams: Promise<{ type?: string }>;
 }
 
-async function Page({ params }: Props) {
+async function Page({ params, searchParams }: Props) {
   const { movieId } = await params;
+  const { type } = await searchParams;
 
-  // Try fetching as movie
-  let tmdbData = await tmdb.getDetails("movie", movieId);
-  
-  let isTv = false;
-  // If not found, try as TV show
-  if (!tmdbData || tmdbData.success === false) {
+  let isTv = type === "tv";
+  let tmdbData = null;
+
+  if (type === "tv") {
     tmdbData = await tmdb.getDetails("tv", movieId);
-    isTv = true;
+  } else if (type === "movie") {
+    tmdbData = await tmdb.getDetails("movie", movieId);
+  } else {
+    // Fallback if no type provided
+    tmdbData = await tmdb.getDetails("movie", movieId);
+    if (!tmdbData || tmdbData.success === false) {
+      tmdbData = await tmdb.getDetails("tv", movieId);
+      isTv = true;
+    }
   }
 
   if (!tmdbData || tmdbData.success === false) {

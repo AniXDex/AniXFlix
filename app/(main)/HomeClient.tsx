@@ -98,13 +98,13 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
                 <div className="flex items-center gap-3">
                   <button
                     className="h-11 md:h-12 px-8 text-black bg-white hover:bg-white/90 flex items-center gap-2 font-bold text-[15px] rounded-full transition-colors shadow-lg"
-                    onClick={() => router.push(`/watch/${featured.publicId}`)}
+                    onClick={() => router.push(`/title/${featured.publicId}?type=${featured.mediaType || 'movie'}`)}
                   >
                     <Play size={16} fill="black" /> Play
                   </button>
                   <button
                     className="h-11 md:h-12 px-8 text-white bg-transparent border border-white/20 hover:bg-white/10 flex items-center gap-2 font-bold text-[15px] rounded-full transition-colors"
-                    onClick={() => router.push(`/title/${featured.publicId}`)}
+                    onClick={() => router.push(`/title/${featured.publicId}?type=${featured.mediaType || 'movie'}`)}
                   >
                     <Info size={16} /> See More
                   </button>

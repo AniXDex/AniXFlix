@@ -178,13 +178,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         </p>
                         <div className="flex items-center gap-3">
                           <button 
-                            onClick={() => { onClose(); router.push(`/watch/${movie.publicId}`); }}
+                            onClick={() => { onClose(); router.push(`/title/${movie.publicId}?type=${(movie as any).mediaType || 'movie'}`); }}
                             className="bg-white hover:bg-white/90 text-black px-5 py-1.5 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                           >
                             <Play size={14} fill="black" /> Play
                           </button>
                           <button 
-                            onClick={() => { onClose(); router.push(`/title/${movie.publicId}`); }}
+                            onClick={() => { onClose(); router.push(`/title/${movie.publicId}?type=${(movie as any).mediaType || 'movie'}`); }}
                             className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-5 py-1.5 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                           >
                             <Info size={14} /> See more

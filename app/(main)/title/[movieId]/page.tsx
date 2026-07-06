@@ -9,15 +9,24 @@ import MovieCard from "@/components/movie/MovieCard";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
 
-export default async function TitlePage({ params }: { params: Promise<{ movieId: string }> }) {
+export default async function TitlePage({ params, searchParams }: { params: Promise<{ movieId: string }>, searchParams: Promise<{ type?: string }> }) {
   const { movieId } = await params;
+  const { type } = await searchParams;
 
-  let isTv = false;
-  let details = await tmdb.getDetails("movie", movieId);
-  
-  if (!details || details.success === false) {
+  let isTv = type === "tv";
+  let details = null;
+
+  if (type === "tv") {
     details = await tmdb.getDetails("tv", movieId);
-    isTv = true;
+  } else if (type === "movie") {
+    details = await tmdb.getDetails("movie", movieId);
+  } else {
+    // Fallback if no type provided
+    details = await tmdb.getDetails("movie", movieId);
+    if (!details || details.success === false) {
+      details = await tmdb.getDetails("tv", movieId);
+      isTv = true;
+    }
   }
 
   if (!details || details.success === false) {
@@ -104,7 +113,7 @@ export default async function TitlePage({ params }: { params: Promise<{ movieId:
 
           <div className="flex items-center gap-3 md:gap-4 flex-wrap">
             <Link 
-              href={`/watch/${movieId}`}
+              href={`/watch/${movieId}?type=${isTv ? 'tv' : 'movie'}`}
               className="bg-white hover:bg-white/90 text-black px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold flex items-center gap-2 transition-all hover:scale-105"
             >
               <Play size={18} fill="black" /> Play
