@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Play, Plus, List, ArrowDownToLine, Star } from "lucide-react";
 import MovieCard from "@/components/movie/MovieCard";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
-import WatchlistButton from "./WatchlistButton";
+import WatchlistButton from "@/components/movie/WatchlistButton";
 
 export default async function TitlePage({ params }: { params: Promise<{ movieId: string }> }) {
   const { movieId } = await params;
