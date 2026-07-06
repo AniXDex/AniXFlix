@@ -6,7 +6,7 @@ export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = f
     publicId: tmdbMovie.id.toString(),
     title: tmdbMovie.title || tmdbMovie.name || "Unknown",
     description: tmdbMovie.overview || "No description available.",
-    thumbnailUrl: tmdbMovie.poster_path ? `https://image.tmdb.org/t/p/w500${tmdbMovie.poster_path}` : null,
+    thumbnailUrl: tmdbMovie.poster_path ? `https://wsrv.nl/?url=${encodeURIComponent(`https://image.tmdb.org/t/p/w780${tmdbMovie.poster_path}`)}&output=webp&q=65&n=-1` : null,
     backdropUrl: tmdbMovie.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMovie.backdrop_path}` : null,
     trailerUrl: null,
     videoUrl: null,
