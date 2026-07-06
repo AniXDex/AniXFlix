@@ -39,7 +39,7 @@ function Header() {
       
       {/* LEFT: Logo & Back Button */}
       <div className="flex items-center gap-4 z-50 pointer-events-auto">
-        {pathname?.startsWith("/watch") && (
+        {pathname !== "/" && (
           <button onClick={() => window.history.back()} className="text-white hover:text-[#ff9d00] transition-colors p-2 -ml-2 rounded-full hover:bg-white/5">
             <ArrowLeft size={24} />
           </button>
