@@ -27,7 +27,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
     if (heroMovies.length === 0) return;
     const interval = setInterval(() => {
       setFeaturedIndex((prev) => (prev + 1) % heroMovies.length);
-    }, 5000); // 5-second smooth rotation
+    }, 10000); // 10-second smooth rotation
     return () => clearInterval(interval);
   }, [heroMovies.length]);
 

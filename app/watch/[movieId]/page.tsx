@@ -1,6 +1,8 @@
 import MyPlayer from "@/components/player";
 import { tmdb } from "@/lib/tmdb";
 import { notFound } from "next/navigation";
+import HistoryTracker from "@/components/HistoryTracker";
+import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 
 interface Props {
   params: Promise<{ movieId: string }>;
@@ -22,9 +24,11 @@ async function Page({ params }: Props) {
   }
 
   const title = tmdbData.title || tmdbData.name || "Unknown Title";
+  const mappedMovie = mapTmdbToAnix(tmdbData);
 
   return (
     <div className="flex flex-col min-h-screen bg-black">
+      <HistoryTracker movie={mappedMovie} />
       <MyPlayer src={""} title={title} thumbnails={[]} tmdbId={movieId} />
     </div>
   );

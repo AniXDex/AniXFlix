@@ -3,7 +3,8 @@ import { Movie } from "@/types/types";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, Heart } from "lucide-react";
+import { useStore } from "@/store/useStore";
 
 interface Props {
   movie: any;
@@ -12,6 +13,19 @@ interface Props {
 }
 
 function MovieCard({ movie, isPortrait = false, rank }: Props) {
+  const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useStore();
+  const isSaved = isInWatchlist(movie.publicId || movie.id?.toString());
+
+  const handleWatchlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isSaved) {
+      removeFromWatchlist(movie.publicId || movie.id?.toString());
+    } else {
+      addToWatchlist(movie);
+    }
+  };
+
   return (
     <Link href={`/watch/${movie.publicId}`} className="group flex flex-col gap-3 w-full cursor-pointer">
       {/* Poster Image Container */}
@@ -32,6 +46,14 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
             </span>
           </div>
         )}
+
+        {/* Watchlist Button */}
+        <button
+          onClick={handleWatchlist}
+          className="absolute top-2 right-2 p-2 bg-black/40 hover:bg-black/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 z-20"
+        >
+          <Heart size={16} className={`${isSaved ? 'text-red-500 fill-red-500' : 'text-white'}`} />
+        </button>
       </div>
 
       {/* Metadata */}

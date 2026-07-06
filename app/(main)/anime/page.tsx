@@ -4,7 +4,7 @@ import { tmdb } from '@/lib/tmdb';
 import { mapTmdbToAnix } from '@/lib/mapTmdbToAnix';
 
 export default async function animePage() {
-  const popular = await tmdb.getPopular('movie');
+  const popular = await tmdb.getDiscover('tv', { genreId: '16', originalLanguage: 'ja' });
   
   return (
     <div>
