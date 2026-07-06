@@ -30,6 +30,7 @@ function MoviesRow({ title, movies, isTop10 = false }: Props) {
           <div className="w-1 h-6 md:h-7 bg-red-600 rounded-full"></div>
           <h2 className="font-bold text-xl md:text-2xl text-white tracking-tight">{title}</h2>
         </div>
+      </div>
 
       {/* Carousel */}
       <Carousel opts={{ align: "start" }} className="w-full relative group/carousel">

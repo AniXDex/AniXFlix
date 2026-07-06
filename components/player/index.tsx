@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { createPlayer, videoFeatures, Container } from "@videojs/react";
-import { Video } from "@videojs/react/video";
-import VideoControls from "./VideoControls";
+import React, { useState } from "react";
 import { Server } from "lucide-react";
 
 interface ThumbnailEntry {
@@ -18,10 +16,7 @@ interface MyPlayerProps {
   tmdbId?: string;
 }
 
-const Player = createPlayer({ features: videoFeatures });
-
 const SERVERS = [
-  { name: "AniXFlix Original", url: (id: string) => "" },
   { name: "Videasy", url: (id: string) => `https://player.videasy.net/movie/${id}` },
   { name: "Vidking", url: (id: string) => `https://www.vidking.net/embed/movie/${id}` },
   { name: "VidSrc PM", url: (id: string) => `https://vidsrc.pm/embed/movie/${id}` },
@@ -35,36 +30,22 @@ const SERVERS = [
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId }: MyPlayerProps) {
-  const [selectedServer, setSelectedServer] = useState(1);
+  const [selectedServer, setSelectedServer] = useState(0);
 
   return (
     <div className="flex flex-col w-full h-full flex-1">
       
       {/* Player Frame */}
-      <div className="relative w-full aspect-video md:h-[85vh] bg-black">
-        {selectedServer === 0 ? (
-          <Player.Provider>
-            <Container className="relative h-full w-full flex items-center justify-center bg-black">
-              <Video
-                src={src}
-                autoPlay
-                muted
-                className="video-element h-full w-full object-contain"
-              />
-              <VideoControls title={title} thumbnails={thumbnails} />
-            </Container>
-          </Player.Provider>
-        ) : (
-          <iframe
-            src={tmdbId ? SERVERS[selectedServer].url(tmdbId) : ""}
-            className="w-full h-full border-none"
-            allowFullScreen
-            frameBorder="0"
-            scrolling="no"
-            referrerPolicy="origin"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          ></iframe>
-        )}
+      <div className="relative w-full flex-1 min-h-[50vh] md:min-h-[85vh] bg-black">
+        <iframe
+          src={tmdbId ? SERVERS[selectedServer].url(tmdbId) : ""}
+          className="absolute inset-0 w-full h-full border-none"
+          allowFullScreen
+          frameBorder="0"
+          scrolling="no"
+          referrerPolicy="origin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        ></iframe>
       </div>
 
       {/* Control Bar (Servers) */}
