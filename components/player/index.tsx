@@ -85,7 +85,7 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
       <div className="bg-[#0f0f0f] border-t border-white/5 w-full flex flex-col justify-center px-4 md:px-8 py-3 z-20">
         
         {/* Top Row: Sources & Share */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-white/5 pb-4 mb-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide w-full md:w-auto">
             <div className="flex items-center text-white/50 shrink-0 font-medium">
               <Server className="h-4 w-4 mr-2" />
@@ -108,39 +108,6 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
             </div>
           </div>
 
-        </div>
-
-        {/* Bottom Row: Theater & Selection */}
-        <div className="flex items-center gap-6">
-          <button className="flex items-center gap-2 text-white/50 hover:text-white text-xs font-bold transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
-            Theater
-          </button>
-          
-          {mediaType === "tv" && (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Season</span>
-                <button 
-                  onClick={() => document.getElementById('episodes')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex items-center gap-2 bg-[#1f1f23] hover:bg-[#2a2a2f] border border-white/5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-colors"
-                >
-                  Season {season}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">Episode</span>
-                <button 
-                  onClick={() => document.getElementById('episodes')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="flex items-center gap-2 bg-[#1f1f23] hover:bg-[#2a2a2f] border border-white/5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-colors"
-                >
-                  Episode {episode}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

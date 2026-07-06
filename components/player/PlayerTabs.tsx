@@ -53,12 +53,6 @@ export default function PlayerTabs({
         >
           Photos
         </button>
-        <button 
-          onClick={() => setActiveTab("Reviews")}
-          className={`${activeTab === "Reviews" ? 'text-[#ff9d00] border-b-2 border-[#ff9d00] font-bold' : 'text-white/50 hover:text-white font-semibold'} pb-2 transition-colors whitespace-nowrap`}
-        >
-          Reviews
-        </button>
       </div>
 
       {/* Content */}
@@ -255,13 +249,6 @@ export default function PlayerTabs({
             ) : (
               <p className="text-white/50 text-sm">No photos available.</p>
             )}
-          </div>
-        )}
-
-        {activeTab === "Reviews" && (
-          <div className="flex flex-col gap-6 animate-in fade-in duration-500">
-            <h3 className="text-lg font-bold">Reviews</h3>
-            <p className="text-white/50 text-sm italic">User reviews will be available soon.</p>
           </div>
         )}
       </div>

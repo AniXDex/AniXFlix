@@ -14,13 +14,15 @@ import {
   PartyPopper,
   History,
   Heart,
-  Settings2
+  Settings2,
+  ArrowLeft
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import SearchModal from "@/components/SearchModal";
+import HeaderWatchControls from "@/components/HeaderWatchControls";
 
 import {
   DropdownMenu,
@@ -35,10 +37,22 @@ function Header() {
   return (
     <header className="absolute w-full min-h-20 px-4 sm:px-6 md:px-14 top-0 z-50 flex items-center justify-between bg-transparent">
       
-      {/* LEFT: Logo */}
-      <Link href={"/"} className="flex items-center text-2xl font-bold text-white tracking-tight z-50">
-        <img src="/logo.svg" alt="AniXFlix" className="h-6 md:h-8 w-auto ml-0.5" />
-      </Link>
+      {/* LEFT: Logo & Back Button */}
+      <div className="flex items-center gap-4 z-50">
+        {pathname?.startsWith("/watch") && (
+          <button onClick={() => window.history.back()} className="text-white hover:text-[#ff9d00] transition-colors p-2 -ml-2 rounded-full hover:bg-white/5">
+            <ArrowLeft size={24} />
+          </button>
+        )}
+        <Link href={"/"} className="flex items-center text-2xl font-bold text-white tracking-tight">
+          <img src="/logo.svg" alt="AniXFlix" className="h-6 md:h-8 w-auto ml-0.5" />
+        </Link>
+      </div>
+
+      {/* MIDDLE: Watch Controls (Only visible on watch page) */}
+      <Suspense fallback={null}>
+        <HeaderWatchControls />
+      </Suspense>
 
       {/* RIGHT: Navigation & Icons */}
       <div className="flex items-center gap-5 text-sm font-medium">

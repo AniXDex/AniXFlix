@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import HistoryTracker from "@/components/HistoryTracker";
 import { tmdb } from "@/lib/tmdb";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
-import PlayerBackButton from "@/components/player/PlayerBackButton";
 
 interface Props {
   params: Promise<{ movieId: string }>;
@@ -50,7 +49,6 @@ export default async function Page({ params, searchParams }: Props) {
   // Render MyPlayer immediately without waiting for TMDB data
   return (
     <div className="flex flex-col min-h-screen bg-black pt-20 md:pt-24 relative">
-      <PlayerBackButton />
       
       {/* Background history update */}
       <Suspense fallback={null}>
