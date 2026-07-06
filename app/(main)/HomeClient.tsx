@@ -4,6 +4,7 @@ import ProviderRow from "@/components/movie/ProviderRow";
 import { useGlobalContext } from "@/context/globalContext";
 import { Star, Play, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Movie } from "@/types/types";
