@@ -10,19 +10,19 @@ import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
 import SeasonEpisodesClient from "@/components/movie/SeasonEpisodesClient";
 
-export default async function TitlePage({ params, searchParams }: { params: Promise<{ movieId: string }>, searchParams: Promise<{ type?: string }> }) {
+export default async function TitlePage({ params, searchParams }: { params: Promise<{ movieId: string }>, searchParams: Promise<{ v?: string }> }) {
   const { movieId } = await params;
-  const { type } = await searchParams;
+  const { v } = await searchParams;
 
-  let isTv = type === "tv";
+  let isTv = v === "2";
   let details = null;
 
-  if (type === "tv") {
+  if (v === "2") {
     details = await tmdb.getDetails("tv", movieId);
-  } else if (type === "movie") {
+  } else if (v === "1") {
     details = await tmdb.getDetails("movie", movieId);
   } else {
-    // Fallback if no type provided
+    // Fallback if no v provided
     details = await tmdb.getDetails("movie", movieId);
     if (!details || details.success === false) {
       details = await tmdb.getDetails("tv", movieId);

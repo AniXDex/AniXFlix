@@ -178,7 +178,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         </p>
                         <div className="flex items-center gap-3">
                           <button 
-                            onClick={() => { onClose(); router.push(`/detail/${movie.publicId}`); }}
+                            onClick={() => { onClose(); router.push(`/detail/${movie.publicId}?v=${(movie as any).mediaType === 'tv' ? 2 : 1}`); }}
                             className="bg-white hover:bg-white/90 text-black px-5 py-1.5 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                           >
                             <Play size={14} fill="black" /> Play

@@ -93,9 +93,11 @@ export default function HomeClient({
                 transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
                 className="flex flex-col gap-4"
               >
-                <h1 className="font-black text-4xl md:text-5xl lg:text-6xl uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left line-clamp-3 md:line-clamp-2">
-                  {featured.title}
-                </h1>
+                <Link href={`/detail/${featured.publicId}?v=${featured.mediaType === 'tv' ? 2 : 1}`} className="text-white hover:text-red-500 transition-colors drop-shadow-md">
+                  <h1 className="font-black text-4xl md:text-5xl lg:text-6xl uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left line-clamp-3 md:line-clamp-2">
+                    {featured.title}
+                  </h1>
+                </Link>
 
                 {/* Metadata */}
                 <div className="flex items-center gap-2 text-[13px] md:text-sm text-white/80 font-medium mt-2 mb-2">
@@ -118,13 +120,13 @@ export default function HomeClient({
                 <div className="flex items-center gap-3">
                   <button
                     className="h-11 md:h-12 px-8 text-black bg-white hover:bg-white/90 flex items-center gap-2 font-bold text-[15px] rounded-full transition-colors shadow-lg"
-                    onClick={() => router.push(`/detail/${featured.publicId}`)}
+                    onClick={() => router.push(`/detail/${featured.publicId}?v=${featured.mediaType === 'tv' ? 2 : 1}`)}
                   >
                     <Play size={16} fill="black" /> Play
                   </button>
                   <button
                     className="h-11 md:h-12 px-8 text-white bg-transparent border border-white/20 hover:bg-white/10 flex items-center gap-2 font-bold text-[15px] rounded-full transition-colors"
-                    onClick={() => router.push(`/detail/${featured.publicId}`)}
+                    onClick={() => router.push(`/detail/${featured.publicId}?v=${featured.mediaType === 'tv' ? 2 : 1}`)}
                   >
                     <Info size={16} /> See More
                   </button>
