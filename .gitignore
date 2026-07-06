@@ -32,6 +32,11 @@ yarn-error.log*
 # vercel
 .vercel
 
-# Flutter App Wrapper
-/AniXFlixApk/
-.vercel
+# Flutter App Wrapper (Android Only)
+/AniXFlixApk/ios/
+/AniXFlixApk/macos/
+/AniXFlixApk/windows/
+/AniXFlixApk/linux/
+/AniXFlixApk/web/
+/AniXFlixApk/build/
+/AniXFlixApk/.dart_tool/

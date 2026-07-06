@@ -1,0 +1,129 @@
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:async';
+import 'offline_screen.dart';
+
+class WebViewScreen extends StatefulWidget {
+  const WebViewScreen({super.key});
+
+  @override
+  State<WebViewScreen> createState() => _WebViewScreenState();
+}
+
+class _WebViewScreenState extends State<WebViewScreen> {
+  late final WebViewController _controller;
+  bool _isLoading = true;
+  bool _isOffline = false;
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkInitialConnectivity();
+    _setupConnectivityListener();
+    _initWebView();
+  }
+
+  Future<void> _checkInitialConnectivity() async {
+    final result = await Connectivity().checkConnectivity();
+    _updateOfflineState(result);
+  }
+
+  void _setupConnectivityListener() {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
+      _updateOfflineState(result);
+    });
+  }
+
+  void _updateOfflineState(List<ConnectivityResult> result) {
+    bool isNowOffline = result.isEmpty || result.contains(ConnectivityResult.none);
+    
+    if (isNowOffline && !_isOffline) {
+      setState(() { _isOffline = true; });
+    } else if (!isNowOffline && _isOffline) {
+      setState(() { _isOffline = false; });
+      _controller.reload();
+    }
+  }
+
+  void _initWebView() {
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFF000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() { _isLoading = true; });
+          },
+          onPageFinished: (String url) {
+            setState(() { _isLoading = false; });
+            _injectCSSAndJS();
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse('https://anixflix-iota.vercel.app/'));
+  }
+
+  void _injectCSSAndJS() {
+    // Disable zoom, text selection, and context menus to make the web app feel like a native app
+    const String script = """
+      // Disable text selection
+      document.body.style.userSelect = 'none';
+      document.body.style.webkitUserSelect = 'none';
+      document.body.style.msUserSelect = 'none';
+      document.body.style.mozUserSelect = 'none';
+      
+      // Disable callout (context menu) on iOS/Android
+      document.body.style.webkitTouchCallout = 'none';
+      
+      // Disable long press context menus globally
+      document.oncontextmenu = function(e) { e.preventDefault(); return false; };
+      
+      // Disable zooming via meta tag
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+    """;
+    _controller.runJavaScript(script);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isOffline) {
+      return OfflineScreen(
+        onRetry: () async {
+          await _checkInitialConnectivity();
+        },
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          SafeArea(
+            bottom: false,
+            child: WebViewWidget(controller: _controller),
+          ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFFE50914), // Netflix red loader
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
