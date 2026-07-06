@@ -4,14 +4,19 @@ import { tmdb } from '@/lib/tmdb';
 import { mapTmdbToAnix } from '@/lib/mapTmdbToAnix';
 
 export default async function animePage() {
-  const popular = await tmdb.getDiscover('tv', { genreId: '16', originalLanguage: 'ja' });
+  const popular = await tmdb.getDiscover('tv', { genreId: '16', originalLanguage: 'ja', sortBy: 'popularity.desc' });
+  const topRated = await tmdb.getDiscover('tv', { genreId: '16', originalLanguage: 'ja', sortBy: 'vote_average.desc' });
+  const newReleases = await tmdb.getDiscover('tv', { genreId: '16', originalLanguage: 'ja', sortBy: 'first_air_date.desc' });
   
   return (
-    <div>
+    <div className="bg-[#09090b] min-h-screen">
       <Header />
-      <div className="pt-20 px-4 md:px-14 relative z-20 flex flex-col gap-10">
-        <h1 className="text-3xl font-bold text-white mt-10 mb-4 capitalize">anime</h1>
-        <MoviesRow title="Trending" movies={popular.slice(0, 20).map(m => mapTmdbToAnix(m))} />
+      <div className="pt-24 px-4 md:px-14 relative z-20 flex flex-col gap-8 pb-20">
+        <h1 className="text-3xl font-bold text-white mt-6 mb-2">Anime</h1>
+        
+        <MoviesRow title="Trending Anime" movies={popular.slice(0, 20).map(m => mapTmdbToAnix(m))} />
+        <MoviesRow title="Top Rated Classics" movies={topRated.slice(0, 20).map(m => mapTmdbToAnix(m))} />
+        <MoviesRow title="New Releases" movies={newReleases.slice(0, 20).map(m => mapTmdbToAnix(m))} />
       </div>
     </div>
   );

@@ -16,7 +16,6 @@ interface SearchModalProps {
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const router = useRouter();
-  const { openModal } = useGlobalContext();
   const { searchHistory, addSearchHistory, removeSearchHistory } = useStore();
   
   const [query, setQuery] = useState("");
@@ -185,7 +184,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             <Play size={14} fill="black" /> Play
                           </button>
                           <button 
-                            onClick={() => { onClose(); openModal("movie-info", movie); }}
+                            onClick={() => { onClose(); router.push(`/title/${movie.publicId}`); }}
                             className="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                           >
                             <Info size={14} /> See more
