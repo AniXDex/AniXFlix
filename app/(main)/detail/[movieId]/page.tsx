@@ -128,7 +128,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
 
           <div className="flex items-center gap-3 md:gap-4 flex-wrap">
             <Link 
-              href={`/watch/${movieId}?type=${isTv ? 'tv' : 'movie'}`}
+              href={`/play/${movieId}${isTv ? '?s=1&e=1' : ''}`}
               className="bg-white hover:bg-white/90 text-black px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold flex items-center gap-2 transition-all hover:scale-105"
             >
               <Play size={18} fill="black" /> Play
