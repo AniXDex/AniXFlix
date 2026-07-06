@@ -1,19 +1,13 @@
-import MoviesRow from "@/components/movie/MoviesRow";
+import CategoryPageClient from "@/components/category/CategoryPageClient";
 import { tmdb } from "@/lib/tmdb";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 
 export default async function MoviesPage() {
-  const topRated = await tmdb.getTopRated("movie");
+  // Fetch initial "Most popular" movies for SSR
   const popular = await tmdb.getPopular("movie");
-  const upcoming = await tmdb.getUpcoming();
+  const initialMovies = popular.map(m => mapTmdbToAnix(m));
 
   return (
-    <div className="bg-[#09090b] min-h-screen">
-      <div className="pt-20 px-4 md:px-14 relative z-20 flex flex-col gap-10">
-        <MoviesRow title="Popular Films" movies={popular.slice(0, 20).map(m => mapTmdbToAnix(m))} />
-        <MoviesRow title="Top Rated" movies={topRated.slice(0, 20).map(m => mapTmdbToAnix(m))} />
-        <MoviesRow title="Upcoming" movies={upcoming.slice(0, 20).map(m => mapTmdbToAnix(m))} />
-      </div>
-    </div>
+    <CategoryPageClient type="movie" initialMovies={initialMovies} />
   );
 }

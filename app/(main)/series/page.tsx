@@ -1,19 +1,13 @@
-import MoviesRow from "@/components/movie/MoviesRow";
+import CategoryPageClient from "@/components/category/CategoryPageClient";
 import { tmdb } from "@/lib/tmdb";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 
 export default async function SeriesPage() {
-  const topRated = await tmdb.getTopRated("tv");
+  // Fetch initial "Most popular" tv shows for SSR
   const popular = await tmdb.getPopular("tv");
-  const onAir = await tmdb.getOnTheAir();
+  const initialShows = popular.map(m => mapTmdbToAnix(m));
 
   return (
-    <div className="bg-[#09090b] min-h-screen">
-      <div className="pt-20 px-4 md:px-14 relative z-20 flex flex-col gap-10">
-        <MoviesRow title="Popular Series" movies={popular.slice(0, 20).map(m => mapTmdbToAnix(m))} />
-        <MoviesRow title="Top Rated" movies={topRated.slice(0, 20).map(m => mapTmdbToAnix(m))} />
-        <MoviesRow title="On The Air" movies={onAir.slice(0, 20).map(m => mapTmdbToAnix(m))} />
-      </div>
-    </div>
+    <CategoryPageClient type="tv" initialMovies={initialShows} />
   );
 }

@@ -73,39 +73,40 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
                 transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
                 className="flex flex-col gap-4"
               >
-                {/* Title */}
-                <h1 className="font-black text-4xl md:text-7xl uppercase text-white leading-tight tracking-tighter u-text-shadow origin-left">
+                <h1 className="font-black text-5xl md:text-[5.5rem] uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left">
                   {featured.title}
                 </h1>
 
                 {/* Metadata */}
-                <div className="flex items-center gap-2 text-xs md:text-sm text-white/70 font-medium">
-                  <Star size={14} className="text-red-600 fill-red-600" />
+                <div className="flex items-center gap-2 text-[13px] md:text-sm text-white/80 font-medium mt-2 mb-2">
+                  <Star size={14} className="text-red-600 fill-red-600 mb-0.5" />
                   <span className="text-red-600 font-bold">{featured.rating || "8.5"}</span>
-                  <span>&middot;</span>
+                  <span className="text-white/40">&middot;</span>
                   <span>{featured.releaseYear || "2026"}</span>
-                  <span>&middot;</span>
-                  <span>Trending Now</span>
+                  <span className="text-white/40">&middot;</span>
+                  <span>Action & Adventure</span>
+                  <span className="text-white/40">&middot;</span>
+                  <span>Animation</span>
                 </div>
                 
                 {/* Description */}
-                <p className="text-white/60 text-xs md:text-sm font-medium line-clamp-3 md:line-clamp-4 max-w-xl">
+                <p className="text-white/70 text-sm md:text-[15px] font-medium line-clamp-3 leading-relaxed max-w-2xl mb-4 drop-shadow-md pr-4">
                   {featured.description}
                 </p>
 
                 {/* Buttons */}
-                <div className="flex items-center gap-3 mt-2">
+                <div className="flex items-center gap-3">
                   <button
-                    className="h-10 md:h-12 px-6 md:px-8 text-black bg-white hover:bg-white/90 flex items-center gap-2 font-bold text-sm rounded-full transition-colors"
+                    className="h-11 md:h-12 px-8 text-black bg-white hover:bg-white/90 flex items-center gap-2 font-bold text-[15px] rounded-full transition-colors shadow-lg"
                     onClick={() => router.push(`/watch/${featured.publicId}`)}
                   >
-                    <Play size={18} fill="black" /> Play
+                    <Play size={16} fill="black" /> Play
                   </button>
                   <button
-                    className="h-10 md:h-12 px-6 md:px-8 text-white bg-transparent border border-white/30 hover:bg-white/10 flex items-center gap-2 font-bold text-sm rounded-full transition-colors"
+                    className="h-11 md:h-12 px-8 text-white bg-transparent border border-white/20 hover:bg-white/10 flex items-center gap-2 font-bold text-[15px] rounded-full transition-colors"
                     onClick={() => router.push(`/title/${featured.publicId}`)}
                   >
-                    <Info size={18} /> See More
+                    <Info size={16} /> See More
                   </button>
                 </div>
               </motion.div>
