@@ -12,12 +12,9 @@ export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = f
     videoUrl: null,
     cloudinaryId: null,
     duration: tmdbMovie.runtime || null,
-    releaseYear: tmdbMovie.release_date 
-      ? parseInt(tmdbMovie.release_date.split("-")[0]) 
-      : tmdbMovie.first_air_date 
-        ? parseInt(tmdbMovie.first_air_date.split("-")[0]) 
-        : null,
-    maturityRating: tmdbMovie.adult ? "R" : "PG-13",
+    rating: tmdbMovie.vote_average ? tmdbMovie.vote_average.toFixed(1) : null,
+    releaseYear: tmdbMovie.release_date ? parseInt(tmdbMovie.release_date.split("-")[0]) : (tmdbMovie.first_air_date ? parseInt(tmdbMovie.first_air_date.split("-")[0]) : null),
+    maturityRating: null,
     isTrending,
     isFeatured,
     createdAt: new Date(),

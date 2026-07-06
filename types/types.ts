@@ -19,6 +19,7 @@ export interface Movie {
   isTrending: boolean;
   isFeatured: boolean;
   createdAt: Date;
+  rating: string | null;
 }
 
 export interface User {
