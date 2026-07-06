@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import React, { useState } from "react";
 import { Server } from "lucide-react";
 
 interface ThumbnailEntry {

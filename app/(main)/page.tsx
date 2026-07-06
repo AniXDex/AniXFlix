@@ -18,7 +18,7 @@ export default async function Home() {
     tmdb.getTopRated("movie"),
     tmdb.getDiscover("movie", { genreId: "28" }), // Action genre ID
     tmdb.getDiscover("movie", { genreId: "35" }), // Comedy genre ID
-    tmdb.getDiscover("movie", { genreId: "16" }), // Animation genre ID
+    tmdb.getDiscover("movie", { genreId: "878" }), // Sci-Fi genre ID
   ]);
 
   // Map to AniXFlix internal format

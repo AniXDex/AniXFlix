@@ -17,7 +17,7 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
       {/* Poster Image Container */}
       <div className={`relative w-full overflow-hidden rounded-2xl ${isPortrait ? 'aspect-[2/3]' : 'aspect-video'} bg-white/5`}>
         <Image
-          src={movie.thumbnailUrl || movie.backdropUrl || ""}
+          src={isPortrait ? (movie.thumbnailUrl || movie.backdropUrl || "") : (movie.backdropUrl || movie.thumbnailUrl || "")}
           alt={movie.title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"

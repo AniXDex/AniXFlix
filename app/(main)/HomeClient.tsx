@@ -119,7 +119,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
         <MoviesRow title="Top Rated Masterpieces" movies={topRated} />
         <MoviesRow title="Action Packed" movies={action} />
         <MoviesRow title="Laugh Out Loud" movies={comedy} />
-        <MoviesRow title="Top Animations" movies={animation} />
+        <MoviesRow title="Sci-Fi & Fantasy" movies={animation} />
       </div>
     </div>
   );
