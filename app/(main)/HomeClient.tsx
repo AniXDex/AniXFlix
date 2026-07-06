@@ -62,7 +62,7 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
         <div className="absolute inset-0 bg-gradient-to-r from-[#09090b] via-[#09090b]/40 to-transparent z-10"></div>
 
         {/* Hero Content */}
-        <div className="absolute left-4 md:left-14 bottom-[15%] md:bottom-[20%] max-w-[90%] md:max-w-2xl z-20">
+        <div className="absolute left-4 md:left-14 bottom-[5%] md:bottom-[10%] max-w-[90%] md:max-w-2xl z-20">
           <AnimatePresence mode="wait">
             {featured && (
               <motion.div
