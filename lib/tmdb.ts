@@ -25,6 +25,7 @@ async function fetchTMDB(endpoint: string, params: Record<string, string> = {}) 
     const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
     const url = new URL(`${BASE_URL}${cleanEndpoint}`);
     url.searchParams.append("api_key", API_KEY);
+    url.searchParams.append("language", "en-US");
     Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value));
 
     const MAX_RETRIES = 3;

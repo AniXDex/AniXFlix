@@ -26,7 +26,7 @@ export default async function PlayerDetails({ tmdbId, type, season, episode }: {
   const mappedSimilar = similar.slice(0, 10).map((m: any) => mapTmdbToAnix(m));
 
   return (
-    <div id="episodes" className="w-full bg-[#0a0a0a] min-h-screen text-white pt-8 px-4 md:px-8">
+    <div id="episodes" className="w-full bg-[#0a0a0a] min-h-screen text-white pt-8 px-4 md:px-14">
       <PlayerTabs 
         type={type} 
         episodes={episodes} 

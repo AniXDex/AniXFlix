@@ -36,6 +36,9 @@ function ProviderRow({ initialMovies }: Props) {
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [isVisible, setIsVisible] = useState(false);
+  const rowRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -44,6 +47,24 @@ function ProviderRow({ initialMovies }: Props) {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px" }
+    );
+
+    if (rowRef.current) {
+      observer.observe(rowRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   const handleProviderChange = async (provider: typeof PROVIDERS[0]) => {
@@ -62,10 +83,10 @@ function ProviderRow({ initialMovies }: Props) {
   };
 
   return (
-    <section className="flex flex-col gap-4 md:gap-6 relative">
+    <section ref={rowRef} className="flex flex-col gap-5 md:gap-7 relative min-h-[300px]">
       
       {/* Section Header */}
-      <div className="flex items-end px-2 z-40 relative">
+      <div className="flex items-end z-40 relative">
         <div className="flex items-center gap-3">
           <div className="w-1 h-6 md:h-7 bg-red-600 rounded-full"></div>
           <div className="flex items-center text-xl md:text-2xl tracking-tight">
@@ -111,22 +132,26 @@ function ProviderRow({ initialMovies }: Props) {
 
       {/* Carousel */}
       <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-50' : 'opacity-100'}`}>
-        <Carousel opts={{ align: "start" }} className="w-full relative group/carousel">
-          <CarouselContent className="gap-2 md:gap-4 px-2">
-            {movies.map((movie) => (
-              <CarouselItem
-                key={movie.id}
-                className="pl-0 basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4"
-              >
-                <MovieCard movie={movie} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 pointer-events-none px-4 flex justify-between opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
-            <CarouselPrevious className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -left-6" />
-            <CarouselNext className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -right-6" />
-          </div>
-        </Carousel>
+        {isVisible ? (
+          <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full relative group/carousel">
+            <CarouselContent className="">
+              {movies.map((movie) => (
+                <CarouselItem
+                  key={movie.id}
+                  className="basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4"
+                >
+                  <MovieCard movie={movie} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 pointer-events-none px-4 flex justify-between opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+              <CarouselPrevious className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -left-6" />
+              <CarouselNext className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -right-6" />
+            </div>
+          </Carousel>
+        ) : (
+          <div className="w-full h-[200px] md:h-[250px] bg-white/5 rounded-2xl animate-pulse"></div>
+        )}
       </div>
 
     </section>

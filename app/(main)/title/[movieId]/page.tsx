@@ -60,6 +60,17 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
     }
   }
 
+  // Backdrop fetching (using sorting logic for titled english backdrops)
+  const backdrops = details.images?.backdrops || [];
+  const bestBackdrop = backdrops
+    .filter((b: any) => b.iso_639_1 === "en")
+    .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
+    ?? backdrops[0];
+    
+  const heroBackdropUrl = bestBackdrop 
+    ? `https://image.tmdb.org/t/p/original${bestBackdrop.file_path}` 
+    : mappedMovie.backdropUrl || mappedMovie.thumbnailUrl || "";
+
   return (
     <div className="bg-[#09090b] min-h-screen pb-20">
       <Header />
@@ -67,7 +78,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
       {/* Hero Section */}
       <div className="relative w-full aspect-[4/5] md:aspect-[21/9] lg:aspect-[2.5/1]">
         <Image
-          src={mappedMovie.backdropUrl || mappedMovie.thumbnailUrl || ""}
+          src={heroBackdropUrl}
           alt={mappedMovie.title || "Backdrop"}
           fill
           className="object-cover object-top opacity-50 md:opacity-70"

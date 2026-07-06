@@ -7,23 +7,37 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Movie } from "@/types/types";
+import Image from "next/image";
 
 interface HomeClientProps {
-  trending: Movie[];
-  topRated: Movie[];
-  action: Movie[];
-  comedy: Movie[];
-  animation: Movie[];
+  trendingMovies: Movie[];
+  trendingSeries: Movie[];
+  topRatedMovies: Movie[];
+  topRatedSeries: Movie[];
+  actionMovies: Movie[];
+  actionSeries: Movie[];
+  comedyMovies: Movie[];
+  comedySeries: Movie[];
+  animationMovies: Movie[];
+  animationSeries: Movie[];
   netflix: Movie[];
 }
 
-export default function HomeClient({ trending, topRated, action, comedy, animation, netflix }: HomeClientProps) {
+export default function HomeClient({ 
+  trendingMovies, trendingSeries,
+  topRatedMovies, topRatedSeries,
+  actionMovies, actionSeries,
+  comedyMovies, comedySeries,
+  animationMovies, animationSeries,
+  netflix 
+}: HomeClientProps) {
   const router = useRouter();
   const { openModal } = useGlobalContext();
   const [featuredIndex, setFeaturedIndex] = useState(0);
 
   // Filter out movies without backdrops to ensure hero always looks good
-  const heroMovies = trending.filter(m => m.backdropUrl).slice(0, 10);
+  // Use trendingMovies for hero carousel
+  const heroMovies = trendingMovies.filter(m => m.backdropUrl).slice(0, 10);
 
   useEffect(() => {
     if (heroMovies.length === 0) return;
@@ -50,10 +64,13 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
               transition={{ duration: 0.5, ease: "easeInOut" }}
               className="absolute inset-0"
             >
-              <img 
+              <Image 
                 src={featured.backdropUrl || ""} 
                 alt={featured.title || "Hero Banner"} 
-                className="w-full h-full object-cover object-top opacity-70"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-top opacity-70"
               />
             </motion.div>
           )}
@@ -117,13 +134,13 @@ export default function HomeClient({ trending, topRated, action, comedy, animati
         </div>
       </div>
 
-      <div className="relative z-30 flex flex-col gap-14 mt-4 md:mt-8 px-4 md:px-14 pb-20">
-        <MoviesRow title="TOP 10 Today" movies={trending} isTop10={true} />
-        <MoviesRow title="Trending Today" movies={topRated} />
+      <div className="relative z-30 flex flex-col gap-16 md:gap-20 mt-4 md:mt-8 px-4 md:px-14 pb-20">
+        <MoviesRow title="TOP 10 Today" movies={trendingMovies} series={trendingSeries} isTop10={true} />
+        <MoviesRow title="Trending Today" movies={topRatedMovies} series={topRatedSeries} />
         <ProviderRow initialMovies={netflix} />
-        <MoviesRow title="New Release Movies" movies={action} />
-        <MoviesRow title="Comedy Movies" movies={comedy} />
-        <MoviesRow title="Sci-Fi & Fantasy" movies={animation} />
+        <MoviesRow title="Sci-Fi & Fantasy" movies={animationMovies} series={animationSeries} />
+        <MoviesRow title="Action & Adventure" movies={actionMovies} series={actionSeries} />
+        <MoviesRow title="Comedy" movies={comedyMovies} series={comedySeries} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 import { Movie } from "@/types/types";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Star, Heart } from "lucide-react";
@@ -14,26 +14,51 @@ interface Props {
 
 function MovieCard({ movie, isPortrait = false, rank }: Props) {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useStore();
-  const isSaved = isInWatchlist(movie.publicId || movie.id?.toString());
+  const [localMovie, setLocalMovie] = useState(movie);
+  const isSaved = isInWatchlist(localMovie.publicId || localMovie.id?.toString());
+
+  useEffect(() => {
+    // ONLY fetch for horizontal cards to perfectly replace textless backdrops with Titled English Backdrops
+    if (!isPortrait) {
+      let isMounted = true;
+      const fetchTitledBackdrop = async () => {
+        try {
+          // This hits the internal Next.js API, which resolves from the massive Vercel Edge Cache instantly (0ms)
+          const res = await fetch(`/api/movies/${movie.publicId || movie.id}`);
+          if (res.ok && isMounted) {
+            const data = await res.json();
+            if (data && data.backdropUrl) {
+              setLocalMovie((prev: any) => ({ ...prev, backdropUrl: data.backdropUrl }));
+            }
+          }
+        } catch (e) {
+          // Fallback to original image on error
+        }
+      };
+      fetchTitledBackdrop();
+      return () => { isMounted = false; };
+    }
+  }, [isPortrait, movie.publicId, movie.id]);
 
   const handleWatchlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (isSaved) {
-      removeFromWatchlist(movie.publicId || movie.id?.toString());
+      removeFromWatchlist(localMovie.publicId || localMovie.id?.toString());
     } else {
-      addToWatchlist(movie);
+      addToWatchlist(localMovie);
     }
   };
 
   return (
-    <Link href={`/title/${movie.publicId}?type=${movie.mediaType || 'movie'}`} className="group flex flex-col gap-3 w-full cursor-pointer">
+    <Link href={`/title/${localMovie.publicId}?type=${localMovie.mediaType || 'movie'}`} className="group flex flex-col gap-3 w-full cursor-pointer">
       {/* Poster Image Container */}
       <div className={`relative w-full overflow-hidden rounded-2xl ${isPortrait ? 'aspect-[2/3]' : 'aspect-video'} bg-white/5`}>
         <Image
-          src={isPortrait ? (movie.thumbnailUrl || movie.backdropUrl || "") : (movie.backdropUrl || movie.thumbnailUrl || "")}
-          alt={movie.title}
+          src={isPortrait ? (localMovie.thumbnailUrl || localMovie.backdropUrl || "") : (localMovie.backdropUrl || localMovie.thumbnailUrl || "")}
+          alt={localMovie.title}
           fill
+          sizes={isPortrait ? "(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 15vw" : "(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"}
           className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
         />
         
@@ -61,17 +86,17 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
       {/* Metadata */}
       <div className="flex flex-col gap-1">
         <h3 className="font-bold text-white text-sm md:text-base line-clamp-1 group-hover:text-red-500 transition-colors">
-          {movie.title}
+          {localMovie.title}
         </h3>
         <div className="flex items-center gap-2 text-[11px] md:text-xs text-white/50 font-medium">
           <div className="flex items-center gap-1">
             <Star size={12} className="text-red-600 fill-red-600 mb-0.5" />
-            <span className="text-white/80">{movie.rating || "8.5"}</span>
+            <span className="text-white/80">{localMovie.rating || "8.5"}</span>
           </div>
           <span>&middot;</span>
-          <span>{movie.releaseYear || (movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : "2026")}</span>
+          <span>{localMovie.releaseYear || (localMovie.releaseDate ? new Date(localMovie.releaseDate).getFullYear() : "2026")}</span>
           <span>&middot;</span>
-          <span>{movie.mediaType === "tv" ? "TV Show" : "Movie"}</span>
+          <span>{localMovie.mediaType === "tv" ? "TV Show" : "Movie"}</span>
         </div>
       </div>
     </Link>
