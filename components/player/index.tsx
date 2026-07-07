@@ -69,7 +69,6 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
           frameBorder="0"
           scrolling="no"
           referrerPolicy="origin"
-          sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         ></iframe>
       </div>

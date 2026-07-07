@@ -1,7 +1,7 @@
 import { Movie } from "@/types/types";
 
 export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = false): Movie => {
-  let finalBackdropUrl = tmdbMovie.backdrop_path ? `https://image.tmdb.org/t/p/w1280${tmdbMovie.backdrop_path}` : null;
+  let finalBackdropUrl = tmdbMovie.backdrop_path ? `https://image.tmdb.org/t/p/w780${tmdbMovie.backdrop_path}` : null;
   
   // If the deep images object was fetched, use textless (null) backdrops first
   if (tmdbMovie.images && tmdbMovie.images.backdrops && tmdbMovie.images.backdrops.length > 0) {
@@ -12,7 +12,7 @@ export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = f
       ?? backdrops[0];
       
     if (bestBackdrop) {
-      finalBackdropUrl = `https://image.tmdb.org/t/p/w1280${bestBackdrop.file_path}`;
+      finalBackdropUrl = `https://image.tmdb.org/t/p/w780${bestBackdrop.file_path}`;
     }
   }
 

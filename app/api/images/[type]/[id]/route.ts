@@ -25,14 +25,14 @@ export async function GET(
     if (details && details.images && details.images.backdrops) {
       const backdrops = details.images.backdrops;
       
-      // Strict English titled backdrop sorting logic
+      // Textless backdrop sorting logic (null language)
       const bestBackdrop = backdrops
-        .filter((b: any) => b.iso_639_1 === "en")
+        .filter((b: any) => b.iso_639_1 === null)
         .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
         ?? backdrops[0];
         
       if (bestBackdrop && bestBackdrop.file_path) {
-        const finalUrl = `https://image.tmdb.org/t/p/w1280${bestBackdrop.file_path}`;
+        const finalUrl = `https://image.tmdb.org/t/p/w780${bestBackdrop.file_path}`;
         // Cache the redirect aggressively on Vercel Edge Cache (1 year)
         return NextResponse.redirect(finalUrl, { 
           status: 302,
