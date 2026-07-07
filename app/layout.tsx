@@ -7,6 +7,7 @@ import ModalProvider from "@/providers/ModalProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import { Toaster } from "react-hot-toast";
 import DisableDevtoolWrapper from "@/components/DisableDevtoolWrapper";
+import { Analytics } from "@vercel/analytics/react";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -49,6 +50,7 @@ export default function RootLayout({
                 <main>{children}</main>
               </div>
             </ModalProvider>
+            <Analytics />
           </QueryProvider>
         </body>
       </ContextProvider>
