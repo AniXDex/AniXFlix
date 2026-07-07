@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Server, ArrowLeft, ChevronRight } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Server, ArrowLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ThumbnailEntry {
@@ -40,13 +40,13 @@ const SERVERS = [
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
   const [selectedServer, setSelectedServer] = useState(0);
   const [isMouseIdle, setIsMouseIdle] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
-      setSelectedServer(1);
-    }
-  }, []);
+    setIsLoading(true);
+  }, [selectedServer]);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -69,8 +69,16 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
       {/* Player Frame */}
       <div className="relative w-full flex-1 min-h-[40vh] md:min-h-[85vh] bg-black overflow-hidden group">
         
+        {isLoading && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black">
+            <Loader2 className="w-10 h-10 text-red-500 animate-spin mb-3" />
+            <p className="text-white/50 text-xs font-medium">Loading {SERVERS[selectedServer].name}...</p>
+          </div>
+        )}
         <iframe
+          ref={iframeRef}
           src={tmdbId ? SERVERS[selectedServer].url(tmdbId, mediaType === "tv", season, episode) : ""}
+          onLoad={() => setIsLoading(false)}
           className="absolute inset-0 w-full h-full border-none z-10"
           allowFullScreen
           frameBorder="0"
