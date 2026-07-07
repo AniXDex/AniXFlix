@@ -20,7 +20,6 @@ interface MyPlayerProps {
 }
 
 const SERVERS = [
-  { name: "Alok", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` }, // ScreenScape
   { name: "Chrono", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` }, // Videasy
   { name: "Hayato", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` : `https://vidsrc.pm/embed/movie/${id}` }, // VidSrc PM
   { name: "Kelly", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` }, // Peachify
@@ -28,6 +27,7 @@ const SERVERS = [
   { name: "Jota", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidfast.net/tv/${id}/${s}/${e}` : `https://vidfast.net/movie/${id}` }, // Vidfast
   { name: "Dimitri", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` : `https://primesrc.me/embed/movie?tmdb=${id}` }, // PrimeSRC
   { name: "Wukong", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}` : `https://vidsrc-embed.ru/embed/movie/${id}` }, // VidSrc Embed
+  { name: "Alok", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` }, // ScreenScape
   { name: "Miguel", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidrock.net/embed/tv/${id}/${s}/${e}` : `https://vidrock.net/embed/movie/${id}` }, // Vidrock
   { name: "Caroline", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` }, // VidSrc CC
   { name: "Shirou", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidify.to/embed/tv/${id}/${s}/${e}` : `https://vidify.to/embed/movie/${id}` }, // Vidify
@@ -83,7 +83,8 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
           allowFullScreen
           frameBorder="0"
           scrolling="no"
-          allow="autoplay; encrypted-media; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          referrerPolicy="origin"
         ></iframe>
       </div>
 
