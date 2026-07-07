@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -62,7 +63,34 @@ class _WebViewScreenState extends State<WebViewScreen> {
             _injectCSSAndJS();
           },
           onNavigationRequest: (NavigationRequest request) {
-            return NavigationDecision.navigate;
+            final url = request.url.toLowerCase();
+            
+            // 1. Allow our own domain
+            if (url.startsWith('https://anixflix') || url.contains('vercel.app')) {
+              return NavigationDecision.navigate;
+            }
+            
+            // 2. Allow known video embed providers
+            final allowedProviders = [
+              'vidsrc', 'vidlink', 'vidify', 'vidzee', '2embed', 
+              'vidking', 'videasy', 'peachify', 'vidfast', 
+              'primesrc', 'vidrock', 'hnembed', 'youtube', 'vimeo'
+            ];
+            
+            for (final provider in allowedProviders) {
+              if (url.contains(provider)) {
+                return NavigationDecision.navigate;
+              }
+            }
+            
+            // 3. Allow TMDB image loading
+            if (url.contains('tmdb.org')) {
+              return NavigationDecision.navigate;
+            }
+            
+            // 4. Block EVERYTHING ELSE (This kills all pop-ups, redirects, and ad tabs)
+            debugPrint('BLOCKED AD/POPUP: $url');
+            return NavigationDecision.prevent;
           },
         ),
       )

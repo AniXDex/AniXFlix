@@ -70,15 +70,15 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
         <h3 className="font-bold text-white text-sm md:text-base line-clamp-1 group-hover:text-red-500 transition-colors">
           {localMovie.title}
         </h3>
-        <div className="flex items-center gap-2 text-[11px] md:text-xs text-white/50 font-medium">
-          <div className="flex items-center gap-1">
-            <Star size={12} className="text-red-600 fill-red-600 mb-0.5" />
+        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[10px] sm:text-[11px] md:text-xs text-white/50 font-medium">
+          <div className="flex items-center gap-1 shrink-0">
+            <Star size={10} className="text-red-600 fill-red-600 sm:w-3 sm:h-3" />
             <span className="text-white/80">{localMovie.rating || "8.5"}</span>
           </div>
-          <span>&middot;</span>
-          <span>{localMovie.releaseYear || (localMovie.releaseDate ? new Date(localMovie.releaseDate).getFullYear() : "2026")}</span>
-          <span>&middot;</span>
-          <span>{localMovie.mediaType === "tv" ? "TV Show" : "Movie"}</span>
+          <span className="shrink-0">&middot;</span>
+          <span className="shrink-0">{localMovie.releaseYear || (localMovie.releaseDate ? new Date(localMovie.releaseDate).getFullYear() : "2026")}</span>
+          <span className="shrink-0">&middot;</span>
+          <span className="truncate">{localMovie.mediaType === "tv" ? "TV Show" : "Movie"}</span>
         </div>
       </div>
     </Link>

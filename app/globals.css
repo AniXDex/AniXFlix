@@ -196,8 +196,4 @@ html.android-apk * {
   backdrop-filter: none !important;
   box-shadow: none !important;
   transition: none !important;
-  animation-duration: 0.01s !important; /* Extremely fast instead of none to prevent breaking some logic */
-}
-html.android-apk .bg-black\/50, html.android-apk .bg-black\/40, html.android-apk .bg-white\/20 {
-  background-color: transparent !important;
 }

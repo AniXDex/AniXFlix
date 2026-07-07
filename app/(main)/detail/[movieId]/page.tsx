@@ -89,7 +89,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
         <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/60 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#09090b] via-[#09090b]/60 to-transparent"></div>
 
-        <div className="absolute left-4 md:left-14 bottom-[12%] md:bottom-[15%] max-w-[90%] md:max-w-4xl z-10 flex flex-col items-start">
+        <div className="absolute left-4 md:left-14 bottom-[8%] md:bottom-[15%] max-w-[90%] md:max-w-4xl z-10 flex flex-col items-start">
           
           {logoUrl ? (
             <Image 
@@ -105,24 +105,24 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
             </h1>
           )}
 
-          <div className="flex items-center gap-3 text-xs md:text-sm font-semibold text-white/70 mb-4">
-            <span className="flex items-center gap-1 text-red-500 font-bold">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] md:text-sm font-semibold text-white/70 mb-4">
+            <span className="flex items-center gap-1 text-red-500 font-bold shrink-0">
               <Star size={14} className="fill-red-500" /> 
               {mappedMovie.rating || "N/A"}
             </span>
-            <span>&middot;</span>
-            <span>{mappedMovie.releaseYear || "2026"}</span>
-            <span>&middot;</span>
-            <span className="border border-white/20 px-1.5 py-0.5 rounded-sm">{isTv ? "TV Show" : "Movie"}</span>
+            <span className="shrink-0">&middot;</span>
+            <span className="shrink-0">{mappedMovie.releaseYear || "2026"}</span>
+            <span className="shrink-0">&middot;</span>
+            <span className="border border-white/20 px-1.5 py-0.5 rounded-sm shrink-0">{isTv ? "TV Show" : "Movie"}</span>
             {details.genres?.slice(0,2).map((g: any) => (
               <React.Fragment key={g.id}>
-                <span>&middot;</span>
-                <span>{g.name}</span>
+                <span className="shrink-0">&middot;</span>
+                <span className="shrink-0">{g.name}</span>
               </React.Fragment>
             ))}
           </div>
 
-          <p className="text-white/80 text-sm md:text-base leading-relaxed line-clamp-3 md:line-clamp-4 max-w-2xl mb-8 drop-shadow-md">
+          <p className="text-white/80 text-sm md:text-base leading-relaxed line-clamp-3 md:line-clamp-4 max-w-2xl mb-5 drop-shadow-md">
             {mappedMovie.description}
           </p>
 
@@ -162,7 +162,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
               <h2 className="text-2xl font-bold text-white">Actors</h2>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
               {cast.map((actor: any) => (
                 <div key={actor.id} className="flex items-center gap-4 bg-[#141414] p-3 rounded-2xl border border-white/5">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden bg-white/5 shrink-0">
