@@ -96,7 +96,8 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
               src={logoUrl} 
               alt={mappedMovie.title || "Logo"} 
               width={400} 
-              className="w-48 md:w-80 object-contain mb-6 drop-shadow-2xl" 
+              height={150}
+              className="w-48 md:w-80 h-auto max-h-[100px] md:max-h-[150px] object-contain object-left mb-6 drop-shadow-2xl" 
             />
           ) : (
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg uppercase leading-[0.95] line-clamp-3 md:line-clamp-2">

@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import MovieCard from "@/components/movie/MovieCard";
-import { Play } from "lucide-react";
+import { Play, ChevronDown, Search } from "lucide-react";
 
 export default function PlayerTabs({ 
   type, 
@@ -16,6 +16,18 @@ export default function PlayerTabs({
   details 
 }: any) {
   const [activeTab, setActiveTab] = useState(type === "tv" ? "Episodes" : "Related");
+  const [visibleCount, setVisibleCount] = useState(20);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    setVisibleCount(20);
+    setSearchQuery("");
+  }, [season]);
+
+  const filteredEpisodes = type === "tv" ? episodes.filter((ep: any) => 
+    ep.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    ep.episode_number.toString() === searchQuery
+  ) : [];
 
   return (
     <div className="flex flex-col gap-8 w-full pb-20">
@@ -116,51 +128,85 @@ export default function PlayerTabs({
               </div>
             )}
 
-            <div className="mt-4">
-              <h3 className="text-lg font-bold mb-6">Season Episodes <span className="text-white/40 text-sm font-normal ml-2">({episodes.length} total)</span></h3>
-              <div className="flex flex-col gap-3">
-                {episodes.map((ep: any) => (
-                  <Link 
-                    href={`/play/${tmdbId}?s=${season}&e=${ep.episode_number}`}
-                    key={ep.id}
-                    className={`flex flex-col md:flex-row items-center gap-6 p-3 rounded-xl transition-all border border-transparent hover:bg-[#141417] hover:border-white/5 ${ep.episode_number === episode ? 'bg-[#141417] border-white/5' : ''}`}
-                  >
-                    <div className="relative w-full md:w-48 aspect-video shrink-0 rounded-lg overflow-hidden bg-black/50">
-                      {ep.still_path ? (
-                        <Image 
-                          src={`https://image.tmdb.org/t/p/w500${ep.still_path}`} 
-                          alt={ep.name || "Episode Image"} 
-                          fill 
-                          className="object-cover" 
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-white/20">No Image</div>
-                      )}
-                      {ep.episode_number === episode && (
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                          <div className="text-[#ff9d00] text-xs font-black uppercase tracking-wider flex items-center gap-2 bg-black/80 px-3 py-1.5 rounded-full shadow-lg border border-[#ff9d00]/30">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                            Playing
+            {/* Season Episodes */}
+            {type === "tv" && episodes && episodes.length > 0 && (
+              <div className="mt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                  <h3 className="text-lg font-bold">Season Episodes <span className="text-white/40 text-sm font-normal ml-2">({episodes.length} total)</span></h3>
+                  
+                  {/* Search Input */}
+                  <div className="relative w-full sm:w-64">
+                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
+                    <input 
+                      type="text" 
+                      placeholder="Search episode..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-[#141414] border border-white/10 hover:border-white/30 focus:border-red-500 rounded-xl py-2 pl-10 pr-4 text-sm text-white placeholder-white/30 outline-none transition-all"
+                    />
+                  </div>
+                </div>
+
+                {filteredEpisodes.length > 0 ? (
+                  <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
+                    {filteredEpisodes.slice(0, visibleCount).map((ep: any) => (
+                      <Link 
+                        href={`/play/${tmdbId}?s=${season}&e=${ep.episode_number}`}
+                        key={ep.id}
+                        className={`group flex flex-col lg:flex-row items-center gap-3 p-2 rounded-xl transition-all border border-transparent hover:bg-[#141417] hover:border-white/5 ${ep.episode_number === Number(episode) ? 'bg-[#141417] border-white/5' : ''}`}
+                      >
+                        <div className="relative w-full lg:w-48 aspect-video shrink-0 rounded-lg overflow-hidden bg-black/50">
+                          {ep.still_path ? (
+                            <Image 
+                              src={`https://image.tmdb.org/t/p/w500${ep.still_path}`} 
+                              alt={ep.name || "Episode Image"} 
+                              fill 
+                              className="object-cover" 
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center text-white/20">No Image</div>
+                          )}
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/40">
+                              <div className="w-0 h-0 border-t-4 border-b-4 border-l-6 border-transparent border-l-white ml-1"></div>
+                            </div>
+                          </div>
+
+                          <div className="absolute bottom-1.5 left-1.5 bg-black/80 px-1.5 py-0.5 rounded text-[10px] font-bold text-white shadow-lg">
+                            E{ep.episode_number}
                           </div>
                         </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex flex-col justify-center flex-1 py-1">
-                      <h4 className={`text-base font-bold mb-1 ${ep.episode_number === episode ? 'text-[#ff9d00]' : 'text-white'}`}>
-                        Episode {ep.episode_number}: {ep.name}
-                      </h4>
-                      <div className="text-xs text-white/40 mb-2 font-medium">
-                        {ep.air_date} <span className="mx-1.5">•</span> {ep.runtime || '45'} mins
+                        
+                        <div className="flex-1 min-w-0 flex flex-col justify-center py-2 px-2 lg:p-0">
+                          <h4 className={`text-sm lg:text-base font-bold truncate mb-1 transition-colors ${
+                            ep.episode_number === Number(episode) ? "text-red-500" : "text-white group-hover:text-red-500"
+                          }`}>
+                            {ep.episode_number}. {ep.name}
+                          </h4>
+                          <p className="hidden lg:block text-xs text-white/50 line-clamp-2 leading-relaxed">
+                            {ep.overview || "No description available for this episode."}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                    {visibleCount < filteredEpisodes.length && (
+                      <div className="col-span-2 lg:col-span-1">
+                        <button 
+                          onClick={() => setVisibleCount(prev => prev + 20)}
+                          className="mt-2 w-full py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl border border-white/10 transition-colors flex items-center justify-center gap-2"
+                        >
+                          <ChevronDown size={18} /> Load More
+                        </button>
                       </div>
-                      <p className="text-sm text-white/60 line-clamp-2 leading-relaxed">
-                        {ep.overview || "No description available."}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-white/40">
+                    No episodes found for this search.
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </div>
         )}
 

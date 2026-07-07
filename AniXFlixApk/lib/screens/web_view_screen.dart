@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
+import 'package:flutter/services.dart';
 import 'offline_screen.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -71,6 +72,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void _injectCSSAndJS() {
     // Disable zoom, text selection, and context menus to make the web app feel like a native app
     const String script = """
+      // Inject Android app class to let the website disable heavy CSS
+      document.documentElement.classList.add('android-apk');
+      
       // Disable text selection
       document.body.style.userSelect = 'none';
       document.body.style.webkitUserSelect = 'none';
@@ -108,7 +112,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
       );
     }
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        if (await _controller.canGoBack()) {
+          await _controller.goBack();
+        } else {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [

@@ -11,8 +11,8 @@ void main() {
     DeviceOrientation.portraitDown,
   ]);
   
-  // Hide the status bar and navigation bar (full screen mode)
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+  // Show the status bar but allow content to render underneath
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
   runApp(const AniXFlixApp());
 }
