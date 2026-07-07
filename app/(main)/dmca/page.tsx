@@ -9,7 +9,7 @@ export default function DmcaPage() {
         <section>
           <h2 className="text-xl font-bold text-white mb-3">Important Notice</h2>
           <p>
-            This website does not host any movies, TV shows, or media files on its own servers. All content is provided by non-affiliated third-party public providers.
+            <strong>AniXFlix</strong> does not host any movies, TV shows, or media files on its own servers. All content is provided by non-affiliated third-party public providers.
           </p>
         </section>
 
@@ -17,7 +17,7 @@ export default function DmcaPage() {
           <h2 className="text-xl font-bold text-white mb-3">DMCA Notice</h2>
           <p className="text-white/50 text-xs font-medium uppercase tracking-wider mb-3">Digital Millennium Copyright Act compliance information</p>
           <p className="mb-3">
-            This website operates in accordance with the Digital Millennium Copyright Act (DMCA). We respect the intellectual property rights of others and expect our users to do the same.
+            <strong>AniXFlix</strong> operates in accordance with the Digital Millennium Copyright Act (DMCA). We respect the intellectual property rights of others and expect our users to do the same.
           </p>
           <ul className="space-y-2 text-white/70">
             <li><strong className="text-white">Content Hosting:</strong> We do not host, store, or distribute any copyrighted material on our servers. All content is indexed from publicly available sources on the internet.</li>
@@ -30,7 +30,7 @@ export default function DmcaPage() {
           <h2 className="text-xl font-bold text-white mb-3">Disclaimer</h2>
           <p className="text-white/50 text-xs font-medium uppercase tracking-wider mb-3">Legal disclaimer and terms of service</p>
           <ul className="space-y-2 text-white/70">
-            <li><strong className="text-white">No Hosting:</strong> This website does not host any movies, TV shows, or media files on its own servers.</li>
+            <li><strong className="text-white">No Hosting:</strong> <strong>AniXFlix</strong> does not host any movies, TV shows, or media files on its own servers.</li>
             <li><strong className="text-white">Third-Party Sources:</strong> All content is provided by non-affiliated third-party public providers that are freely available on the internet.</li>
             <li><strong className="text-white">Content Indexing:</strong> We merely index links and content found publicly on the Internet and provide a search interface.</li>
             <li><strong className="text-white">Legal Issues:</strong> If you have any legal issues or copyright concerns, please contact the appropriate media file owners or host sites directly.</li>
@@ -59,7 +59,7 @@ export default function DmcaPage() {
           <h2 className="text-xl font-bold text-white mb-3">Fair Use Statement</h2>
           <p className="text-white/50 text-xs font-medium uppercase tracking-wider mb-3">Information about fair use and educational purposes</p>
           <p className="mb-3">
-            This website may contain copyrighted material the use of which has not always been specifically authorized by the copyright owner. We believe this constitutes a &apos;fair use&apos; of any such copyrighted material as provided for in section 107 of the US Copyright Law.
+            <strong>AniXFlix</strong> may contain copyrighted material the use of which has not always been specifically authorized by the copyright owner. We believe this constitutes a &apos;fair use&apos; of any such copyrighted material as provided for in section 107 of the US Copyright Law.
           </p>
           <ul className="space-y-2 text-white/70">
             <li><strong className="text-white">Educational Purpose:</strong> The material on this site is distributed without profit for research and educational purposes. If you wish to use copyrighted material from this site for purposes of your own that go beyond &apos;fair use&apos;, you must obtain permission from the copyright owner.</li>
