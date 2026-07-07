@@ -19,31 +19,33 @@ interface MyPlayerProps {
   episode?: number;
 }
 
-const SERVERS = [
+const ALL_SERVERS = [
   { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}` : `https://embed.filmu.in/embed/movie/${id}` },
   { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` },
-  { name: "VidSrc PM", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` : `https://vidsrc.pm/embed/movie/${id}` },
   { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` },
-  { name: "Vidlink", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` },
-  { name: "Vidfast", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidfast.net/tv/${id}/${s}/${e}` : `https://vidfast.net/movie/${id}` },
-  { name: "PrimeSRC", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` : `https://primesrc.me/embed/movie?tmdb=${id}` },
-  { name: "VidSrc Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}` : `https://vidsrc-embed.ru/embed/movie/${id}` },
   { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
-  { name: "Vidrock", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidrock.net/embed/tv/${id}/${s}/${e}` : `https://vidrock.net/embed/movie/${id}` },
-  { name: "VidSrc CC", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
-  { name: "Vidify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidify.to/embed/tv/${id}/${s}/${e}` : `https://vidify.to/embed/movie/${id}` },
-  { name: "Vidzee", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidzee.to/embed/tv/${id}/${s}/${e}` : `https://vidzee.to/embed/movie/${id}` },
-  { name: "2Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` },
-  { name: "HNEmbed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://hnembed.cc/embed/tv/${id}/${s}/${e}` : `https://hnembed.cc/embed/movie/${id}` },
-  { name: "Vidking", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.vidking.net/embed/tv/${id}/${s}/${e}` : `https://www.vidking.net/embed/movie/${id}` }
+  { name: "2Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` }
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
   const [selectedServer, setSelectedServer] = useState(0);
   const [isMouseIdle, setIsMouseIdle] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    setIsDesktop(!/android|iphone|ipad|mobile/i.test(navigator.userAgent));
+  }, []);
+
+  const SERVERS = React.useMemo(() => {
+    if (isDesktop) {
+      const ss = ALL_SERVERS.find(s => s.name === "ScreenScape")!;
+      return [ss, ...ALL_SERVERS.filter(s => s.name !== "ScreenScape")];
+    }
+    return ALL_SERVERS;
+  }, [isDesktop]);
 
   useEffect(() => {
     setIsLoading(true);
