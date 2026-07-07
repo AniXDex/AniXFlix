@@ -17,12 +17,12 @@ interface VideoPlayerProps {
 }
 
 const SERVERS = [
-    { name: "ScreenScape", movie: (id: string) => `https://screenscape.me/embed?tmdb=${id}&type=movie`, show: (id: string, s: number, e: number) => `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` },
-    { name: "VidSrc CC", movie: (id: string) => `https://vidsrc.cc/v2/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` },
-    { name: "VidSrc PM", movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` },
-    { name: "Vidlink", movie: (id: string) => `https://vidlink.pro/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}` },
-    { name: "Peachify", movie: (id: string) => `https://peachify.top/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://peachify.top/embed/tv/${id}/${s}/${e}` },
-    { name: "Vidrock", movie: (id: string) => `https://vidrock.net/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}` },
+    { name: "Alok", movie: (id: string) => `https://screenscape.me/embed?tmdb=${id}&type=movie`, show: (id: string, s: number, e: number) => `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` }, // ScreenScape
+    { name: "Caroline", movie: (id: string) => `https://vidsrc.cc/v2/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` }, // VidSrc CC
+    { name: "Hayato", movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` }, // VidSrc PM
+    { name: "Moco", movie: (id: string) => `https://vidlink.pro/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}` }, // Vidlink
+    { name: "Kelly", movie: (id: string) => `https://peachify.top/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://peachify.top/embed/tv/${id}/${s}/${e}` }, // Peachify
+    { name: "Miguel", movie: (id: string) => `https://vidrock.net/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidrock.net/embed/tv/${id}/${s}/${e}` }, // Vidrock
 ];
 
 export default function VideoPlayer({
@@ -154,7 +154,7 @@ export default function VideoPlayer({
                 <div className="bg-black/80 backdrop-blur-md rounded-md p-3 border border-white/10 shadow-2xl flex flex-col gap-2 w-48">
                     <div className="flex items-center gap-2 px-1 mb-1">
                         <Server size={14} className="text-white/50" />
-                        <span className="text-[10px] text-white/50 uppercase tracking-widest font-bold">Source</span>
+                        <span className="text-[10px] text-white/50 uppercase tracking-widest font-bold">Server</span>
                     </div>
                     <div className="flex flex-col max-h-48 overflow-y-auto scrollbar-hide gap-1">
                         {SERVERS.map((server, idx) => (

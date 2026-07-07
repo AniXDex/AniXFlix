@@ -20,21 +20,21 @@ interface MyPlayerProps {
 }
 
 const SERVERS = [
-  { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
-  { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` },
-  { name: "VidSrc PM", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` : `https://vidsrc.pm/embed/movie/${id}` },
-  { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` },
-  { name: "Vidlink", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` },
-  { name: "Vidfast", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidfast.net/tv/${id}/${s}/${e}` : `https://vidfast.net/movie/${id}` },
-  { name: "PrimeSRC", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` : `https://primesrc.me/embed/movie?tmdb=${id}` },
-  { name: "VidSrc Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}` : `https://vidsrc-embed.ru/embed/movie/${id}` },
-  { name: "Vidrock", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidrock.net/embed/tv/${id}/${s}/${e}` : `https://vidrock.net/embed/movie/${id}` },
-  { name: "VidSrc CC", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` },
-  { name: "Vidify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidify.to/embed/tv/${id}/${s}/${e}` : `https://vidify.to/embed/movie/${id}` },
-  { name: "Vidzee", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidzee.to/embed/tv/${id}/${s}/${e}` : `https://vidzee.to/embed/movie/${id}` },
-  { name: "2Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` },
-  { name: "HNEmbed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://hnembed.cc/embed/tv/${id}/${s}/${e}` : `https://hnembed.cc/embed/movie/${id}` },
-  { name: "Vidking", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.vidking.net/embed/tv/${id}/${s}/${e}` : `https://www.vidking.net/embed/movie/${id}` }
+  { name: "Alok", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` }, // ScreenScape
+  { name: "Chrono", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` }, // Videasy
+  { name: "Hayato", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` : `https://vidsrc.pm/embed/movie/${id}` }, // VidSrc PM
+  { name: "Kelly", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` }, // Peachify
+  { name: "Moco", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidlink.pro/tv/${id}/${s}/${e}` : `https://vidlink.pro/movie/${id}` }, // Vidlink
+  { name: "Jota", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidfast.net/tv/${id}/${s}/${e}` : `https://vidfast.net/movie/${id}` }, // Vidfast
+  { name: "Dimitri", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://primesrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}` : `https://primesrc.me/embed/movie?tmdb=${id}` }, // PrimeSRC
+  { name: "Wukong", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc-embed.ru/embed/tv/${id}/${s}/${e}` : `https://vidsrc-embed.ru/embed/movie/${id}` }, // VidSrc Embed
+  { name: "Miguel", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidrock.net/embed/tv/${id}/${s}/${e}` : `https://vidrock.net/embed/movie/${id}` }, // Vidrock
+  { name: "Caroline", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` : `https://vidsrc.cc/v2/embed/movie/${id}` }, // VidSrc CC
+  { name: "Shirou", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidify.to/embed/tv/${id}/${s}/${e}` : `https://vidify.to/embed/movie/${id}` }, // Vidify
+  { name: "Laura", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidzee.to/embed/tv/${id}/${s}/${e}` : `https://vidzee.to/embed/movie/${id}` }, // Vidzee
+  { name: "Kapella", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` }, // 2Embed
+  { name: "Maro", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://hnembed.cc/embed/tv/${id}/${s}/${e}` : `https://hnembed.cc/embed/movie/${id}` }, // HNEmbed
+  { name: "Xayne", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.vidking.net/embed/tv/${id}/${s}/${e}` : `https://www.vidking.net/embed/movie/${id}` } // Vidking
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
@@ -88,7 +88,7 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
           <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide w-full md:w-auto pr-8">
             <div className="flex items-center text-white/50 shrink-0 font-medium">
               <Server className="h-4 w-4 mr-2" />
-              <span className="text-[11px] md:text-xs font-bold uppercase tracking-wider">Source</span>
+              <span className="text-[11px] md:text-xs font-bold uppercase tracking-wider">Server</span>
             </div>
             <div className="flex items-center gap-2 shrink-0 pr-4">
               {SERVERS.map((server, idx) => (
