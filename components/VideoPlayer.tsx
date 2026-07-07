@@ -20,6 +20,7 @@ const SERVERS = [
     { name: "FilmU", movie: (id: string) => `https://embed.filmu.in/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://embed.filmu.in/embed/tv/${id}/${s}/${e}` },
     { name: "ScreenScape", movie: (id: string) => `https://screenscape.me/embed?tmdb=${id}&type=movie`, show: (id: string, s: number, e: number) => `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` },
     { name: "Peachify", movie: (id: string) => `https://peachify.top/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://peachify.top/embed/tv/${id}/${s}/${e}` },
+    { name: "EmbedMaster", movie: (id: string) => `https://embedmaster.link/movie/${id}`, show: (id: string, s: number, e: number) => `https://embedmaster.link/tv/${id}/${s}/${e}` },
 ];
 
 export default function VideoPlayer({
