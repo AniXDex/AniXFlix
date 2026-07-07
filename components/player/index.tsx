@@ -84,7 +84,7 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
           src={tmdbId ? SERVERS[selectedServer].url(tmdbId, mediaType === "tv", season, episode) : ""}
           onLoad={() => setIsLoading(false)}
           className="absolute inset-0 w-full h-full border-none z-10"
-          allowFullScreen
+          allowFullScreen={isDesktop}
           frameBorder="0"
           scrolling="no"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
