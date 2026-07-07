@@ -17,7 +17,7 @@ interface VideoPlayerProps {
 }
 
 const SERVERS = [
-    { name: "Alok", movie: (id: string) => `https://screenscape.me/embed?tmdb=${id}&type=movie&lan=eng`, show: (id: string, s: number, e: number) => `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}&lan=eng` }, // ScreenScape
+    { name: "Alok", movie: (id: string) => `https://screenscape.me/embed?tmdb=${id}&type=movie`, show: (id: string, s: number, e: number) => `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` }, // ScreenScape
     { name: "Caroline", movie: (id: string) => `https://vidsrc.cc/v2/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}` }, // VidSrc CC
     { name: "Hayato", movie: (id: string) => `https://vidsrc.pm/embed/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` }, // VidSrc PM
     { name: "Moco", movie: (id: string) => `https://vidlink.pro/movie/${id}`, show: (id: string, s: number, e: number) => `https://vidlink.pro/tv/${id}/${s}/${e}` }, // Vidlink

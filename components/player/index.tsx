@@ -20,7 +20,7 @@ interface MyPlayerProps {
 }
 
 const SERVERS = [
-  { name: "Alok", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}&lan=eng` : `https://screenscape.me/embed?tmdb=${id}&type=movie&lan=eng` }, // ScreenScape
+  { name: "Alok", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` }, // ScreenScape
   { name: "Chrono", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` }, // Videasy
   { name: "Hayato", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://vidsrc.pm/embed/tv/${id}/${s}/${e}` : `https://vidsrc.pm/embed/movie/${id}` }, // VidSrc PM
   { name: "Kelly", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` }, // Peachify
@@ -83,7 +83,6 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
           allowFullScreen
           frameBorder="0"
           scrolling="no"
-          loading="eager"
           allow="autoplay; encrypted-media; picture-in-picture"
         ></iframe>
       </div>
