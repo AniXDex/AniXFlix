@@ -60,16 +60,12 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
     }
   }
 
-  // Backdrop fetching (using sorting logic for textless backdrops)
+  // Backdrop fetching (using first textless backdrop)
   const backdrops = details.images?.backdrops || [];
-  const bestBackdrop = backdrops
-    .filter((b: any) => b.iso_639_1 === null)
-    .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
-    ?? [...backdrops].sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
-    ?? backdrops[0];
+  const bestBackdrop = backdrops.find((b: any) => b.iso_639_1 === null) ?? backdrops[0];
     
   const heroBackdropUrl = bestBackdrop 
-    ? `https://image.tmdb.org/t/p/original${bestBackdrop.file_path}` 
+    ? `https://image.tmdb.org/t/p/w1280${bestBackdrop.file_path}` 
     : mappedMovie.backdropUrl || mappedMovie.thumbnailUrl || "";
 
   return (

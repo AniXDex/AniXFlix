@@ -46,14 +46,10 @@ export default async function Home() {
   const trendingMovies = baseTrendingMovies.map((movie, index) => {
     if (index < 10 && top10Details[index]?.images?.backdrops) {
       const backdrops = top10Details[index].images.backdrops;
-      const bestBackdrop = backdrops
-        .filter((b: any) => b.iso_639_1 === null)
-        .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
-        ?? [...backdrops].sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
-        ?? backdrops[0];
+      const bestBackdrop = backdrops.find((b: any) => b.iso_639_1 === null) ?? backdrops[0];
       
       if (bestBackdrop) {
-        movie.backdropUrl = `https://image.tmdb.org/t/p/original${bestBackdrop.file_path}`;
+        movie.backdropUrl = `https://image.tmdb.org/t/p/w1280${bestBackdrop.file_path}`;
       }
     }
     return movie;
