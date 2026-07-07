@@ -43,6 +43,12 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
   const router = useRouter();
 
   useEffect(() => {
+    if (/android|iphone|ipad|mobile/i.test(navigator.userAgent)) {
+      setSelectedServer(1);
+    }
+  }, []);
+
+  useEffect(() => {
     let timeout: NodeJS.Timeout;
     const handleMouseMove = () => {
       setIsMouseIdle(false);
