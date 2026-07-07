@@ -16,7 +16,7 @@ interface SearchModalProps {
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const router = useRouter();
-  const { searchHistory, addSearchHistory, removeSearchHistory } = useStore();
+  const { searchHistory, addSearchHistory, removeSearchHistory, clearSearchHistory } = useStore();
   
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "anime">("all");
@@ -131,7 +131,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               <div className="flex flex-col pb-2">
                 <div className="flex items-center justify-between px-5 py-3 mt-1">
                   <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Recent</span>
-                  <button onClick={() => {}} className="text-[11px] font-medium text-white/40 hover:text-white transition-colors">Clear</button>
+                  <button onClick={() => clearSearchHistory()} className="text-[11px] font-medium text-white/40 hover:text-white transition-colors">Clear</button>
                 </div>
                 {searchHistory.map((histQuery) => (
                   <div key={histQuery} className="flex items-center justify-between px-5 py-2 hover:bg-white/5 transition-colors group cursor-pointer" onClick={() => setQuery(histQuery)}>

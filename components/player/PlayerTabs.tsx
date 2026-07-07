@@ -25,8 +25,7 @@ export default function PlayerTabs({
   }, [season]);
 
   const filteredEpisodes = type === "tv" ? (episodes || []).filter((ep: any) => 
-    ep?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    ep?.episode_number?.toString() === searchQuery
+    searchQuery.trim() === "" || ep?.episode_number?.toString() === searchQuery.trim()
   ) : [];
 
   return (
