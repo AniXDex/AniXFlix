@@ -200,3 +200,6 @@ html.android-apk * {
   box-shadow: none !important;
   transition: none !important;
 }
+html.android-apk .search-overlay {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+}

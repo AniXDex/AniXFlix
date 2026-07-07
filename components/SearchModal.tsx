@@ -57,9 +57,9 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 pointer-events-auto">
+    <div className="fixed inset-0 z-[100] flex items-start md:items-center justify-center px-4 pt-24 md:pt-0 pointer-events-auto">
       <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm search-overlay" 
         onClick={onClose} 
       />
       
