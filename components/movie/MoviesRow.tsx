@@ -20,31 +20,10 @@ interface Props {
 
 function MoviesRow({ title, movies, series, isTop10 = false }: Props) {
   const [activeTab, setActiveTab] = useState<"movies" | "series">("movies");
-  const [isVisible, setIsVisible] = useState(false);
-  const rowRef = useRef<HTMLDivElement>(null);
-  
   const currentList = activeTab === "series" && series ? series : movies;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "400px" } // Load slightly before it enters the viewport
-    );
-
-    if (rowRef.current) {
-      observer.observe(rowRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section ref={rowRef} className="flex flex-col gap-4 md:gap-7 relative min-h-[180px] md:min-h-[300px]">
+    <section className="flex flex-col gap-4 md:gap-7 relative min-h-[180px] md:min-h-[300px]">
       
       {/* Section Header */}
       <div className="flex items-end justify-between">
@@ -74,30 +53,26 @@ function MoviesRow({ title, movies, series, isTop10 = false }: Props) {
       </div>
 
       {/* Carousel */}
-      {isVisible ? (
-        <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full relative group/carousel">
-          <CarouselContent className="">
-            {currentList.map((movie, index) => (
-              <CarouselItem
-                key={movie.id}
-                className={
-                  isTop10 
-                    ? 'basis-[40%] sm:basis-1/3 md:basis-1/4 lg:basis-[14.28%]' 
-                    : 'basis-[40%] sm:basis-1/3 md:basis-[30%] lg:basis-[22%] xl:basis-[18%]'
-                }
-              >
-                <MovieCard movie={movie} isPortrait={isTop10} isResponsive={!isTop10} rank={isTop10 ? index + 1 : undefined} />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 pointer-events-none px-4 flex justify-between opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
-            <CarouselPrevious className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -left-6" />
-            <CarouselNext className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -right-6" />
-          </div>
-        </Carousel>
-      ) : (
-        <div className="w-full h-[200px] md:h-[250px] bg-white/5 rounded-2xl animate-pulse"></div>
-      )}
+      <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full relative group/carousel">
+        <CarouselContent className="">
+          {currentList.map((movie, index) => (
+            <CarouselItem
+              key={movie.id}
+              className={
+                isTop10 
+                  ? 'basis-[40%] sm:basis-1/3 md:basis-1/4 lg:basis-[14.28%]' 
+                  : 'basis-[40%] sm:basis-1/3 md:basis-[30%] lg:basis-[22%] xl:basis-[18%]'
+              }
+            >
+              <MovieCard movie={movie} isPortrait={isTop10} isResponsive={!isTop10} rank={isTop10 ? index + 1 : undefined} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 pointer-events-none px-4 flex justify-between opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
+          <CarouselPrevious className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -left-6" />
+          <CarouselNext className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -right-6" />
+        </div>
+      </Carousel>
 
     </section>
   );
