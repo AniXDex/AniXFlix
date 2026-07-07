@@ -55,9 +55,9 @@ export default function SeasonEpisodesClient({ movieId, seasons, initialEpisodes
     return () => { isMounted = false; };
   }, [selectedSeason, movieId, defaultSeason, initialEpisodes]);
 
-  const filteredEpisodes = episodes.filter((ep: any) => 
-    ep.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    ep.episode_number.toString() === searchQuery
+  const filteredEpisodes = (episodes || []).filter((ep: any) => 
+    ep?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    ep?.episode_number?.toString() === searchQuery
   );
 
   if (validSeasons.length === 0) return null;
