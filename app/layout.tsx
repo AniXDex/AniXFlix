@@ -40,6 +40,9 @@ export default function RootLayout({
         geist.variable,
       )}
     >
+      <head>
+        <link rel="preconnect" href="https://screenscape.me" />
+      </head>
       <ContextProvider>
         <body className="min-h-full flex flex-col w-full overflow-x-hidden">
           <DisableDevtoolWrapper />

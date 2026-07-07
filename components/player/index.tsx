@@ -83,8 +83,7 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
           allowFullScreen
           frameBorder="0"
           scrolling="no"
-          referrerPolicy="origin"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="autoplay; encrypted-media; picture-in-picture"
         ></iframe>
       </div>
 
