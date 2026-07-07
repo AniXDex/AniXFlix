@@ -40,6 +40,7 @@ Designed to mimic the premium aesthetics of enterprise streaming giants, AniXFli
 - 🎬 **Infinite Catalog**: Deep integration with the TMDB API to pull trending movies, series, top-rated lists, cast details, similar content, and dynamic streaming provider data (e.g., Netflix, Prime, Hulu tabs).
 - 💾 **Local First State**: Fully client-side Watchlist and History tracking powered by Zustand and LocalStorage. Your data stays completely private on your device.
 - 🔍 **Global Search**: An instant, debounced, globally accessible search modal that queries movies, tv shows, and cast members simultaneously.
+- 📱 **Mobile Optimized & APK Ready**: Flawless responsive design that adapts beautifully to Android screens, complete with immersive fullscreen mode and tailored mobile layouts.
 - 🎭 **Immersive Title Pages**: Gorgeous detail pages featuring ultra-widescreen hero banners, cast lists, trailers, and seamless transitions into the integrated video player interface.
 
 ---

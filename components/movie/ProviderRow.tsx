@@ -163,9 +163,9 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
               {currentList.map((movie) => (
                 <CarouselItem
                   key={movie.id}
-                  className="basis-[32%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
+                  className="basis-[40%] sm:basis-1/3 md:basis-[30%] lg:basis-[22%] xl:basis-[18%]"
                 >
-                  <MovieCard movie={movie} isPortrait={true} />
+                  <MovieCard movie={movie} isPortrait={false} isResponsive={true} />
                 </CarouselItem>
               ))}
             </CarouselContent>

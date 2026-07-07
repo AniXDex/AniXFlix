@@ -9,10 +9,11 @@ import { useStore } from "@/store/useStore";
 interface Props {
   movie: any;
   isPortrait?: boolean;
+  isResponsive?: boolean;
   rank?: number; // 1 to 10
 }
 
-function MovieCard({ movie, isPortrait = false, rank }: Props) {
+function MovieCard({ movie, isPortrait = false, isResponsive = false, rank }: Props) {
   const { addToWatchlist, removeFromWatchlist, isInWatchlist } = useStore();
   const [localMovie, setLocalMovie] = useState(movie);
   const isSaved = isInWatchlist(localMovie.publicId || localMovie.id?.toString());
@@ -32,16 +33,30 @@ function MovieCard({ movie, isPortrait = false, rank }: Props) {
   return (
     <Link href={`/detail/${localMovie.publicId}?v=${localMovie.mediaType === 'tv' ? 2 : 1}`} className="group flex flex-col gap-3 w-full cursor-pointer">
       {/* Poster Image Container */}
-      <div className={`relative w-full overflow-hidden rounded-2xl ${isPortrait ? 'aspect-[2/3]' : 'aspect-video'} bg-[#141417]`}>
+      <div className={`relative w-full overflow-hidden rounded-2xl bg-[#141417] ${
+        isPortrait ? 'aspect-[2/3]' : (isResponsive ? 'aspect-[2/3] md:aspect-video' : 'aspect-video')
+      }`}>
+        
+        {/* Mobile / Portrait Image */}
         <Image
-          src={isPortrait 
-            ? (localMovie.thumbnailUrl || localMovie.backdropUrl || "") 
-            : `/api/images/${localMovie.mediaType || 'movie'}/${localMovie.publicId || localMovie.id}?fallback=${encodeURIComponent(localMovie.backdropUrl || localMovie.thumbnailUrl || "")}`
-          }
+          src={localMovie.thumbnailUrl || localMovie.backdropUrl || ""}
           alt={localMovie.title}
           fill
-          sizes={isPortrait ? "(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 15vw" : "(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"}
-          className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          sizes={isPortrait ? "(max-width: 1024px) 33vw, 15vw" : "(max-width: 768px) 50vw, 1vw"}
+          className={`object-cover group-hover:scale-105 transition-transform duration-500 ease-out ${
+            isResponsive ? 'md:hidden' : ''
+          } ${!isPortrait && !isResponsive ? 'hidden' : ''}`}
+        />
+
+        {/* Desktop / Horizontal Image */}
+        <Image
+          src={`/api/images/${localMovie.mediaType || 'movie'}/${localMovie.publicId || localMovie.id}?fallback=${encodeURIComponent(localMovie.backdropUrl || localMovie.thumbnailUrl || "")}`}
+          alt={localMovie.title}
+          fill
+          sizes="(min-width: 768px) 33vw, 1vw"
+          className={`object-cover group-hover:scale-105 transition-transform duration-500 ease-out ${
+            isResponsive ? 'hidden md:block' : ''
+          } ${isPortrait ? 'hidden' : ''}`}
         />
         
         {/* Top 10 Badge */}

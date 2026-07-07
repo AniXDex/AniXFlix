@@ -47,8 +47,9 @@ export default async function Home() {
     if (index < 10 && top10Details[index]?.images?.backdrops) {
       const backdrops = top10Details[index].images.backdrops;
       const bestBackdrop = backdrops
-        .filter((b: any) => b.iso_639_1 === "en")
+        .filter((b: any) => b.iso_639_1 === null)
         .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
+        ?? [...backdrops].sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
         ?? backdrops[0];
       
       if (bestBackdrop) {

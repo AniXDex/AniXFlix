@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Server, ArrowLeft } from "lucide-react";
+import { Server, ArrowLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ThumbnailEntry {
@@ -77,8 +77,8 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
       <div className="bg-[#0f0f0f] border-t border-white/5 w-full flex flex-col justify-center px-4 md:px-8 py-3 z-20">
         
         {/* Top Row: Sources & Share */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide w-full md:w-auto">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative">
+          <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide w-full md:w-auto pr-8">
             <div className="flex items-center text-white/50 shrink-0 font-medium">
               <Server className="h-4 w-4 mr-2" />
               <span className="text-[11px] md:text-xs font-bold uppercase tracking-wider">Source</span>
@@ -98,6 +98,11 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Animated Scroll Indicator for Mobile */}
+          <div className="absolute right-0 top-0 bottom-0 md:hidden pointer-events-none bg-gradient-to-l from-[#0f0f0f] to-transparent w-16 flex items-center justify-end text-white/60">
+             <ChevronRight className="w-5 h-5 animate-pulse text-red-500" />
           </div>
 
         </div>

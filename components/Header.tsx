@@ -65,7 +65,7 @@ function Header() {
         {/* BROWSE MEGA MENU */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 text-red-500 bg-red-500/10 px-3 py-1.5 rounded-lg hover:bg-red-500/20 transition-colors outline-none group border border-red-500/20">
+            <button className="flex items-center gap-2 text-white bg-white/10 px-3 py-1.5 rounded-lg hover:bg-white/20 transition-colors outline-none group border border-white/20">
               <LayoutGrid size={18} /> Browse <ChevronDown size={16} className="group-data-[state=open]:rotate-180 transition-transform" />
             </button>
           </DropdownMenuTrigger>

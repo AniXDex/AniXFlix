@@ -138,7 +138,7 @@ export default function HomeClient({
         </div>
       </div>
 
-      <div className="relative z-30 flex flex-col gap-8 md:gap-20 mt-4 md:mt-8 px-4 md:px-14 pb-20">
+      <div className="relative z-30 flex flex-col gap-8 md:gap-10 mt-4 md:mt-8 px-4 md:px-14 pb-20">
         <MoviesRow title="TOP 10 Today" movies={trendingMovies} series={trendingSeries} isTop10={true} />
         <MoviesRow title="Trending Today" movies={topRatedMovies} series={topRatedSeries} />
         <ProviderRow initialMovies={netflix} initialSeries={netflixSeries} />

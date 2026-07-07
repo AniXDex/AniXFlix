@@ -3,11 +3,11 @@ import { Movie } from "@/types/types";
 export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = false): Movie => {
   let finalBackdropUrl = tmdbMovie.backdrop_path ? `https://image.tmdb.org/t/p/w780${tmdbMovie.backdrop_path}` : null;
   
-  // If the deep images object was fetched, use textless (null) backdrops first
+  // If the deep images object was fetched, use english (en) backdrops first for cards
   if (tmdbMovie.images && tmdbMovie.images.backdrops && tmdbMovie.images.backdrops.length > 0) {
     const backdrops = tmdbMovie.images.backdrops;
     const bestBackdrop = backdrops
-      .filter((b: any) => b.iso_639_1 === null)
+      .filter((b: any) => b.iso_639_1 === "en")
       .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
       ?? backdrops[0];
       

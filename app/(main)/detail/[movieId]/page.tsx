@@ -60,11 +60,12 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
     }
   }
 
-  // Backdrop fetching (using sorting logic for titled english backdrops)
+  // Backdrop fetching (using sorting logic for textless backdrops)
   const backdrops = details.images?.backdrops || [];
   const bestBackdrop = backdrops
-    .filter((b: any) => b.iso_639_1 === "en")
+    .filter((b: any) => b.iso_639_1 === null)
     .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
+    ?? [...backdrops].sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
     ?? backdrops[0];
     
   const heroBackdropUrl = bestBackdrop 
@@ -114,7 +115,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
             <span className="shrink-0">{mappedMovie.releaseYear || "2026"}</span>
             <span className="shrink-0">&middot;</span>
             <span className="border border-white/20 px-1.5 py-0.5 rounded-sm shrink-0">{isTv ? "TV Show" : "Movie"}</span>
-            {details.genres?.slice(0,2).map((g: any) => (
+            {(details.genres?.slice(0,2) || []).map((g: any) => (
               <React.Fragment key={g.id}>
                 <span className="shrink-0">&middot;</span>
                 <span className="shrink-0">{g.name}</span>

@@ -25,9 +25,9 @@ export async function GET(
     if (details && details.images && details.images.backdrops) {
       const backdrops = details.images.backdrops;
       
-      // Textless backdrop sorting logic (null language)
+      // Titled english backdrop sorting logic (en language)
       const bestBackdrop = backdrops
-        .filter((b: any) => b.iso_639_1 === null)
+        .filter((b: any) => b.iso_639_1 === "en")
         .sort((a: any, b: any) => b.vote_average - a.vote_average)[0]
         ?? backdrops[0];
         

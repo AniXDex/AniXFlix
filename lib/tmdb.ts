@@ -113,7 +113,7 @@ export const tmdb = {
             append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,keywords,external_ids",
             include_image_language: "en,null"
         });
-        return data || {};
+        return data || null;
     },
     search: async (query: string): Promise<Movie[]> => {
         const [multiData, companyData] = await Promise.all([
@@ -162,23 +162,23 @@ export const tmdb = {
     },
     getSeasonDetails: async (tvId: string, seasonNumber: number) => {
         const data = await fetchTMDB(`/tv/${tvId}/season/${seasonNumber}`);
-        return data || {};
+        return data || null;
     },
     getPersonDetails: async (id: string) => {
         const data = await fetchTMDB(`/person/${id}`, { append_to_response: "external_ids,images" });
-        return data || {};
+        return data || null;
     },
     getPersonCredits: async (id: string) => {
         const data = await fetchTMDB(`/person/${id}/combined_credits`);
-        return data || {};
+        return data || null;
     },
     getPopularPeople: async (page = 1) => {
         const data = await fetchTMDB("/person/popular", { page: page.toString() });
-        return data || {};
+        return data || null;
     },
     getCollection: async (id: string) => {
         const data = await fetchTMDB(`/collection/${id}`);
-        return data || {};
+        return data || null;
     },
     getListDetails: async (listId: string | number): Promise<Movie[]> => {
         const data = await fetchTMDB(`/list/${listId}`);
