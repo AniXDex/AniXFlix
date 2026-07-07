@@ -92,7 +92,7 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
   const currentList = activeTab === "series" ? series : movies;
 
   return (
-    <section ref={rowRef} className="flex flex-col gap-5 md:gap-7 relative min-h-[300px]">
+    <section ref={rowRef} className="flex flex-col gap-4 md:gap-7 relative min-h-[180px] md:min-h-[300px]">
       
       {/* Section Header */}
       <div className="flex items-end z-40 relative">
@@ -163,9 +163,9 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
               {currentList.map((movie) => (
                 <CarouselItem
                   key={movie.id}
-                  className="basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4"
+                  className="basis-[32%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
                 >
-                  <MovieCard movie={movie} />
+                  <MovieCard movie={movie} isPortrait={true} />
                 </CarouselItem>
               ))}
             </CarouselContent>

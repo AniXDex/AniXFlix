@@ -44,7 +44,7 @@ function MoviesRow({ title, movies, series, isTop10 = false }: Props) {
   }, []);
 
   return (
-    <section ref={rowRef} className="flex flex-col gap-5 md:gap-7 relative min-h-[300px]">
+    <section ref={rowRef} className="flex flex-col gap-4 md:gap-7 relative min-h-[180px] md:min-h-[300px]">
       
       {/* Section Header */}
       <div className="flex items-end justify-between">
@@ -80,9 +80,9 @@ function MoviesRow({ title, movies, series, isTop10 = false }: Props) {
             {currentList.map((movie, index) => (
               <CarouselItem
                 key={movie.id}
-                className={`${isTop10 ? 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-[14.28%]' : 'basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/4'}`}
+                className={`${isTop10 ? 'basis-[40%] sm:basis-1/3 md:basis-1/4 lg:basis-[14.28%]' : 'basis-[32%] sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6'}`}
               >
-                <MovieCard movie={movie} isPortrait={isTop10} rank={isTop10 ? index + 1 : undefined} />
+                <MovieCard movie={movie} isPortrait={true} rank={isTop10 ? index + 1 : undefined} />
               </CarouselItem>
             ))}
           </CarouselContent>
