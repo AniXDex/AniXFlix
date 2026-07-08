@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { getTvSeasonsAndEpisodes } from "@/app/actions/tv";
 import { ChevronDown, Check } from "lucide-react";
+import { PLAYBACK_KEY } from "@/lib/playback";
 
 export default function HeaderWatchControls() {
   const pathname = usePathname();
@@ -51,12 +52,14 @@ export default function HeaderWatchControls() {
 
   const handleSeasonSelect = (s: number) => {
     setIsSeasonOpen(false);
-    router.push(`/play/${movieId}?s=${s}&e=1`);
+    sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify({ tmdbId: movieId, mediaType: "tv", season: s, episode: 1 }));
+    router.push("/play");
   };
 
   const handleEpisodeSelect = (e: number) => {
     setIsEpisodeOpen(false);
-    router.push(`/play/${movieId}?s=${season}&e=${e}`);
+    sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify({ tmdbId: movieId, mediaType: "tv", season, episode: e }));
+    router.push("/play");
   };
 
   return (

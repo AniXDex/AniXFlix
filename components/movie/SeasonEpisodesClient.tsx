@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChevronDown, Search } from "lucide-react";
 import { getSeasonEpisodes } from "@/app/actions/tv";
+import { PLAYBACK_KEY } from "@/lib/playback";
 
 interface Season {
   id: number;
@@ -29,6 +30,7 @@ export default function SeasonEpisodesClient({ movieId, seasons, initialEpisodes
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(20);
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
   // Valid seasons that have episodes
   const validSeasons = seasons.filter(s => s.season_number > 0 && s.episode_count > 0);
@@ -123,11 +125,16 @@ export default function SeasonEpisodesClient({ movieId, seasons, initialEpisodes
           </div>
         ) : filteredEpisodes.length > 0 ? (
           <>
-            {filteredEpisodes.slice(0, visibleCount).map((ep: any) => (
-              <Link 
-                href={`/play/${movieId}?s=${selectedSeason}&e=${ep.episode_number}`}
+            {filteredEpisodes.slice(0, visibleCount).map((ep: any) => {
+              const handlePlay = () => {
+                sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify({ tmdbId: movieId, mediaType: "tv", season: selectedSeason, episode: ep.episode_number }));
+                router.push("/play");
+              };
+              return (
+              <button
+                onClick={handlePlay}
                 key={ep.id} 
-                className="group flex flex-col md:flex-row gap-2 md:gap-4 bg-[#141414] rounded-2xl border border-white/5 overflow-hidden hover:border-white/20 hover:bg-[#1a1a1a] transition-all"
+                className="group flex flex-col md:flex-row gap-2 md:gap-4 bg-[#141414] rounded-2xl border border-white/5 overflow-hidden hover:border-white/20 hover:bg-[#1a1a1a] transition-all text-left"
               >
                 <div className="relative w-full md:w-64 aspect-video shrink-0 bg-black/50 overflow-hidden">
                   {ep.still_path ? (
@@ -158,8 +165,9 @@ export default function SeasonEpisodesClient({ movieId, seasons, initialEpisodes
                   <span className="hidden md:block text-xs text-white/50 mb-3 font-semibold">{ep.runtime ? `${ep.runtime} min` : '45 min'}</span>
                   <p className="hidden md:block text-sm text-white/70 line-clamp-3 leading-relaxed">{ep.overview || "No description available for this episode."}</p>
                 </div>
-              </Link>
-            ))}
+                </button>
+              );
+            })}
             {visibleCount < filteredEpisodes.length && (
               <div className="col-span-2 md:col-span-1">
                 <button 

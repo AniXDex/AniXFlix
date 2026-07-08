@@ -4,11 +4,12 @@ import { tmdb } from "@/lib/tmdb";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Play, Sparkles, Star } from "lucide-react";
+import { Sparkles, Star } from "lucide-react";
 import MovieCard from "@/components/movie/MovieCard";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
 import SeasonEpisodesClient from "@/components/movie/SeasonEpisodesClient";
+import PlayButton from "@/components/movie/PlayButton";
 
 export default async function TitlePage({ params, searchParams }: { params: Promise<{ movieId: string }>, searchParams: Promise<{ v?: string }> }) {
   const { movieId } = await params;
@@ -124,12 +125,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
           </p>
 
           <div className="flex items-center gap-3 md:gap-4 flex-wrap">
-            <Link 
-              href={`/play/${movieId}${isTv ? '?s=1&e=1' : ''}`}
-              className="bg-white hover:bg-white/90 text-black px-6 md:px-8 py-2.5 md:py-3 rounded-full font-bold flex items-center gap-2 transition-all hover:scale-105"
-            >
-              <Play size={18} fill="black" /> Play
-            </Link>
+            <PlayButton data={{ tmdbId: movieId, mediaType: isTv ? "tv" : "movie", season: 1, episode: 1 }} />
             
             <WatchlistButton movie={mappedMovie} />
             
