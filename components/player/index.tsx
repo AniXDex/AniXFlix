@@ -20,14 +20,14 @@ interface MyPlayerProps {
 }
 
 const ALL_SERVERS = [
-  // 1 - rozgarlelo.modiplay.xyz
-  { name: "razor[Hindi]", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}&autoplay=1` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}&autoplay=1` },
+  // 1 - cinemaos.tech
+  { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}?autoplay=1` : `https://cinemaos.tech/player/${id}?autoplay=1` },
   // 2 - screenscape.me
   { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}&autoplay=1` : `https://screenscape.me/embed?tmdb=${id}&type=movie&autoplay=1` },
   // 3 - player.cinezo.live
   { name: "Cinezo", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?autoplay=true` : `https://player.cinezo.live/embed/movie/${id}?autoplay=true` },
-  // 4 - cinemaos.tech
-  { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}?autoplay=1` : `https://cinemaos.tech/player/${id}?autoplay=1` },
+  // 4 - rozgarlelo.modiplay.xyz
+  { name: "razor[Hindi]", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}&autoplay=1` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}&autoplay=1` },
   // 5 - embed.filmu.in
   { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}?autoplay=1` : `https://embed.filmu.in/embed/movie/${id}?autoplay=1` },
   // 6 - player.videasy.net
