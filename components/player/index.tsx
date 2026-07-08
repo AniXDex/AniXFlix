@@ -26,16 +26,14 @@ const ALL_SERVERS = [
   { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}&autoplay=1` : `https://screenscape.me/embed?tmdb=${id}&type=movie&autoplay=1` },
   // 3 - player.cinezo.live
   { name: "Cinezo", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?autoplay=true` : `https://player.cinezo.live/embed/movie/${id}?autoplay=true` },
-  // 4 - embed.filmu.in
-  { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}?autoplay=1` : `https://embed.filmu.in/embed/movie/${id}?autoplay=1` },
-  // 5 - cinemaos.tech
+  // 4 - cinemaos.tech
   { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}?autoplay=1` : `https://cinemaos.tech/player/${id}?autoplay=1` },
+  // 5 - embed.filmu.in
+  { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}?autoplay=1` : `https://embed.filmu.in/embed/movie/${id}?autoplay=1` },
   // 6 - player.videasy.net
   { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}?autoplay=1` : `https://player.videasy.net/movie/${id}?autoplay=1` },
   // 7 - peachify.top
-  { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}?autoplay=1` : `https://peachify.top/embed/movie/${id}?autoplay=1` },
-  // 8 - embedmaster.link
-  { name: "EmbedMaster", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embedmaster.link/tv/${id}/${s}/${e}?autoplay=1` : `https://embedmaster.link/movie/${id}?autoplay=1` }
+  { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}?autoplay=1` : `https://peachify.top/embed/movie/${id}?autoplay=1` }
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
