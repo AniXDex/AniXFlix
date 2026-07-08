@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tmdb } from "@/lib/tmdb";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
+import { validateOrigin, originBlockedResponse } from "@/lib/origin";
 
 export async function GET(req: NextRequest) {
   try {
+    if (!validateOrigin(req.headers.get("origin"))) return originBlockedResponse();
     const featured = req.nextUrl.searchParams.get("featured");
     const trending = req.nextUrl.searchParams.get("trending");
 

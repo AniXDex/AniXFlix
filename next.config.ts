@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Prevent generating source maps in production to obfuscate code
+  poweredByHeader: false,
   productionBrowserSourceMaps: false,
   images: {
     unoptimized: true,
@@ -23,6 +23,22 @@ const nextConfig: NextConfig = {
         hostname: 'wsrv.nl',
       },
     ],
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+    ];
   },
 };
 

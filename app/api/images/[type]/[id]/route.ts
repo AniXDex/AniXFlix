@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tmdb } from "@/lib/tmdb";
+import { validateOrigin, originBlockedResponse } from "@/lib/origin";
 
 export const revalidate = 3600; // Cache these redirects for 1 hour locally if Next supports it
 
@@ -8,6 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ type: string; id: string }> }
 ) {
   try {
+    if (!validateOrigin(req.headers.get("origin"))) return originBlockedResponse();
     const { type, id } = await params;
     
     // Fallback provided by the client in case we can't find an English image

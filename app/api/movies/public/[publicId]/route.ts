@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { tmdb } from "@/lib/tmdb";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
+import { validateOrigin, originBlockedResponse } from "@/lib/origin";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ publicId: string }> }
 ) {
   try {
+    if (!validateOrigin(req.headers.get("origin"))) return originBlockedResponse();
     const { publicId } = await params;
     
     // Attempt to fetch as movie first
