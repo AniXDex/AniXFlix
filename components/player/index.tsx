@@ -21,19 +21,21 @@ interface MyPlayerProps {
 
 const ALL_SERVERS = [
   // 1 - rozgarlelo.modiplay.xyz
-  { name: "razor[Hindi]", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}` },
+  { name: "razor[Hindi]", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}&autoplay=1` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}&autoplay=1` },
   // 2 - screenscape.me
-  { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
+  { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}&autoplay=1` : `https://screenscape.me/embed?tmdb=${id}&type=movie&autoplay=1` },
   // 3 - embed.filmu.in
-  { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}` : `https://embed.filmu.in/embed/movie/${id}` },
+  { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}?autoplay=1` : `https://embed.filmu.in/embed/movie/${id}?autoplay=1` },
   // 4 - cinemaos.tech
-  { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}` : `https://cinemaos.tech/player/${id}` },
+  { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}?autoplay=1` : `https://cinemaos.tech/player/${id}?autoplay=1` },
   // 5 - player.videasy.net
-  { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` },
+  { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}?autoplay=1` : `https://player.videasy.net/movie/${id}?autoplay=1` },
   // 6 - peachify.top
-  { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` },
+  { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}?autoplay=1` : `https://peachify.top/embed/movie/${id}?autoplay=1` },
   // 7 - embedmaster.link
-  { name: "EmbedMaster", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embedmaster.link/tv/${id}/${s}/${e}` : `https://embedmaster.link/movie/${id}` }
+  { name: "EmbedMaster", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embedmaster.link/tv/${id}/${s}/${e}?autoplay=1` : `https://embedmaster.link/movie/${id}?autoplay=1` },
+  // 8 - player.cinezo.live
+  { name: "Cinezo", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?autoplay=true` : `https://player.cinezo.live/embed/movie/${id}?autoplay=true` }
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
