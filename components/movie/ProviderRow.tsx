@@ -36,6 +36,7 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
   const [activeProvider, setActiveProvider] = useState(PROVIDERS[0]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -47,6 +48,10 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setIsAndroid(/android/i.test(navigator.userAgent));
   }, []);
 
   const handleProviderChange = async (provider: typeof PROVIDERS[0]) => {
@@ -136,7 +141,7 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
 
       {/* Carousel */}
       <div className={`transition-opacity duration-300 ${isLoading ? 'opacity-50' : 'opacity-100'}`}>
-        <Carousel opts={{ align: "start", slidesToScroll: 3 }} className="w-full relative group/carousel">
+        <Carousel opts={{ align: "start", slidesToScroll: isAndroid ? 1 : 3, dragFree: isAndroid }} className="w-full relative group/carousel">
           <CarouselContent className="">
             {currentList.map((movie) => (
               <CarouselItem
@@ -147,10 +152,12 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
               </CarouselItem>
             ))}
           </CarouselContent>
+          {!isAndroid && (
           <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 pointer-events-none px-4 flex justify-between opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300">
             <CarouselPrevious className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -left-6" />
             <CarouselNext className="relative pointer-events-auto w-12 h-12 bg-black/50 border-white/10 hover:bg-black/80 hover:scale-110 transition-all text-white backdrop-blur-sm -right-6" />
           </div>
+          )}
         </Carousel>
       </div>
 
