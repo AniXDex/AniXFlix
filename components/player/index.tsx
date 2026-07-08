@@ -20,14 +20,20 @@ interface MyPlayerProps {
 }
 
 const ALL_SERVERS = [
-  { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}` : `https://embed.filmu.in/embed/movie/${id}` },
-  { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}` : `https://cinemaos.tech/player/${id}` },
+  // 1 - rozgarlelo.modiplay.xyz
+  { name: "razor[Hindi]", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}` },
+  // 2 - screenscape.me
   { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
+  // 3 - embed.filmu.in
+  { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}` : `https://embed.filmu.in/embed/movie/${id}` },
+  // 4 - cinemaos.tech
+  { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}` : `https://cinemaos.tech/player/${id}` },
+  // 5 - player.videasy.net
   { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` },
+  // 6 - peachify.top
   { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` },
-  { name: "2Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` },
-  { name: "EmbedMaster", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embedmaster.link/tv/${id}/${s}/${e}` : `https://embedmaster.link/movie/${id}` },
-  { name: "razor[Hindi]", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}` }
+  // 7 - embedmaster.link
+  { name: "EmbedMaster", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embedmaster.link/tv/${id}/${s}/${e}` : `https://embedmaster.link/movie/${id}` }
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
