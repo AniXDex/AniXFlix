@@ -21,9 +21,10 @@ interface MyPlayerProps {
 
 const ALL_SERVERS = [
   { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}` : `https://embed.filmu.in/embed/movie/${id}` },
+  { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}` : `https://cinemaos.tech/player/${id}` },
+  { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
   { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}` : `https://player.videasy.net/movie/${id}` },
   { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}` : `https://peachify.top/embed/movie/${id}` },
-  { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
   { name: "2Embed", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}` : `https://www.2embed.cc/embed/${id}` },
   { name: "EmbedMaster", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embedmaster.link/tv/${id}/${s}/${e}` : `https://embedmaster.link/movie/${id}` }
 ];
@@ -40,13 +41,7 @@ function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episo
     setIsDesktop(!/android|iphone|ipad|mobile/i.test(navigator.userAgent));
   }, []);
 
-  const SERVERS = React.useMemo(() => {
-    if (isDesktop) {
-      const ss = ALL_SERVERS.find(s => s.name === "ScreenScape")!;
-      return [ss, ...ALL_SERVERS.filter(s => s.name !== "ScreenScape")];
-    }
-    return ALL_SERVERS;
-  }, [isDesktop]);
+  const SERVERS = ALL_SERVERS;
 
   useEffect(() => {
     setIsLoading(true);
