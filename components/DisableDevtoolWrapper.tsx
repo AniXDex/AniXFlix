@@ -5,12 +5,14 @@ import DisableDevtool from "disable-devtool";
 export default function DisableDevtoolWrapper() {
   useEffect(() => {
     DisableDevtool({
-      // The secret tkName to bypass the devtool block
-      // Usage: https://anixflix.com/?anix-dd
-      tkName: 'anix-dd',
-      // Optional settings
+      // Bypass: https://anixflix.com/?anix-dd
+      tkName: "anix-dd",
       disableMenu: true,
       clearLog: true,
+      disableSelect: true,
+      disableCopy: true,
+      disableCut: true,
+      disablePaste: true,
     });
   }, []);
 
