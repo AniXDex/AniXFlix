@@ -45,7 +45,7 @@ function Header() {
           </button>
         )}
         <Link href={"/"} className="flex items-center text-2xl font-bold text-white tracking-tight">
-          <img src="/logo.svg" alt="AniXFlix" className="h-8 md:h-10 w-auto ml-0.5 translate-y-1" />
+          <img src="/logo.svg" alt="AniXFlix" className="h-9 md:h-10 w-auto ml-0.5 translate-y-0.5" />
         </Link>
       </div>
 
