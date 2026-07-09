@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import MyPlayer from "./index";
 import PlayerTabs from "./PlayerTabs";
@@ -20,10 +20,41 @@ export default function PlayClient() {
   const [detailsLoaded, setDetailsLoaded] = useState(false);
   const [detailsError, setDetailsError] = useState(false);
 
+  const loadPlayData = useCallback(async (parsed: PlaybackData) => {
+    setDetails(null);
+    setEpisodes([]);
+    setCurrentEpisodeData(null);
+    setMappedSimilar([]);
+    setMappedMovie(null);
+    setDetailsLoaded(false);
+    setDetailsError(false);
+
+    try {
+      const result = await getPlayPageData(parsed.tmdbId, parsed.mediaType, parsed.season, parsed.episode);
+      if (result) {
+        setDetails(result.tmdbData);
+        setEpisodes(result.episodes);
+        setCurrentEpisodeData(result.currentEpisodeData);
+        setMappedSimilar(result.mappedSimilar);
+        setMappedMovie(result.mappedMovie);
+      } else {
+        setDetailsError(true);
+      }
+    } catch {
+      setDetailsError(true);
+    }
+    setDetailsLoaded(true);
+  }, []);
+
+  const handleNavigate = useCallback((newData: PlaybackData) => {
+    sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify(newData));
+    setData(newData);
+    loadPlayData(newData);
+  }, [loadPlayData]);
+
   useEffect(() => {
     if (handled.current) return;
     handled.current = true;
-    let isMounted = true;
 
     const raw = sessionStorage.getItem(PLAYBACK_KEY);
     if (!raw) {
@@ -33,33 +64,13 @@ export default function PlayClient() {
     try {
       const parsed: PlaybackData = JSON.parse(raw);
       setData(parsed);
-
-      getPlayPageData(parsed.tmdbId, parsed.mediaType, parsed.season, parsed.episode)
-        .then((result) => {
-          if (!isMounted) return;
-          if (result) {
-            setDetails(result.tmdbData);
-            setEpisodes(result.episodes);
-            setCurrentEpisodeData(result.currentEpisodeData);
-            setMappedSimilar(result.mappedSimilar);
-            setMappedMovie(result.mappedMovie);
-          } else {
-            setDetailsError(true);
-          }
-          setDetailsLoaded(true);
-        })
-        .catch(() => {
-          if (!isMounted) return;
-          setDetailsError(true);
-          setDetailsLoaded(true);
-        });
+      loadPlayData(parsed);
     } catch {
       router.replace("/");
       return;
     }
     setReady(true);
-    return () => { isMounted = false; };
-  }, []);
+  }, [router, loadPlayData]);
 
   if (!ready || !data) {
     return (
@@ -92,6 +103,7 @@ export default function PlayClient() {
             mappedSimilar={mappedSimilar}
             tmdbId={data.tmdbId}
             details={details}
+            onNavigate={handleNavigate}
           />
         </div>
       )}

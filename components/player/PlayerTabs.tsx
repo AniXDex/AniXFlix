@@ -1,10 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import MovieCard from "@/components/movie/MovieCard";
 import { Play, ChevronDown, Search } from "lucide-react";
-import { PLAYBACK_KEY } from "@/lib/playback";
 
 export default function PlayerTabs({ 
   type, 
@@ -14,12 +12,12 @@ export default function PlayerTabs({
   episode, 
   mappedSimilar, 
   tmdbId, 
-  details 
+  details,
+  onNavigate
 }: any) {
   const [activeTab, setActiveTab] = useState(type === "tv" ? "Episodes" : "Related");
   const [visibleCount, setVisibleCount] = useState(20);
   const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
 
   useEffect(() => {
     setVisibleCount(20);
@@ -108,10 +106,7 @@ export default function PlayerTabs({
                   <div className="flex items-center gap-2 md:gap-3 mt-auto">
                     {currentEpisodeData.episode_number > 1 && (
                       <button
-                        onClick={() => {
-                          sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify({ tmdbId, mediaType: "tv", season, episode: currentEpisodeData.episode_number - 1 }));
-                          router.push("/play");
-                        }}
+                        onClick={() => onNavigate({ tmdbId, mediaType: "tv", season, episode: currentEpisodeData.episode_number - 1 })}
                         className="bg-white/5 hover:bg-white/10 text-white/70 hover:text-white px-4 md:px-5 py-2 md:py-2.5 rounded-lg text-[10px] md:text-xs font-bold transition-colors flex items-center gap-1.5 md:gap-2 flex-1 md:flex-none justify-center"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -120,10 +115,7 @@ export default function PlayerTabs({
                     )}
                     {currentEpisodeData.episode_number < episodes.length && (
                       <button
-                        onClick={() => {
-                          sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify({ tmdbId, mediaType: "tv", season, episode: currentEpisodeData.episode_number + 1 }));
-                          router.push("/play");
-                        }}
+                        onClick={() => onNavigate({ tmdbId, mediaType: "tv", season, episode: currentEpisodeData.episode_number + 1 })}
                         className="bg-[#ff9d00] hover:bg-[#ffaa22] text-black px-4 md:px-6 py-2 md:py-2.5 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider transition-colors shadow-[0_0_20px_rgba(255,157,0,0.2)] flex items-center gap-1.5 md:gap-2 flex-1 md:flex-none justify-center"
                       >
                         Next Ep
@@ -158,10 +150,7 @@ export default function PlayerTabs({
                   <div className="flex flex-col gap-3">
                     {filteredEpisodes.slice(0, visibleCount).map((ep: any) => (
                       <button
-                        onClick={() => {
-                          sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify({ tmdbId, mediaType: "tv", season, episode: ep.episode_number }));
-                          router.push("/play");
-                        }}
+                        onClick={() => onNavigate({ tmdbId, mediaType: "tv", season, episode: ep.episode_number })}
                         key={ep.id}
                         className={`group flex flex-row items-center gap-3 p-2 rounded-xl transition-all border border-transparent hover:bg-[#141417] hover:border-white/5 text-left w-full ${ep.episode_number === Number(episode) ? 'bg-[#141417] border-white/5' : ''}`}
                       >
