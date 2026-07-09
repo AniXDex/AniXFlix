@@ -95,9 +95,20 @@ export default function HomeClient({
                 className="flex flex-col gap-4"
               >
                 <Link href={`/detail/${featured.publicId}?v=${featured.mediaType === 'tv' ? 2 : 1}`} className="text-white hover:text-red-500 transition-colors drop-shadow-md">
-                  <h1 className="font-black text-4xl md:text-5xl lg:text-6xl uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left line-clamp-3 md:line-clamp-2">
-                    {featured.title}
-                  </h1>
+                  {featured.logoUrl ? (
+                    <Image
+                      src={featured.logoUrl}
+                      alt={featured.title}
+                      width={400}
+                      height={150}
+                      className="w-48 md:w-80 h-auto max-h-[100px] md:max-h-[150px] object-contain object-left drop-shadow-2xl"
+                      priority
+                    />
+                  ) : (
+                    <h1 className="font-black text-4xl md:text-5xl lg:text-6xl uppercase text-white leading-[0.95] tracking-tight u-text-shadow origin-left line-clamp-3 md:line-clamp-2">
+                      {featured.title}
+                    </h1>
+                  )}
                 </Link>
 
                 {/* Metadata */}

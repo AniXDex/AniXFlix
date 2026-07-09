@@ -16,6 +16,14 @@ export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = f
     }
   }
 
+  let logoUrl: string | null = null;
+  if (tmdbMovie.images?.logos) {
+    const enLogo = tmdbMovie.images.logos.find((l: any) => l.iso_639_1 === "en") || tmdbMovie.images.logos[0];
+    if (enLogo) {
+      logoUrl = `https://image.tmdb.org/t/p/w500${enLogo.file_path}`;
+    }
+  }
+
   return {
     id: tmdbMovie.id.toString(),
     publicId: tmdbMovie.id.toString(),
@@ -32,6 +40,7 @@ export const mapTmdbToAnix = (tmdbMovie: any, isFeatured = false, isTrending = f
     maturityRating: null,
     isTrending,
     isFeatured,
+    logoUrl,
     mediaType: tmdbMovie.media_type || (tmdbMovie.first_air_date ? "tv" : "movie"),
     createdAt: new Date(),
   };

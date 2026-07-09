@@ -18,6 +18,7 @@ export interface Movie {
   maturityRating: string | null;
   isTrending: boolean;
   isFeatured: boolean;
+  logoUrl: string | null;
   createdAt: Date;
   rating: string | null;
   mediaType?: "movie" | "tv";

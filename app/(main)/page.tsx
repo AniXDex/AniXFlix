@@ -44,12 +44,20 @@ export default async function Home() {
   );
   
   const trendingMovies = baseTrendingMovies.map((movie, index) => {
-    if (index < 10 && top10Details[index]?.images?.backdrops) {
-      const backdrops = top10Details[index].images.backdrops;
-      const bestBackdrop = backdrops.find((b: any) => b.iso_639_1 === null) ?? backdrops[0];
-      
-      if (bestBackdrop) {
-        movie.backdropUrl = `https://image.tmdb.org/t/p/w1280${bestBackdrop.file_path}`;
+    if (index < 10 && top10Details[index]) {
+      const d = top10Details[index];
+      if (d.images?.backdrops) {
+        const backdrops = d.images.backdrops;
+        const bestBackdrop = backdrops.find((b: any) => b.iso_639_1 === null) ?? backdrops[0];
+        if (bestBackdrop) {
+          movie.backdropUrl = `https://image.tmdb.org/t/p/w1280${bestBackdrop.file_path}`;
+        }
+      }
+      if (d.images?.logos) {
+        const enLogo = d.images.logos.find((l: any) => l.iso_639_1 === "en") || d.images.logos[0];
+        if (enLogo) {
+          movie.logoUrl = `https://image.tmdb.org/t/p/w500${enLogo.file_path}`;
+        }
       }
     }
     return movie;
