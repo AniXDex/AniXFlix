@@ -50,6 +50,7 @@ export default function PlayClient() {
     sessionStorage.setItem(PLAYBACK_KEY, JSON.stringify(newData));
     setData(newData);
     loadPlayData(newData);
+    window.dispatchEvent(new CustomEvent("playback-change"));
   }, [loadPlayData]);
 
   useEffect(() => {

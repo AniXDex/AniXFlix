@@ -26,6 +26,18 @@ export default function HeaderWatchControls() {
     } catch {}
   }, [pathname]);
 
+  useEffect(() => {
+    const handler = () => {
+      const raw = sessionStorage.getItem(PLAYBACK_KEY);
+      if (!raw) return;
+      try {
+        setPlaybackData(JSON.parse(raw));
+      } catch {}
+    };
+    window.addEventListener("playback-change", handler);
+    return () => window.removeEventListener("playback-change", handler);
+  }, []);
+
   const isTv = playbackData?.mediaType === "tv";
   const movieId = playbackData?.tmdbId || "";
   const season = playbackData?.season || 1;
