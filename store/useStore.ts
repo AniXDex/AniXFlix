@@ -1,17 +1,20 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Movie } from '@/types/types';
+import { Movie, ContinueWatchingItem } from '@/types/types';
 
 interface StoreState {
   watchlist: Movie[];
   history: Movie[];
   searchHistory: string[];
+  continueWatching: ContinueWatchingItem[];
   addToWatchlist: (movie: Movie) => void;
   removeFromWatchlist: (id: string) => void;
   isInWatchlist: (id: string) => boolean;
   addToHistory: (movie: Movie) => void;
   removeFromHistory: (id: string) => void;
   clearHistory: () => void;
+  addToContinueWatching: (item: ContinueWatchingItem) => void;
+  removeFromContinueWatching: (tmdbId: string) => void;
   addSearchHistory: (query: string) => void;
   removeSearchHistory: (query: string) => void;
   clearSearchHistory: () => void;
@@ -23,6 +26,7 @@ export const useStore = create<StoreState>()(
       watchlist: [],
       history: [],
       searchHistory: [],
+      continueWatching: [],
       addToWatchlist: (movie) => {
         set((state) => {
           const id = movie.publicId || movie.id?.toString();
@@ -52,6 +56,23 @@ export const useStore = create<StoreState>()(
       },
       clearHistory: () => {
         set({ history: [] });
+      },
+      addToContinueWatching: (item) => {
+        set((state) => {
+          const filtered = state.continueWatching.filter(
+            (c) => !(c.tmdbId === item.tmdbId && c.mediaType === item.mediaType && c.season === item.season && c.episode === item.episode)
+          );
+          return {
+            continueWatching: [item, ...filtered]
+              .sort((a, b) => b.lastWatchedAt - a.lastWatchedAt)
+              .slice(0, 50)
+          };
+        });
+      },
+      removeFromContinueWatching: (tmdbId) => {
+        set((state) => ({
+          continueWatching: state.continueWatching.filter((c) => c.tmdbId !== tmdbId),
+        }));
       },
       addSearchHistory: (query) => {
         set((state) => {

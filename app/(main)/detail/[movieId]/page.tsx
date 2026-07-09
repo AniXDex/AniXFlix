@@ -2,14 +2,15 @@ import React from "react";
 import Header from "@/components/Header";
 import { tmdb } from "@/lib/tmdb";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import SafeImage from "@/components/SafeImage";
 import { Sparkles, Star } from "lucide-react";
 import MovieCard from "@/components/movie/MovieCard";
 import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
 import SeasonEpisodesClient from "@/components/movie/SeasonEpisodesClient";
 import PlayButton from "@/components/movie/PlayButton";
+import ContinueWatchingRow from "@/components/ContinueWatchingRow";
 
 export default async function TitlePage({ params, searchParams }: { params: Promise<{ movieId: string }>, searchParams: Promise<{ v?: string }> }) {
   const { movieId } = await params;
@@ -75,7 +76,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
 
       {/* Hero Section */}
       <div className="relative w-full h-[70vh] md:h-[90vh] -mt-20 overflow-hidden bg-[#09090b]">
-        <Image
+        <SafeImage
           src={heroBackdropUrl}
           alt={mappedMovie.title || "Backdrop"}
           fill
@@ -90,7 +91,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
         <div className="absolute left-4 md:left-14 bottom-[8%] md:bottom-[15%] max-w-[90%] md:max-w-4xl z-10 flex flex-col items-start">
           
           {logoUrl ? (
-            <Image 
+            <SafeImage 
               src={logoUrl} 
               alt={mappedMovie.title || "Logo"} 
               width={400} 
@@ -138,6 +139,9 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
 
       <div className="px-4 md:px-14 flex flex-col gap-16 md:gap-20 mt-4 md:mt-8 relative z-20">
         
+        {/* Continue Watching - only for TV shows, only this show */}
+        {isTv && <ContinueWatchingRow showOnlyTvId={movieId} />}
+
         {/* Episodes Section */}
         {isTv && details.seasons && details.seasons.length > 0 && (
           <SeasonEpisodesClient 
@@ -159,16 +163,12 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
               {cast.map((actor: any) => (
                 <div key={actor.id} className="flex items-center gap-4 bg-[#141414] p-3 rounded-2xl border border-white/5">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden bg-white/5 shrink-0">
-                    {actor.profile_path ? (
-                      <Image 
-                        src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`} 
-                        alt={actor.name} 
-                        fill 
-                        className="object-cover" 
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-white/20">?</div>
-                    )}
+                    <SafeImage 
+                      src={actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : null}
+                      alt={actor.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   <div className="flex flex-col overflow-hidden">
                     <span className="text-sm font-bold text-white truncate">{actor.name}</span>

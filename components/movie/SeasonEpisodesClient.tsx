@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Search } from "lucide-react";
 import { getSeasonEpisodes } from "@/app/actions/tv";
@@ -136,17 +136,13 @@ export default function SeasonEpisodesClient({ movieId, seasons, initialEpisodes
                 key={ep.id} 
                 className="group flex flex-col md:flex-row gap-2 md:gap-4 bg-[#141414] rounded-2xl border border-white/5 overflow-hidden hover:border-white/20 hover:bg-[#1a1a1a] transition-all text-left"
               >
-                <div className="relative w-full md:w-64 aspect-video shrink-0 bg-black/50 overflow-hidden">
-                  {ep.still_path ? (
-                    <Image 
-                      src={`https://image.tmdb.org/t/p/w500${ep.still_path}`} 
-                      alt={ep.name} 
-                      fill 
-                      className="object-cover group-hover:scale-105 transition-transform duration-500" 
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-white/20">No Image</div>
-                  )}
+                <div className="relative w-full md:w-64 aspect-video shrink-0 bg-[#141414] overflow-hidden">
+                  <SafeImage
+                    src={ep.still_path ? `https://image.tmdb.org/t/p/w500${ep.still_path}` : null}
+                    alt={ep.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                   
                   {/* Play overlay on hover */}
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">

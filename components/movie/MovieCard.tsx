@@ -2,8 +2,8 @@
 import { Movie } from "@/types/types";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Star, Heart } from "lucide-react";
+import SafeImage from "@/components/SafeImage";
 import { useStore } from "@/store/useStore";
 
 interface Props {
@@ -38,8 +38,8 @@ function MovieCard({ movie, isPortrait = false, isResponsive = false, rank }: Pr
       }`}>
         
         {/* Mobile / Portrait Image */}
-        <Image
-          src={localMovie.thumbnailUrl || localMovie.backdropUrl || ""}
+        <SafeImage
+          src={localMovie.thumbnailUrl || localMovie.backdropUrl}
           alt={localMovie.title}
           fill
           sizes={isPortrait ? "(max-width: 1024px) 33vw, 15vw" : "(max-width: 768px) 50vw, 1vw"}
@@ -49,7 +49,7 @@ function MovieCard({ movie, isPortrait = false, isResponsive = false, rank }: Pr
         />
 
         {/* Desktop / Horizontal Image */}
-        <Image
+        <SafeImage
           src={`/api/images/${localMovie.mediaType || 'movie'}/${localMovie.publicId || localMovie.id}?fallback=${encodeURIComponent(localMovie.backdropUrl || localMovie.thumbnailUrl || "")}`}
           alt={localMovie.title}
           fill

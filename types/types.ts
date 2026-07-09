@@ -1,3 +1,15 @@
+export interface ContinueWatchingItem {
+  tmdbId: string;
+  publicId: string;
+  mediaType: "movie" | "tv";
+  title: string;
+  posterUrl: string | null;
+  backdropUrl: string | null;
+  season: number;
+  episode: number;
+  lastWatchedAt: number;
+}
+
 export enum Role {
   USER = "USER",
   ADMIN = "ADMIN",

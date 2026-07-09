@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Search, X, Clock, Play, Info, ChevronDown, ChevronUp, Star } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import { searchContent } from "@/app/actions/search";
 import { Movie } from "@/types/types";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 import { useRouter } from "next/navigation";
 import { useGlobalContext } from "@/context/globalContext";
 
@@ -19,8 +19,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const { searchHistory, addSearchHistory, removeSearchHistory, clearSearchHistory } = useStore();
   
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | "anime">("all");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filter, setFilter] = useState<"all" | "movie" | "tv" | "anime">("all");
   const [results, setResults] = useState<Movie[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -66,36 +65,24 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
       <div className="relative w-full max-w-xl flex flex-col gap-3 z-10 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header Row */}
-        <div className="flex items-end justify-between mb-1 pl-1">
+        <div className="flex items-center justify-between mb-1 pl-1">
           <h2 className="text-2xl font-bold text-white tracking-tight leading-none">Search</h2>
           <div className="flex items-center gap-2">
-            <div className="relative">
-              <button 
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="flex items-center gap-2 bg-[#111111] border border-white/10 hover:bg-[#1a1a1a] px-3.5 py-1.5 rounded-xl text-[11px] font-medium text-white/80 transition-colors"
-              >
-                {filter === "all" ? "Movies & TV Shows" : "Animes"} 
-                <ChevronDown size={14} className={`transition-transform ${isFilterOpen ? "rotate-180" : ""}`} />
-              </button>
-              
-              {isFilterOpen && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-[#111111] border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
-                  <button 
-                    onClick={() => { setFilter("all"); setIsFilterOpen(false); }}
-                    className="w-full text-left px-4 py-3 text-xs font-medium text-white hover:bg-white/5 transition-colors"
-                  >
-                    Movies & TV Shows
-                  </button>
-                  <button 
-                    onClick={() => { setFilter("anime"); setIsFilterOpen(false); }}
-                    className="w-full text-left px-4 py-3 text-xs font-medium text-white hover:bg-white/5 transition-colors"
-                  >
-                    Animes
-                  </button>
-                </div>
-              )}
+            <div className="flex items-center gap-1.5">
+              {(["all", "movie", "tv", "anime"] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all duration-200 ${
+                    filter === f
+                      ? "bg-white text-black"
+                      : "bg-[#111111] border border-white/10 text-white/60 hover:bg-[#1a1a1a] hover:text-white/90"
+                  }`}
+                >
+                  {f === "all" ? "All" : f === "movie" ? "Movies" : f === "tv" ? "TV Shows" : "Anime"}
+                </button>
+              ))}
             </div>
-            
             <button onClick={onClose} className="p-1.5 bg-[#111111] border border-white/10 hover:bg-[#1a1a1a] rounded-xl text-white/80 transition-colors flex items-center justify-center">
               <X size={16} />
             </button>
@@ -131,7 +118,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
               <div className="flex flex-col pb-2">
                 <div className="flex items-center justify-between px-5 py-3 mt-1">
                   <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Recent</span>
-                  <button onClick={() => clearSearchHistory()} className="text-[11px] font-medium text-white/40 hover:text-white transition-colors">Clear</button>
+                  <button onClick={() => clearSearchHistory()} className="text-[11px] font-medium text-white/80 bg-white/10 hover:bg-white/20 px-3 py-1 rounded-lg transition-all duration-200">Clear</button>
                 </div>
                 {searchHistory.map((histQuery) => (
                   <div key={histQuery} className="flex items-center justify-between px-5 py-2 hover:bg-white/5 transition-colors group cursor-pointer" onClick={() => setQuery(histQuery)}>
@@ -156,13 +143,18 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   const isExpanded = expandedId === movie.publicId;
                   
                   return (
-                    <div key={movie.publicId} className="flex flex-col bg-transparent hover:bg-white/5 rounded-xl transition-colors overflow-hidden">
+                    <div key={movie.publicId} className="flex flex-col bg-transparent hover:bg-white/5 rounded-xl transition-all duration-500 ease-out overflow-hidden">
                       <div 
                         className="flex items-center p-2 gap-4 cursor-pointer"
                         onClick={() => setExpandedId(isExpanded ? null : (movie.publicId || ""))}
                       >
-                        <div className="relative w-[40px] h-[55px] rounded-lg overflow-hidden bg-white/5 shrink-0">
-                          <Image src={movie.thumbnailUrl || movie.backdropUrl || ""} alt={movie.title || "Poster"} fill className="object-cover" />
+                        <div className="relative w-[40px] h-[55px] rounded-lg overflow-hidden bg-[#141414] shrink-0">
+                          <SafeImage
+                            src={(movie.thumbnailUrl || movie.backdropUrl)?.replace("/w500/", "/w92/").replace("/w780/", "/w92/")}
+                            alt={movie.title || "Poster"}
+                            fill
+                            className="object-cover"
+                          />
                         </div>
                         <div className="flex flex-col flex-1 min-w-0 justify-center">
                           <h4 className="text-sm font-bold text-white mb-1 truncate">{movie.title}</h4>
@@ -174,30 +166,22 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                             <span className="flex items-center gap-1 text-yellow-500"><Star size={10} className="fill-yellow-500" /> {movie.rating || "N/A"}</span>
                           </div>
                         </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onClose(); router.push(`/detail/${movie.publicId}?v=${(movie as any).mediaType === 'tv' ? 2 : 1}`); }}
+                          className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all duration-300 hover:scale-105 active:scale-95 shrink-0"
+                        >
+                          <Play size={12} fill="currentColor" /> Play
+                        </button>
                         <button className="p-2 text-white/30 shrink-0 hover:text-white transition-colors">
                           {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                         </button>
                       </div>
 
                       {isExpanded && (
-                        <div className="px-4 pb-4 pt-1 animate-in slide-in-from-top-1 duration-200 ml-[56px]">
-                          <p className="text-[11px] text-white/50 mb-3 line-clamp-3 leading-relaxed pr-8">
+                        <div className="px-4 pb-4 pt-1 animate-in slide-in-from-top-3 fade-in duration-500 ease-out ml-[56px]">
+                          <p className="text-[11px] text-white/50 line-clamp-3 leading-relaxed pr-8 transition-all duration-500">
                             {movie.description}
                           </p>
-                          <div className="flex items-center gap-2">
-                            <button 
-                              onClick={() => { onClose(); router.push(`/detail/${movie.publicId}?v=${(movie as any).mediaType === 'tv' ? 2 : 1}`); }}
-                              className="bg-white hover:bg-white/90 text-black px-4 py-1.5 rounded-full text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors"
-                            >
-                              <Play size={12} fill="black" /> Play
-                            </button>
-                            <button 
-                              onClick={() => { onClose(); router.push(`/detail/${movie.publicId}`); }}
-                              className="bg-transparent border border-white/20 hover:bg-white/10 text-white px-4 py-1.5 rounded-full text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors"
-                            >
-                              <Info size={12} /> See more
-                            </button>
-                          </div>
                         </div>
                       )}
                     </div>

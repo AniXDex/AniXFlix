@@ -6,6 +6,7 @@ import PlayerTabs from "./PlayerTabs";
 import HistoryTracker from "@/components/HistoryTracker";
 import { PLAYBACK_KEY, PlaybackData } from "@/lib/playback";
 import { getPlayPageData } from "@/app/actions/play";
+import { useStore } from "@/store/useStore";
 
 export default function PlayClient() {
   const router = useRouter();
@@ -53,6 +54,8 @@ export default function PlayClient() {
     window.dispatchEvent(new CustomEvent("playback-change"));
   }, [loadPlayData]);
 
+  const addToContinueWatching = useStore((s) => s.addToContinueWatching);
+
   useEffect(() => {
     if (handled.current) return;
     handled.current = true;
@@ -72,6 +75,21 @@ export default function PlayClient() {
     }
     setReady(true);
   }, [router, loadPlayData]);
+
+  useEffect(() => {
+    if (!data || !mappedMovie) return;
+    addToContinueWatching({
+      tmdbId: data.tmdbId,
+      publicId: mappedMovie.publicId,
+      mediaType: data.mediaType,
+      title: mappedMovie.title,
+      posterUrl: mappedMovie.thumbnailUrl,
+      backdropUrl: mappedMovie.backdropUrl,
+      season: data.season,
+      episode: data.episode,
+      lastWatchedAt: Date.now(),
+    });
+  }, [data, mappedMovie, addToContinueWatching]);
 
   if (!ready || !data) {
     return (

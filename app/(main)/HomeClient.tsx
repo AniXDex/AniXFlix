@@ -1,6 +1,7 @@
 "use client";
 import MoviesRow from "@/components/movie/MoviesRow";
 import ProviderRow from "@/components/movie/ProviderRow";
+import ContinueWatchingRow from "@/components/ContinueWatchingRow";
 import { useGlobalContext } from "@/context/globalContext";
 import { Star, Play, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Movie } from "@/types/types";
-import Image from "next/image";
+import SafeImage from "@/components/SafeImage";
 
 interface HomeClientProps {
   trendingMovies: Movie[];
@@ -66,9 +67,9 @@ export default function HomeClient({
               transition={{ duration: 0.5, ease: "easeInOut" }}
               className="absolute inset-0"
             >
-              <Image 
-                src={featured.backdropUrl || ""} 
-                alt={featured.title || "Hero Banner"} 
+              <SafeImage 
+                src={featured.backdropUrl}
+                alt={featured.title || "Hero Banner"}
                 fill
                 priority
                 sizes="100vw"
@@ -96,7 +97,7 @@ export default function HomeClient({
               >
                 <Link href={`/detail/${featured.publicId}?v=${featured.mediaType === 'tv' ? 2 : 1}`} className="text-white hover:text-red-500 transition-colors drop-shadow-md">
                   {featured.logoUrl ? (
-                    <Image
+                    <SafeImage
                       src={featured.logoUrl}
                       alt={featured.title}
                       width={400}
@@ -150,6 +151,7 @@ export default function HomeClient({
       </div>
 
       <div className="relative z-30 flex flex-col gap-8 md:gap-10 mt-4 md:mt-8 px-4 md:px-14 pb-20">
+        <ContinueWatchingRow />
         <MoviesRow title="TOP 10 Today" movies={trendingMovies} series={trendingSeries} isTop10={true} />
         <MoviesRow title="Trending Today" movies={topRatedMovies} series={topRatedSeries} />
         <ProviderRow initialMovies={netflix} initialSeries={netflixSeries} />
