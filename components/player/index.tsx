@@ -20,19 +20,21 @@ interface MyPlayerProps {
 }
 
 const ALL_SERVERS = [
-  // 1 - cinemaos.tech
+  // 1 - cinevibe.site
+  { name: "CineVibe", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinevibe.site/api/stream/fetch?server=cinebox&type=show&mediaId=${id}&season_episode=${s}%2F${e}&autoplay=1&muted=0` : `https://cinevibe.site/api/stream/fetch?server=cinebox&type=movie&mediaId=${id}&autoplay=1&muted=0` },
+  // 2 - cinemaos.tech
   { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}?autoplay=1&muted=0` : `https://cinemaos.tech/player/${id}?autoplay=1&muted=0` },
-  // 2 - player.cinezo.live
+  // 3 - player.cinezo.live
   { name: "Cinezo", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?autoplay=true&muted=0` : `https://player.cinezo.live/embed/movie/${id}?autoplay=true&muted=0` },
-  // 3 - screenscape.me
+  // 4 - screenscape.me
   { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}&autoplay=1&muted=0` : `https://screenscape.me/embed?tmdb=${id}&type=movie&autoplay=1&muted=0` },
-  // 4 - rozgarlelo.modiplay.xyz
+  // 5 - rozgarlelo.modiplay.xyz
   { name: "razor[Hindi]", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}&autoplay=1&muted=0` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}&autoplay=1&muted=0` },
-  // 5 - embed.filmu.in
+  // 6 - embed.filmu.in
   { name: "FilmU", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://embed.filmu.in/embed/tv/${id}/${s}/${e}?autoplay=1&muted=0` : `https://embed.filmu.in/embed/movie/${id}?autoplay=1&muted=0` },
-  // 6 - player.videasy.net
+  // 7 - player.videasy.net
   { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}?autoplay=1&muted=0` : `https://player.videasy.net/movie/${id}?autoplay=1&muted=0` },
-  // 7 - peachify.top
+  // 8 - peachify.top
   { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}?autoplay=1&muted=0` : `https://peachify.top/embed/movie/${id}?autoplay=1&muted=0` }
 ];
 
