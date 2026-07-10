@@ -44,7 +44,7 @@ export default function SafeImage({ src, alt, fill, width, height, priority, siz
           fill
           priority={priority}
           sizes={sizes}
-          className={`${className} ${isFallback ? "object-contain max-w-[35%] max-h-[35%] opacity-15" : ""}`}
+          className={`${className} ${isFallback ? "object-contain max-w-[35%] max-h-[35%] m-auto opacity-15" : ""}`}
           style={style}
           onError={handleError}
         />
@@ -55,7 +55,7 @@ export default function SafeImage({ src, alt, fill, width, height, priority, siz
   if (isFallback) {
     return (
       <div className={`bg-[#141414] ${className}`} style={{ width, height, position: "relative", ...style }}>
-        <Image src="/logo.svg" alt="" fill className="object-contain max-w-[35%] max-h-[35%] opacity-15" />
+        <Image src="/logo.svg" alt="" fill className="object-contain max-w-[35%] max-h-[35%] m-auto opacity-15" />
       </div>
     );
   }
