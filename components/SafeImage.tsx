@@ -35,27 +35,34 @@ export default function SafeImage({ src, alt, fill, width, height, priority, siz
     }
   };
 
-  if (fill) {
+  if (isFallback) {
+    if (fill) {
+      return (
+        <div className={`absolute inset-0 flex items-center justify-center bg-[#141414]`}>
+          <img src="/logo.svg" alt="" className="max-w-[35%] max-h-[35%] opacity-15 object-contain" />
+        </div>
+      );
+    }
     return (
-      <div className={`absolute inset-0 ${isFallback ? "bg-[#141414]" : ""}`}>
-        <Image
-          src={imgSrc}
-          alt={isFallback ? "" : alt}
-          fill
-          priority={priority}
-          sizes={sizes}
-          className={`${className} ${isFallback ? "object-contain max-w-[35%] max-h-[35%] m-auto opacity-15" : ""}`}
-          style={style}
-          onError={handleError}
-        />
+      <div className={`flex items-center justify-center bg-[#141414] ${className}`} style={{ width, height, ...style }}>
+        <img src="/logo.svg" alt="" className="max-w-[50%] max-h-[50%] opacity-15 object-contain" />
       </div>
     );
   }
 
-  if (isFallback) {
+  if (fill) {
     return (
-      <div className={`bg-[#141414] ${className}`} style={{ width, height, position: "relative", ...style }}>
-        <Image src="/logo.svg" alt="" fill className="object-contain max-w-[35%] max-h-[35%] m-auto opacity-15" />
+      <div className="absolute inset-0">
+        <Image
+          src={imgSrc}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes={sizes}
+          className={className}
+          style={style}
+          onError={handleError}
+        />
       </div>
     );
   }
