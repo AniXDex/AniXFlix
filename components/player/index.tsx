@@ -20,7 +20,9 @@ interface MyPlayerProps {
 }
 
 const ALL_SERVERS = [
-  // 1 - player.cinezo.live
+  // 1 - anixhub-stream.vercel.app
+  { name: "AnixHub", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://anixhub-stream.vercel.app/?tmdb_id=${id}&media_type=tv&season=${s}&episode=${e}` : `https://anixhub-stream.vercel.app/?tmdb_id=${id}&media_type=movie` },
+  // 2 - player.cinezo.live
   { name: "Cinezo", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?autoplay=true&muted=0` : `https://player.cinezo.live/embed/movie/${id}?autoplay=true&muted=0` },
   // 2 - cinemaos.tech
   { name: "CinemaOS", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://cinemaos.tech/player/${id}/${s}/${e}?autoplay=1&muted=0` : `https://cinemaos.tech/player/${id}?autoplay=1&muted=0` },
@@ -33,7 +35,7 @@ const ALL_SERVERS = [
   // 6 - player.videasy.net
   { name: "Videasy", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.videasy.net/tv/${id}/${s}/${e}?autoplay=1&muted=0` : `https://player.videasy.net/movie/${id}?autoplay=1&muted=0` },
   // 7 - peachify.top
-  { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}?autoplay=1&muted=0` : `https://peachify.top/embed/movie/${id}?autoplay=1&muted=0` }
+  { name: "Peachify", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://peachify.top/embed/tv/${id}/${s}/${e}?autoplay=1&muted=0` : `https://peachify.top/embed/movie/${id}?autoplay=1&muted=0` },
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {

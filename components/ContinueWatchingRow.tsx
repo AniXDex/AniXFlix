@@ -20,14 +20,23 @@ export default function ContinueWatchingRow({ showOnlyTvId }: Props) {
   const router = useRouter();
   const continueWatching = useStore((s) => s.continueWatching);
   const [isAndroid, setIsAndroid] = useState(false);
+  const [maxItems, setMaxItems] = useState(6);
 
   useEffect(() => {
     setIsAndroid(/android/i.test(navigator.userAgent));
   }, []);
 
+  useEffect(() => {
+    if (showOnlyTvId) { setMaxItems(1); return; }
+    const check = () => setMaxItems(window.innerWidth < 768 ? 4 : 6);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [showOnlyTvId]);
+
   const items = continueWatching
     .filter((c) => showOnlyTvId ? (c.tmdbId === showOnlyTvId && c.mediaType === "tv") : true)
-    .slice(0, 7);
+    .slice(0, maxItems);
 
   if (items.length === 0) return null;
 
