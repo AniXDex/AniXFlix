@@ -10,7 +10,7 @@ export default function HistoryPage() {
   return (
     <div className="bg-[#09090b] min-h-screen">
       <Header />
-      <div className="pt-24 px-4 md:px-14 relative z-20 flex flex-col gap-6 pb-20">
+      <div className="pt-24 px-4 md:px-14 xl:px-20 relative z-20 flex flex-col gap-6 pb-20">
         <div className="flex items-center justify-between mt-6">
           <div className="flex items-center gap-3">
             <History size={28} className="text-white" />

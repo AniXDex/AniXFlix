@@ -35,7 +35,7 @@ function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <header className="absolute w-full min-h-20 px-4 sm:px-6 md:px-14 top-0 z-[100] flex items-center justify-between bg-transparent pointer-events-none">
+    <header className="absolute w-full min-h-20 px-4 sm:px-6 md:px-14 xl:px-20 top-0 z-[100] flex items-center justify-between bg-transparent pointer-events-none">
       
       {/* LEFT: Logo & Back Button */}
       <div className="flex items-center gap-4 z-50 pointer-events-auto">

@@ -45,7 +45,7 @@ export default function CategoryPageClient({ type, initialMovies }: CategoryPage
   }, [activeCategory, type]);
 
   return (
-    <div className="bg-[#09090b] min-h-screen pt-24 px-4 md:px-14 pb-20">
+    <div className="bg-[#09090b] min-h-screen pt-24 px-4 md:px-14 xl:px-20 pb-20">
       
       {/* Category Nav Bar */}
       <div className="flex items-center gap-6 md:gap-8 overflow-x-auto scrollbar-hide border-b border-white/10 mb-8 pb-1 w-full relative z-20">
@@ -85,7 +85,7 @@ export default function CategoryPageClient({ type, initialMovies }: CategoryPage
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 relative z-20"
+              className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 relative z-20"
             >
               {movies.map((movie) => (
                 <MovieCard key={movie.publicId} movie={movie} isPortrait={false} />

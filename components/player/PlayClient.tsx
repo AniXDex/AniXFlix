@@ -112,7 +112,7 @@ export default function PlayClient() {
         episode={data.episode}
       />
       {detailsLoaded && !detailsError && details && (
-        <div id="episodes" className="w-full bg-[#0a0a0a] text-white pt-8 px-4 md:px-14">
+        <div id="episodes" className="w-full bg-[#0a0a0a] text-white pt-8 px-4 md:px-14 xl:px-20">
           <PlayerTabs
             type={data.mediaType}
             episodes={episodes}
@@ -127,7 +127,7 @@ export default function PlayClient() {
         </div>
       )}
       {detailsLoaded && detailsError && (
-        <div id="episodes" className="w-full bg-[#0a0a0a] text-white pt-8 px-4 md:px-14">
+        <div id="episodes" className="w-full bg-[#0a0a0a] text-white pt-8 px-4 md:px-14 xl:px-20">
           <p className="text-white/50 text-sm py-8">Failed to load details.</p>
         </div>
       )}

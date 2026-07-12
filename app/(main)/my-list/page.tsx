@@ -10,7 +10,7 @@ export default function WatchlistPage() {
   return (
     <div className="bg-[#09090b] min-h-screen">
       <Header />
-      <div className="pt-24 px-4 md:px-14 relative z-20 flex flex-col gap-6 pb-20">
+      <div className="pt-24 px-4 md:px-14 xl:px-20 relative z-20 flex flex-col gap-6 pb-20">
         <div className="flex items-center gap-3 mt-6 mb-2">
           <Heart size={28} className="text-white fill-white" />
           <h1 className="text-3xl font-bold text-white">My Watchlist</h1>

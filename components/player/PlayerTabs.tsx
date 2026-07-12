@@ -154,7 +154,7 @@ export default function PlayerTabs({
                         key={ep.id}
                         className={`group flex flex-row items-center gap-3 p-2 rounded-xl transition-all border border-transparent hover:bg-[#141417] hover:border-white/5 text-left w-full ${ep.episode_number === Number(episode) ? 'bg-[#141417] border-white/5' : ''}`}
                       >
-                        <div className="relative w-36 md:w-48 aspect-video shrink-0 rounded-lg overflow-hidden bg-black/50">
+                        <div className="relative w-36 md:w-48 lg:w-56 aspect-video shrink-0 rounded-lg overflow-hidden bg-black/50">
                           {ep.still_path ? (
                             <Image 
                               src={`https://image.tmdb.org/t/p/w500${ep.still_path}`} 
@@ -213,7 +213,7 @@ export default function PlayerTabs({
           <div className="flex flex-col gap-6 animate-in fade-in duration-500">
             <h3 className="text-lg font-bold">Related {type === "tv" ? "Shows" : "Movies"}</h3>
             {mappedSimilar.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                 {mappedSimilar.map((movie: any) => (
                   <MovieCard key={movie.publicId} movie={movie} />
                 ))}
@@ -228,7 +228,7 @@ export default function PlayerTabs({
           <div className="flex flex-col gap-6 animate-in fade-in duration-500 max-w-4xl">
             <h3 className="text-2xl font-bold">{details?.title || details?.name}</h3>
             <p className="text-white/70 text-lg leading-relaxed">{details?.overview}</p>
-            <div className="grid grid-cols-2 gap-8 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-4">
               <div>
                 <h4 className="text-white/40 font-bold uppercase text-xs tracking-wider mb-2">Genres</h4>
                 <div className="flex flex-wrap gap-2">

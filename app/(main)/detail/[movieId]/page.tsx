@@ -88,7 +88,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
         <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/60 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#09090b] via-[#09090b]/60 to-transparent"></div>
 
-        <div className="absolute left-4 md:left-14 bottom-[8%] md:bottom-[15%] max-w-[90%] md:max-w-4xl z-10 flex flex-col items-start">
+        <div className="absolute left-4 md:left-14 lg:left-20 bottom-[8%] md:bottom-[15%] lg:bottom-[15%] max-w-[90%] md:max-w-4xl z-10 flex flex-col items-start">
           
           {logoUrl ? (
             <SafeImage 
@@ -96,7 +96,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
               alt={mappedMovie.title || "Logo"} 
               width={400} 
               height={150}
-              className="w-48 md:w-80 h-auto max-h-[100px] md:max-h-[150px] object-contain object-left mb-6 drop-shadow-2xl" 
+              className="w-48 md:w-80 lg:w-96 h-auto max-h-[100px] md:max-h-[150px] lg:max-h-[200px] object-contain object-left mb-6 drop-shadow-2xl" 
             />
           ) : (
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight drop-shadow-lg uppercase leading-[0.95] line-clamp-3 md:line-clamp-2">
@@ -137,7 +137,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
         </div>
       </div>
 
-      <div className="px-4 md:px-14 flex flex-col gap-16 md:gap-20 mt-4 md:mt-8 relative z-20">
+      <div className="px-4 md:px-14 xl:px-20 flex flex-col gap-16 md:gap-20 mt-4 md:mt-8 relative z-20">
         
         {/* Continue Watching - only for TV shows, only this show */}
         {isTv && <ContinueWatchingRow showOnlyTvId={movieId} />}
@@ -159,7 +159,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
               <h2 className="text-2xl font-bold text-white">Actors</h2>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
               {cast.map((actor: any) => (
                 <div key={actor.id} className="flex items-center gap-4 bg-[#141414] p-3 rounded-2xl border border-white/5">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden bg-white/5 shrink-0">
@@ -188,7 +188,7 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
               <h2 className="text-2xl font-bold text-white">You may like</h2>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {mappedSimilar.map((movie: any) => (
                 <MovieCard key={movie.publicId} movie={movie} />
               ))}

@@ -28,7 +28,7 @@ export default function ContinueWatchingRow({ showOnlyTvId }: Props) {
 
   useEffect(() => {
     if (showOnlyTvId) { setMaxItems(1); return; }
-    const check = () => setMaxItems(window.innerWidth < 768 ? 4 : 6);
+    const check = () => setMaxItems(window.innerWidth < 768 ? 4 : window.innerWidth < 1280 ? 6 : 8);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
