@@ -39,13 +39,13 @@ export default function SafeImage({ src, alt, fill, width, height, priority, siz
     if (fill) {
       return (
         <div className={`absolute inset-0 flex items-center justify-center bg-[#141414]`}>
-          <img src="/logo.svg" alt="" className="max-w-[35%] max-h-[35%] opacity-15 object-contain" />
+          <img src="/logo.svg" alt="" loading="lazy" className="max-w-[35%] max-h-[35%] opacity-15 object-contain" />
         </div>
       );
     }
     return (
       <div className={`flex items-center justify-center bg-[#141414] ${className}`} style={{ width, height, ...style }}>
-        <img src="/logo.svg" alt="" className="max-w-[50%] max-h-[50%] opacity-15 object-contain" />
+        <img src="/logo.svg" alt="" loading="lazy" className="max-w-[50%] max-h-[50%] opacity-15 object-contain" />
       </div>
     );
   }
@@ -58,6 +58,7 @@ export default function SafeImage({ src, alt, fill, width, height, priority, siz
           alt={alt}
           fill
           priority={priority}
+          loading={priority ? undefined : "lazy"}
           sizes={sizes}
           className={className}
           style={style}
@@ -74,6 +75,7 @@ export default function SafeImage({ src, alt, fill, width, height, priority, siz
       width={width}
       height={height}
       priority={priority}
+      loading={priority ? undefined : "lazy"}
       sizes={sizes}
       className={className}
       style={style}

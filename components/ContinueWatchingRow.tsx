@@ -75,6 +75,7 @@ export default function ContinueWatchingRow({ showOnlyTvId }: Props) {
               <button
                 onClick={() => handleClick(item)}
                 className="w-full text-left focus:outline-none group/card"
+                style={{ transform: 'translateZ(0)' }}
               >
                 <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-[#141414]">
                   <SafeImage

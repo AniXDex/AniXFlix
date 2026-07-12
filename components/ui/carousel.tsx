@@ -147,6 +147,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
           className,
         )}
+        style={{ transform: 'translateZ(0)' }}
         {...props}
       />
     </div>
@@ -166,6 +167,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
         orientation === "horizontal" ? "pl-4" : "pt-4",
         className,
       )}
+      style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)' }}
       {...props}
     />
   );

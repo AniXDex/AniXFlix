@@ -31,7 +31,7 @@ function MovieCard({ movie, isPortrait = false, isResponsive = false, rank }: Pr
   };
 
   return (
-    <Link href={`/detail/${localMovie.publicId}?v=${localMovie.mediaType === 'tv' ? 2 : 1}`} className="group flex flex-col gap-3 w-full cursor-pointer">
+    <Link href={`/detail/${localMovie.publicId}?v=${localMovie.mediaType === 'tv' ? 2 : 1}`} className="group flex flex-col gap-3 w-full cursor-pointer" style={{ transform: 'translateZ(0)' }}>
       {/* Poster Image Container */}
       <div className={`relative w-full overflow-hidden rounded-2xl bg-[#141417] ${
         isPortrait ? 'aspect-[2/3]' : (isResponsive ? 'aspect-[2/3] md:aspect-video' : 'aspect-video')

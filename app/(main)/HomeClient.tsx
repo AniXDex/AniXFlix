@@ -6,8 +6,7 @@ import { useGlobalContext } from "@/context/globalContext";
 import { Star, Play, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useCallback } from "react";
 import { Movie } from "@/types/types";
 import SafeImage from "@/components/SafeImage";
 
@@ -57,27 +56,18 @@ export default function HomeClient({
       {/* Hero Section */}
       <div className="relative w-full h-[70vh] md:h-[90vh] -mt-20 overflow-hidden bg-[#09090b]">
         
-        <AnimatePresence mode="wait">
+        <div className="absolute inset-0 transition-opacity duration-700 ease-in-out" style={{ transform: 'translateZ(0)' }}>
           {featured && (
-              <motion.div
-                key={featured.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="absolute inset-0"
-            >
-              <SafeImage 
-                src={featured.backdropUrl}
-                alt={featured.title || "Hero Banner"}
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover object-top opacity-70"
-              />
-            </motion.div>
+            <SafeImage 
+              src={featured.backdropUrl}
+              alt={featured.title || "Hero Banner"}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-top opacity-70"
+            />
           )}
-        </AnimatePresence>
+        </div>
 
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/40 to-transparent z-10"></div>
@@ -85,16 +75,8 @@ export default function HomeClient({
 
         {/* Hero Content */}
         <div className="absolute left-4 md:left-14 lg:left-20 bottom-[12%] md:bottom-[15%] lg:bottom-[18%] max-w-[90%] md:max-w-2xl lg:max-w-3xl z-20">
-          <AnimatePresence mode="wait">
-            {featured && (
-              <motion.div
-                key={`content-${featured.id}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-                className="flex flex-col gap-4"
-              >
+              {featured && (
+              <div key={`content-${featured.id}`} className="flex flex-col gap-4">
                 <Link href={`/detail/${featured.publicId}?v=${featured.mediaType === 'tv' ? 2 : 1}`} className="text-white hover:text-red-500 transition-colors drop-shadow-md">
                   {featured.logoUrl ? (
                     <SafeImage
@@ -144,9 +126,8 @@ export default function HomeClient({
                     <Info size={16} /> See More
                   </button>
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
         </div>
       </div>
 
