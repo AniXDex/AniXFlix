@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, Clock, Star, Play, TrendingUp, Film, Tv, Sparkles, Loader2, ChevronRight, ArrowRight } from "lucide-react";
 import { useStore } from "@/store/useStore";
-import { searchContent, getTrendingContent, getSuggestions } from "@/app/actions/search";
+import { searchContent, getTrendingContent } from "@/app/actions/search";
 import { Movie } from "@/types/types";
 import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
@@ -30,21 +30,14 @@ function SearchPageInner() {
   const [results, setResults] = useState<Movie[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(!!initialQuery);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [suggestions, setSuggestions] = useState<Movie[]>([]);
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
   const [trendingTv, setTrendingTv] = useState<Movie[]>([]);
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [popularTv, setPopularTv] = useState<Movie[]>([]);
   const [isLoadingTrending, setIsLoadingTrending] = useState(true);
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
-  const [showTrendingMovies, setShowTrendingMovies] = useState(true);
-  const [showTrendingTv, setShowTrendingTv] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const suggestionsRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const suggestionDebounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -68,21 +61,10 @@ function SearchPageInner() {
     }
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   const doSearch = useCallback(async (q: string, f: typeof filter) => {
     if (q.trim().length > 1) {
       setIsSearching(true);
       setHasSearched(true);
-      setShowSuggestions(false);
       const data = await searchContent(q, f);
       setResults(data);
       setIsSearching(false);
@@ -93,34 +75,18 @@ function SearchPageInner() {
     }
   }, [addSearchHistory]);
 
-  const fetchSuggestions = useCallback(async (q: string) => {
-    if (q.trim().length > 1) {
-      const data = await getSuggestions(q);
-      setSuggestions(data);
-      setShowSuggestions(data.length > 0);
-      setActiveSuggestionIndex(-1);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, []);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setQuery(val);
 
     clearTimeout(debounceRef.current);
-    clearTimeout(suggestionDebounceRef.current);
 
     if (val.trim().length > 1) {
-      suggestionDebounceRef.current = setTimeout(() => fetchSuggestions(val), 150);
       debounceRef.current = setTimeout(() => {
         doSearch(val, filter);
         router.push(`/search?q=${encodeURIComponent(val.trim())}`, { scroll: false });
       }, 400);
     } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
       setResults([]);
       setHasSearched(false);
     }
@@ -129,34 +95,12 @@ function SearchPageInner() {
   const handleSearch = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (query.trim()) {
-      setShowSuggestions(false);
       router.push(`/search?q=${encodeURIComponent(query.trim())}`, { scroll: false });
       doSearch(query, filter);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (showSuggestions && suggestions.length > 0) {
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setActiveSuggestionIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0));
-        return;
-      }
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setActiveSuggestionIndex((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1));
-        return;
-      }
-      if (e.key === "Enter" && activeSuggestionIndex >= 0) {
-        e.preventDefault();
-        const selected = suggestions[activeSuggestionIndex];
-        if (selected?.publicId) {
-          setShowSuggestions(false);
-          router.push(`/detail/${selected.publicId}?v=${selected.mediaType === "tv" ? 2 : 1}`);
-          return;
-        }
-      }
-    }
     if (e.key === "Enter") {
       handleSearch();
     }
@@ -166,13 +110,6 @@ function SearchPageInner() {
     setFilter(f);
     if (query.trim().length > 1) {
       doSearch(query, f);
-    }
-  };
-
-  const handleSuggestionClick = (movie: Movie) => {
-    setShowSuggestions(false);
-    if (movie.publicId) {
-      router.push(`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`);
     }
   };
 
@@ -191,7 +128,7 @@ function SearchPageInner() {
             <p className="text-white/40 text-sm md:text-base font-medium">Search movies, TV shows, and anime across every platform</p>
           </div>
 
-          <div className="relative max-w-3xl mx-auto" ref={suggestionsRef}>
+          <div className="relative max-w-3xl mx-auto">
             <form onSubmit={handleSearch}>
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-400 rounded-2xl opacity-20 group-focus-within:opacity-40 blur-xl transition-all duration-500" />
@@ -205,7 +142,6 @@ function SearchPageInner() {
                   value={query}
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
-                  onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
                   placeholder="Search for movies, TV shows, or anime..."
                   className="w-full bg-transparent py-4 md:py-5 pl-3 pr-12 text-base md:text-lg text-white placeholder:text-white/20 focus:outline-none font-medium"
                   autoComplete="off"
@@ -214,7 +150,7 @@ function SearchPageInner() {
                 {query && (
                   <button
                     type="button"
-                    onClick={() => { setQuery(""); setResults([]); setHasSearched(false); setSuggestions([]); setShowSuggestions(false); }}
+                    onClick={() => { setQuery(""); setResults([]); setHasSearched(false); }}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white bg-white/5 hover:bg-white/10 p-1.5 rounded-xl transition-all"
                   >
                     <X size={18} />
@@ -223,48 +159,6 @@ function SearchPageInner() {
               </div>
             </div>
             </form>
-
-            {/* Suggestions Dropdown */}
-            {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-2xl shadow-black/50 overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <div className="px-4 py-2.5 border-b border-white/5">
-                  <span className="text-[10px] font-bold text-white/30 uppercase tracking-widest">Suggestions</span>
-                </div>
-                {suggestions.map((movie, idx) => (
-                  <button
-                    key={movie.publicId}
-                    type="button"
-                    onClick={() => handleSuggestionClick(movie)}
-                    onMouseEnter={() => setActiveSuggestionIndex(idx)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 transition-all duration-150 ${
-                      idx === activeSuggestionIndex ? "bg-red-600/10 border-l-2 border-red-500" : "hover:bg-white/5 border-l-2 border-transparent"
-                    }`}
-                  >
-                    <div className="relative w-9 h-13 rounded-lg overflow-hidden bg-[#141414] shrink-0">
-                      <SafeImage
-                        src={(movie.thumbnailUrl || movie.backdropUrl)?.replace("/w500/", "/w92/").replace("/w780/", "/w92/")}
-                        alt={movie.title || ""}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-col items-start flex-1 min-w-0">
-                      <span className="text-sm font-semibold text-white truncate">{movie.title}</span>
-                      <span className="text-[10px] text-white/40 font-medium">
-                        {movie.mediaType === "tv" ? "TV Show" : "Movie"} · {movie.releaseYear || "N/A"}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-yellow-500 shrink-0">
-                      <Star size={11} className="fill-yellow-500" />
-                      <span className="text-xs font-bold text-white/60">{movie.rating || "N/A"}</span>
-                    </div>
-                  </button>
-                ))}
-                <div className="px-4 py-2 border-t border-white/5 bg-white/[0.02]">
-                  <span className="text-[10px] text-white/20 font-medium">Use ↑↓ to navigate, Enter to select</span>
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Filters */}
