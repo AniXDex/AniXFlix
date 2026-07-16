@@ -38,6 +38,19 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     return () => { document.body.style.overflow = "auto"; };
   }, [isOpen]);
 
+  const handleEnter = () => {
+    if (query.trim()) {
+      onClose();
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleEnter();
+    }
+  };
+
   useEffect(() => {
     const timer = setTimeout(async () => {
       if (query.trim().length > 1) {
@@ -97,6 +110,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Type here to search..."
             className="w-full bg-[#111111] border border-white/10 rounded-2xl py-3.5 pl-11 pr-11 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-white/20 transition-all font-medium shadow-inner"
           />

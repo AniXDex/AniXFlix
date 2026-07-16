@@ -120,9 +120,9 @@ function Header() {
 
         <div className="w-[1px] h-6 bg-white/10 hidden md:block mx-1"></div>
 
-        <button onClick={() => setIsSearchOpen(true)} className="text-white hover:text-white/80 transition-colors ml-1">
+        <Link href="/search" className="text-white hover:text-white/80 transition-colors ml-1">
           <Search size={22} />
-        </button>
+        </Link>
 
       </div>
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
