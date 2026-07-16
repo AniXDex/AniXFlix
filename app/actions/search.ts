@@ -28,6 +28,21 @@ export async function searchContent(query: string, filter: "all" | "movie" | "tv
   return mapped.filter((item: Movie) => item.mediaType === filter);
 }
 
+export async function searchContentPage(query: string, page: number = 1, filter: "all" | "movie" | "tv" | "anime" = "all"): Promise<{ results: Movie[]; totalPages: number }> {
+  if (!query) return { results: [], totalPages: 0 };
+
+  const data = await tmdb.searchPage(query, page);
+
+  let mapped = (data.results || [])
+    .filter((item: any) => item.media_type === "movie" || item.media_type === "tv")
+    .map((item: any) => mapTmdbToAnix(item));
+
+  if (filter === "movie") mapped = mapped.filter((m: Movie) => m.mediaType === "movie");
+  if (filter === "tv") mapped = mapped.filter((m: Movie) => m.mediaType === "tv");
+
+  return { results: mapped, totalPages: data.totalPages };
+}
+
 export async function getTrendingContent(): Promise<{ trendingMovies: Movie[]; trendingTv: Movie[]; popularMovies: Movie[]; popularTv: Movie[] }> {
   const [trendingMovieData, trendingTvData, popularMovieData, popularTvData] = await Promise.all([
     tmdb.getTrending("movie"),
@@ -59,5 +74,15 @@ export async function getProviderContent(providerId: string, type: "movie" | "tv
     return (data || []).slice(0, 12).map((m: any) => mapTmdbToAnix(m));
   } catch {
     return [];
+  }
+}
+
+export async function getProviderContentPage(providerId: string, type: "movie" | "tv", page: number = 1): Promise<{ results: Movie[]; totalPages: number }> {
+  try {
+    const data = await tmdb.getDiscover(type, { withWatchProviders: providerId });
+    const results = (data || []).slice(0, 12).map((m: any) => mapTmdbToAnix(m));
+    return { results, totalPages: page + 1 };
+  } catch {
+    return { results: [], totalPages: 0 };
   }
 }

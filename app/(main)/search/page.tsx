@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, Clock, Star, Play, TrendingUp, Film, Tv, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
+import { Search, X, Clock, Star, Play, TrendingUp, Film, Tv, Sparkles, ChevronRight, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { useStore } from "@/store/useStore";
-import { searchContent, getTrendingContent, getProviderContent } from "@/app/actions/search";
+import { searchContent, searchContentPage, getTrendingContent, getProviderContent, getProviderContentPage } from "@/app/actions/search";
 import { Movie } from "@/types/types";
 import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
@@ -42,6 +42,11 @@ function SearchPageInner() {
   const [providerMovies, setProviderMovies] = useState<Movie[]>([]);
   const [providerTv, setProviderTv] = useState<Movie[]>([]);
   const [providerTab, setProviderTab] = useState<"movies" | "tv">("movies");
+  const [searchPage, setSearchPage] = useState(1);
+  const [searchTotalPages, setSearchTotalPages] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [providerPage, setProviderPage] = useState(1);
+  const [providerTotalPages, setProviderTotalPages] = useState(1);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -79,25 +84,49 @@ function SearchPageInner() {
     }
   }, []);
 
-  const loadProviderContent = async (providerId: string) => {
-    setIsSearching(true);
+  const loadProviderContent = async (providerId: string, page: number = 1) => {
+    setIsSearching(page === 1);
     setHasSearched(true);
     const [movies, tv] = await Promise.all([
-      getProviderContent(providerId, "movie"),
-      getProviderContent(providerId, "tv"),
+      page === 1 ? getProviderContent(providerId, "movie") : getProviderContentPage(providerId, "movie", page),
+      page === 1 ? getProviderContent(providerId, "tv") : getProviderContentPage(providerId, "tv", page),
     ]);
-    setProviderMovies(movies);
-    setProviderTv(tv);
+    if (page === 1) {
+      setProviderMovies(movies as Movie[]);
+      setProviderTv(tv as Movie[]);
+      setProviderPage(1);
+    } else {
+      setProviderMovies((prev) => [...prev, ...(movies as Movie[])]);
+      setProviderTv((prev) => [...prev, ...(tv as Movie[])]);
+    }
+    setProviderTotalPages((tv as any)?.totalPages || page + 1);
     setProviderTab("movies");
     setIsSearching(false);
+  };
+
+  const handleLoadMoreProvider = async () => {
+    if (isLoadingMore || !activeProvider) return;
+    setIsLoadingMore(true);
+    const nextPage = providerPage + 1;
+    const [movies, tv] = await Promise.all([
+      getProviderContentPage(activeProvider, "movie", nextPage),
+      getProviderContentPage(activeProvider, "tv", nextPage),
+    ]);
+    setProviderMovies((prev) => [...prev, ...movies.results]);
+    setProviderTv((prev) => [...prev, ...tv.results]);
+    setProviderPage(nextPage);
+    setProviderTotalPages(Math.max(movies.totalPages, tv.totalPages));
+    setIsLoadingMore(false);
   };
 
   const doSearch = useCallback(async (q: string, f: typeof filter) => {
     if (q.trim().length > 1) {
       setIsSearching(true);
       setHasSearched(true);
-      const data = await searchContent(q, f);
-      setResults(data);
+      const data = await searchContentPage(q, 1, f);
+      setResults(data.results);
+      setSearchPage(1);
+      setSearchTotalPages(data.totalPages);
       setIsSearching(false);
       addSearchHistory(q);
     } else {
@@ -105,6 +134,17 @@ function SearchPageInner() {
       setHasSearched(false);
     }
   }, [addSearchHistory]);
+
+  const handleLoadMoreSearch = async () => {
+    if (isLoadingMore) return;
+    setIsLoadingMore(true);
+    const nextPage = searchPage + 1;
+    const data = await searchContentPage(query, nextPage, filterRef.current);
+    setResults((prev) => [...prev, ...data.results]);
+    setSearchPage(nextPage);
+    setSearchTotalPages(data.totalPages);
+    setIsLoadingMore(false);
+  };
 
   useEffect(() => {
     if (isInternalRef.current) {
@@ -188,7 +228,12 @@ function SearchPageInner() {
     <div className="min-h-screen bg-black">
       <div className="pt-20 pb-6 px-4 md:px-14 xl:px-20">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">Search</h1>
+          <div className="flex items-center gap-3 mb-3">
+            <button onClick={() => router.back()} className="text-white/50 hover:text-white p-1 -ml-1 transition-colors">
+              <ArrowLeft size={22} />
+            </button>
+            <h1 className="text-2xl md:text-3xl font-bold text-white">Search</h1>
+          </div>
 
           <div className="relative">
             <form onSubmit={handleSearch}>
@@ -424,6 +469,18 @@ function SearchPageInner() {
                           <ResultCard key={movie.publicId} movie={movie} />
                         ))}
                       </div>
+                      {providerPage < providerTotalPages && (
+                        <div className="flex justify-center mt-6">
+                          <button
+                            onClick={handleLoadMoreProvider}
+                            disabled={isLoadingMore}
+                            className="flex items-center gap-2 px-6 py-2.5 bg-[#141414] border border-white/10 rounded-lg text-xs font-semibold text-white/70 hover:text-white hover:border-white/20 disabled:opacity-50 transition-all"
+                          >
+                            {isLoadingMore ? <Loader2 size={14} className="animate-spin" /> : null}
+                            {isLoadingMore ? "Loading..." : "Load More"}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-24">
@@ -447,6 +504,18 @@ function SearchPageInner() {
                           <ResultCard key={movie.publicId} movie={movie} />
                         ))}
                       </div>
+                      {searchPage < searchTotalPages && (
+                        <div className="flex justify-center mt-6">
+                          <button
+                            onClick={handleLoadMoreSearch}
+                            disabled={isLoadingMore}
+                            className="flex items-center gap-2 px-6 py-2.5 bg-[#141414] border border-white/10 rounded-lg text-xs font-semibold text-white/70 hover:text-white hover:border-white/20 disabled:opacity-50 transition-all"
+                          >
+                            {isLoadingMore ? <Loader2 size={14} className="animate-spin" /> : null}
+                            {isLoadingMore ? "Loading..." : "Load More"}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-24">

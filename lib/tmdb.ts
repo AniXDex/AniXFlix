@@ -136,6 +136,13 @@ export const tmdb = {
 
         return [...multiResults, ...companyResults];
     },
+    searchPage: async (query: string, page: number = 1): Promise<{ results: Movie[]; totalPages: number }> => {
+        const data = await fetchTMDB("/search/multi", { query, page: page.toString() });
+        return {
+            results: (data?.results || []).filter((item: any) => item.media_type === "movie" || item.media_type === "tv"),
+            totalPages: data?.total_pages || 1,
+        };
+    },
     getGenreList: async (type: "movie" | "tv") => {
         const data = await fetchTMDB(`/genre/${type}/list`);
         return data?.genres || [];
