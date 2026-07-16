@@ -39,6 +39,8 @@ function SearchPageInner() {
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const isInternalRef = useRef(false);
+  const filterRef = useRef(filter);
+  filterRef.current = filter;
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -57,8 +59,8 @@ function SearchPageInner() {
   }, []);
 
   useEffect(() => {
-    if (initialQuery) {
-      doSearch(initialQuery, filter);
+    if (initialQuery && query) {
+      doSearch(query, filter);
     }
   }, []);
 
@@ -85,13 +87,13 @@ function SearchPageInner() {
     if (q !== query) {
       setQuery(q);
       if (q) {
-        doSearch(q, filter);
+        doSearch(q, filterRef.current);
       } else {
         setResults([]);
         setHasSearched(false);
       }
     }
-  }, [searchParams, query, filter, doSearch]);
+  }, [searchParams]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -101,7 +103,7 @@ function SearchPageInner() {
 
     if (val.trim().length > 1) {
       debounceRef.current = setTimeout(() => {
-        doSearch(val, filter);
+        doSearch(val, filterRef.current);
         isInternalRef.current = true;
         router.push(`/search?q=${encodeURIComponent(val.trim())}`, { scroll: false });
       }, 400);
@@ -130,6 +132,7 @@ function SearchPageInner() {
 
   const handleFilterChange = (f: typeof filter) => {
     setFilter(f);
+    filterRef.current = f;
     if (query.trim().length > 1) {
       doSearch(query, f);
     }
@@ -139,16 +142,15 @@ function SearchPageInner() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="pt-24 pb-8 px-4 md:px-14 xl:px-20">
+      <div className="pt-20 pb-6 px-4 md:px-14 xl:px-20">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-1">Search</h1>
-          <p className="text-sm text-white/40 mb-5">Find movies, TV shows, and anime</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">Search</h1>
 
           <div className="relative">
             <form onSubmit={handleSearch}>
-              <div className="flex items-center bg-[#141414] border border-white/10 rounded-xl overflow-hidden focus-within:border-white/20 transition-colors">
+              <div className="flex items-center bg-[#141414] border border-white/10 rounded-xl overflow-hidden focus-within:border-white/30 transition-colors">
                 <div className="pl-4">
-                  <Search size={20} className="text-white/30" />
+                  <Search size={18} className="text-white/30" />
                 </div>
                 <input
                   ref={inputRef}
@@ -156,8 +158,8 @@ function SearchPageInner() {
                   value={query}
                   onChange={handleInputChange}
                   onKeyDown={handleKeyDown}
-                  placeholder="Search..."
-                  className="w-full bg-transparent py-3.5 pl-3 pr-10 text-base text-white placeholder:text-white/20 focus:outline-none"
+                  placeholder="Search movies, shows, anime..."
+                  className="w-full bg-transparent py-3 pl-3 pr-10 text-sm md:text-base text-white placeholder:text-white/20 focus:outline-none"
                   autoComplete="off"
                   spellCheck={false}
                 />
@@ -165,7 +167,7 @@ function SearchPageInner() {
                   <button
                     type="button"
                     onClick={() => { setQuery(""); setResults([]); setHasSearched(false); isInternalRef.current = true; router.push("/search", { scroll: false }); }}
-                    className="mr-2 text-white/30 hover:text-white p-1"
+                    className="mr-2 text-white/40 hover:text-white p-1"
                   >
                     <X size={16} />
                   </button>
@@ -175,12 +177,12 @@ function SearchPageInner() {
           </div>
 
           {hasSearched && (
-            <div className="flex items-center gap-2 mt-4">
+            <div className="flex items-center gap-2 mt-4 overflow-x-auto pb-1">
               {(["all", "movie", "tv", "anime"] as const).map((f) => (
                 <button
                   key={f}
                   onClick={() => handleFilterChange(f)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
                     filter === f
                       ? "bg-white text-black"
                       : "bg-[#141414] border border-white/10 text-white/50 hover:text-white"
@@ -199,49 +201,47 @@ function SearchPageInner() {
 
           {isInitial && (
             <>
-              <div className="mb-10">
-                <div className="flex items-center gap-2 mb-4">
-                  <h2 className="text-sm font-semibold text-white/50 uppercase tracking-widest">Browse by Platform</h2>
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2">
+              <div className="mb-8">
+                <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Platforms</h2>
+                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2">
                   {PROVIDERS.map((provider) => (
                     <Link
                       key={provider.id}
                       href={`/search?provider=${provider.id}`}
-                      className="flex flex-col items-center gap-2 p-4 rounded-xl bg-[#141414] border border-white/5 hover:border-white/20 transition-colors"
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#141414] border border-white/5 active:scale-95 transition-all"
                     >
                       <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white ${
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white ${
                           provider.border ? 'border border-white/20' : ''
                         }`}
                         style={{ backgroundColor: provider.color }}
                       >
                         {provider.short}
                       </div>
-                      <span className="text-[11px] font-semibold text-white/60 text-center leading-tight">{provider.name}</span>
+                      <span className="text-[10px] font-semibold text-white/50 text-center leading-tight">{provider.name}</span>
                     </Link>
                   ))}
                 </div>
               </div>
 
               {searchHistory.length > 0 && (
-                <div className="mb-10">
+                <div className="mb-8">
                   <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-sm font-semibold text-white/50 uppercase tracking-widest">Recent</h2>
-                    <button onClick={clearSearchHistory} className="text-xs text-red-400 hover:text-red-300 transition-colors">Clear</button>
+                    <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest">Recent</h2>
+                    <button onClick={clearSearchHistory} className="text-xs text-red-400 hover:text-red-300">Clear</button>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {searchHistory.map((histQuery) => (
                       <button
                         key={histQuery}
-                        onClick={() => { setQuery(histQuery); router.push(`/search?q=${encodeURIComponent(histQuery)}`, { scroll: false }); doSearch(histQuery, filter); }}
-                        className="group flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-white/5 hover:border-white/20 rounded-lg text-sm text-white/50 hover:text-white transition-colors"
+                        onClick={() => { setQuery(histQuery); isInternalRef.current = true; router.push(`/search?q=${encodeURIComponent(histQuery)}`, { scroll: false }); doSearch(histQuery, filter); }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-white/5 rounded-lg text-sm text-white/50 active:scale-95 transition-all"
                       >
                         <Clock size={12} className="text-white/20" />
                         <span>{histQuery}</span>
                         <button
                           onClick={(e) => { e.stopPropagation(); removeSearchHistory(histQuery); }}
-                          className="ml-0.5 text-white/10 hover:text-white/50 transition-colors"
+                          className="ml-0.5 text-white/10 hover:text-white/50"
                         >
                           <X size={11} />
                         </button>
@@ -256,15 +256,15 @@ function SearchPageInner() {
                   {trendingMovies.length > 0 && (
                     <section>
                       <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <TrendingUp size={16} className="text-red-500" />
-                          <h2 className="text-base font-bold text-white">Trending Movies</h2>
+                        <div className="flex items-center gap-1.5">
+                          <TrendingUp size={15} className="text-red-500" />
+                          <h2 className="text-sm font-bold text-white">Trending Movies</h2>
                         </div>
-                        <Link href="/movies" className="flex items-center gap-0.5 text-xs text-white/40 hover:text-white transition-colors">
-                          View all <ArrowRight size={12} />
+                        <Link href="/movies" className="text-xs text-white/40 hover:text-white flex items-center gap-0.5">
+                          All <ArrowRight size={12} />
                         </Link>
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
                         {trendingMovies.slice(0, 6).map((movie) => (
                           <TrendingCard key={movie.publicId} movie={movie} />
                         ))}
@@ -275,15 +275,15 @@ function SearchPageInner() {
                   {trendingTv.length > 0 && (
                     <section>
                       <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <Tv size={16} className="text-red-500" />
-                          <h2 className="text-base font-bold text-white">Trending TV Shows</h2>
+                        <div className="flex items-center gap-1.5">
+                          <Tv size={15} className="text-red-500" />
+                          <h2 className="text-sm font-bold text-white">Trending TV</h2>
                         </div>
-                        <Link href="/series" className="flex items-center gap-0.5 text-xs text-white/40 hover:text-white transition-colors">
-                          View all <ArrowRight size={12} />
+                        <Link href="/series" className="text-xs text-white/40 hover:text-white flex items-center gap-0.5">
+                          All <ArrowRight size={12} />
                         </Link>
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
                         {trendingTv.slice(0, 6).map((movie) => (
                           <TrendingCard key={movie.publicId} movie={movie} />
                         ))}
@@ -294,11 +294,8 @@ function SearchPageInner() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {popularMovies.length > 0 && (
                       <section>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Film size={14} className="text-white/30" />
-                          <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest">Popular Movies</h3>
-                        </div>
-                        <div className="flex flex-col gap-1.5">
+                        <h3 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Popular Movies</h3>
+                        <div className="flex flex-col gap-1">
                           {popularMovies.slice(0, 5).map((movie) => (
                             <MiniCard key={movie.publicId} movie={movie} />
                           ))}
@@ -307,11 +304,8 @@ function SearchPageInner() {
                     )}
                     {popularTv.length > 0 && (
                       <section>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Tv size={14} className="text-white/30" />
-                          <h3 className="text-xs font-semibold text-white/50 uppercase tracking-widest">Popular TV Shows</h3>
-                        </div>
-                        <div className="flex flex-col gap-1.5">
+                        <h3 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Popular TV</h3>
+                        <div className="flex flex-col gap-1">
                           {popularTv.slice(0, 5).map((movie) => (
                             <MiniCard key={movie.publicId} movie={movie} />
                           ))}
@@ -326,8 +320,8 @@ function SearchPageInner() {
                 <div className="space-y-6">
                   {[1, 2].map((row) => (
                     <div key={row}>
-                      <div className="h-4 w-36 bg-white/5 rounded mb-3 animate-pulse" />
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                      <div className="h-4 w-32 bg-white/5 rounded mb-3 animate-pulse" />
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
                         {Array.from({ length: 6 }).map((_, i) => (
                           <div key={i} className="aspect-[2/3] bg-white/5 rounded-lg animate-pulse" />
                         ))}
@@ -338,9 +332,9 @@ function SearchPageInner() {
               )}
 
               {searchHistory.length === 0 && !isLoadingTrending && (
-                <div className="text-center py-16">
-                  <Sparkles size={20} className="mx-auto mb-2 text-white/10" />
-                  <p className="text-sm text-white/20">Start typing to search</p>
+                <div className="text-center py-20">
+                  <Sparkles size={18} className="mx-auto mb-2 text-white/10" />
+                  <p className="text-sm text-white/20">Search for something</p>
                 </div>
               )}
             </>
@@ -350,56 +344,24 @@ function SearchPageInner() {
             <>
               {isSearching ? (
                 <div className="flex items-center justify-center py-32">
-                  <div className="w-8 h-8 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
+                  <div className="w-7 h-7 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
                 </div>
               ) : results.length > 0 ? (
                 <div>
-                  <p className="text-sm text-white/40 mb-4">
-                    <span className="text-white font-medium">{results.length}</span> results for &ldquo;{query}&rdquo;
+                  <p className="text-xs text-white/40 mb-3">
+                    <span className="text-white font-medium">{results.length}</span> results
                   </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
                     {results.map((movie) => (
-                      <Link
-                        key={movie.publicId}
-                        href={`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
-                        className="group relative flex flex-col bg-[#141414] rounded-lg overflow-hidden border border-white/[0.04] hover:border-white/20 transition-all"
-                      >
-                        <div className="relative aspect-[2/3] overflow-hidden bg-[#0a0a0a]">
-                          <SafeImage
-                            src={(movie.thumbnailUrl || movie.backdropUrl)?.replace("/w500/", "/w342/").replace("/w780/", "/w342/")}
-                            alt={movie.title || ""}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
-                            <span className="flex items-center gap-1.5 text-white text-xs font-bold bg-red-600 px-3 py-1.5 rounded-lg">
-                              <Play size={11} fill="currentColor" /> Play
-                            </span>
-                          </div>
-                          {movie.rating && (
-                            <div className="absolute top-2 right-2 bg-black/70 px-1.5 py-0.5 rounded text-[10px] font-bold text-yellow-500 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Star size={8} className="fill-yellow-500" /> {movie.rating}
-                            </div>
-                          )}
-                          <div className="absolute top-2 left-2">
-                            <span className="text-[9px] font-bold text-white/70 bg-black/60 px-1.5 py-0.5 rounded">
-                              {movie.mediaType === "tv" ? "TV" : "MOVIE"}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="p-2.5">
-                          <h3 className="text-xs font-semibold text-white/90 truncate">{movie.title}</h3>
-                          <p className="text-[10px] text-white/40 mt-0.5">{movie.releaseYear || "N/A"}</p>
-                        </div>
-                      </Link>
+                      <ResultCard key={movie.publicId} movie={movie} />
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-32">
-                  <Search size={32} className="text-white/10 mb-3" />
-                  <p className="text-sm text-white/30 font-medium">No results for &ldquo;{query}&rdquo;</p>
-                  <p className="text-xs text-white/20 mt-1">Try a different search term</p>
+                <div className="flex flex-col items-center justify-center py-24">
+                  <Search size={28} className="text-white/10 mb-3" />
+                  <p className="text-sm text-white/30">No results for &ldquo;{query}&rdquo;</p>
+                  <p className="text-xs text-white/20 mt-1">Try a different search</p>
                 </div>
               )}
             </>
@@ -414,16 +376,16 @@ function TrendingCard({ movie }: { movie: Movie }) {
   return (
     <Link
       href={`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
-      className="group relative aspect-[2/3] rounded-lg overflow-hidden bg-[#141414] border border-white/[0.03] hover:border-white/20 transition-all"
+      className="group relative aspect-[2/3] rounded-lg overflow-hidden bg-[#141414] active:scale-95 transition-all"
     >
       <SafeImage
         src={(movie.thumbnailUrl || movie.backdropUrl)?.replace("/w500/", "/w342/").replace("/w780/", "/w342/")}
         alt={movie.title || ""}
         fill
-        className="object-cover group-hover:scale-105 transition-transform duration-500"
+        className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="absolute bottom-0 left-0 right-0 p-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute bottom-0 left-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <p className="text-xs font-semibold text-white truncate">{movie.title}</p>
       </div>
     </Link>
@@ -434,7 +396,7 @@ function MiniCard({ movie }: { movie: Movie }) {
   return (
     <Link
       href={`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
-      className="flex items-center gap-2.5 p-2 rounded-lg bg-[#141414] border border-white/[0.03] hover:border-white/10 hover:bg-[#1a1a1a] transition-colors"
+      className="flex items-center gap-2 p-2 rounded-lg bg-[#141414] active:scale-[0.98] transition-all"
     >
       <div className="relative w-9 h-13 rounded overflow-hidden bg-[#0a0a0a] shrink-0">
         <SafeImage
@@ -453,11 +415,48 @@ function MiniCard({ movie }: { movie: Movie }) {
   );
 }
 
+function ResultCard({ movie }: { movie: Movie }) {
+  return (
+    <Link
+      href={`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
+      className="group relative flex flex-col bg-[#141414] rounded-lg overflow-hidden active:scale-95 transition-all"
+    >
+      <div className="relative aspect-[2/3] overflow-hidden bg-[#0a0a0a]">
+        <SafeImage
+          src={(movie.thumbnailUrl || movie.backdropUrl)?.replace("/w500/", "/w342/").replace("/w780/", "/w342/")}
+          alt={movie.title || ""}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+          <span className="flex items-center gap-1 text-white text-xs font-bold bg-red-600 px-3 py-1.5 rounded-lg">
+            <Play size={10} fill="currentColor" /> Play
+          </span>
+        </div>
+        {movie.rating && (
+          <div className="absolute top-2 right-2 bg-black/70 px-1.5 py-0.5 rounded text-[10px] font-bold text-yellow-500 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Star size={8} className="fill-yellow-500" /> {movie.rating}
+          </div>
+        )}
+        <div className="absolute top-2 left-2">
+          <span className="text-[9px] font-bold text-white/70 bg-black/60 px-1.5 py-0.5 rounded">
+            {movie.mediaType === "tv" ? "TV" : "MOVIE"}
+          </span>
+        </div>
+      </div>
+      <div className="p-2.5">
+        <h3 className="text-xs font-semibold text-white/90 truncate">{movie.title}</h3>
+        <p className="text-[10px] text-white/40 mt-0.5">{movie.releaseYear || "N/A"}</p>
+      </div>
+    </Link>
+  );
+}
+
 export default function SearchPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
+        <div className="w-7 h-7 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
       </div>
     }>
       <SearchPageInner />
