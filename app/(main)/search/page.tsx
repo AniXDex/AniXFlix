@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, Clock, Star, Play, TrendingUp, Film, Tv, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
 import { useStore } from "@/store/useStore";
-import { searchContent, getTrendingContent } from "@/app/actions/search";
+import { searchContent, getTrendingContent, getProviderContent } from "@/app/actions/search";
 import { Movie } from "@/types/types";
 import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
@@ -25,16 +25,20 @@ function SearchPageInner() {
   const initialQuery = searchParams.get("q") || "";
   const { searchHistory, addSearchHistory, removeSearchHistory, clearSearchHistory } = useStore();
 
+  const initialProvider = searchParams.get("provider") || "";
+
   const [query, setQuery] = useState(initialQuery);
   const [filter, setFilter] = useState<"all" | "movie" | "tv" | "anime">("all");
   const [results, setResults] = useState<Movie[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [hasSearched, setHasSearched] = useState(!!initialQuery);
+  const [hasSearched, setHasSearched] = useState(!!initialQuery || !!initialProvider);
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
   const [trendingTv, setTrendingTv] = useState<Movie[]>([]);
   const [popularMovies, setPopularMovies] = useState<Movie[]>([]);
   const [popularTv, setPopularTv] = useState<Movie[]>([]);
   const [isLoadingTrending, setIsLoadingTrending] = useState(true);
+  const [activeProvider, setActiveProvider] = useState<string>(initialProvider);
+  const [activeProviderName, setActiveProviderName] = useState("");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -47,6 +51,14 @@ function SearchPageInner() {
   }, []);
 
   useEffect(() => {
+    if (initialProvider) {
+      const p = PROVIDERS.find((x) => x.id === initialProvider);
+      if (p) {
+        setActiveProviderName(p.name);
+        loadProviderContent(initialProvider);
+      }
+      return;
+    }
     if (!initialQuery) {
       getTrendingContent().then((data) => {
         setTrendingMovies(data.trendingMovies);
@@ -63,6 +75,17 @@ function SearchPageInner() {
       doSearch(query, filter);
     }
   }, []);
+
+  const loadProviderContent = async (providerId: string) => {
+    setIsSearching(true);
+    setHasSearched(true);
+    const [movies, tv] = await Promise.all([
+      getProviderContent(providerId, "movie"),
+      getProviderContent(providerId, "tv"),
+    ]);
+    setResults([...movies, ...tv]);
+    setIsSearching(false);
+  };
 
   const doSearch = useCallback(async (q: string, f: typeof filter) => {
     if (q.trim().length > 1) {
@@ -84,6 +107,22 @@ function SearchPageInner() {
       return;
     }
     const q = searchParams.get("q") || "";
+    const p = searchParams.get("provider") || "";
+    if (p && p !== activeProvider) {
+      setActiveProvider(p);
+      setQuery("");
+      const provider = PROVIDERS.find((x) => x.id === p);
+      setActiveProviderName(provider?.name || "");
+      loadProviderContent(p);
+      return;
+    }
+    if (!p && activeProvider) {
+      setActiveProvider("");
+      setActiveProviderName("");
+      setResults([]);
+      setHasSearched(false);
+      return;
+    }
     if (q !== query) {
       setQuery(q);
       if (q) {
@@ -342,6 +381,15 @@ function SearchPageInner() {
 
           {hasSearched && (
             <>
+              {activeProviderName && (
+                <div className="flex items-center gap-3 mb-4">
+                  <button onClick={() => { isInternalRef.current = true; router.push("/search", { scroll: false }); }} className="text-xs text-white/40 hover:text-white transition-colors flex items-center gap-1">
+                    Platforms
+                  </button>
+                  <span className="text-white/20 text-xs">/</span>
+                  <span className="text-sm font-semibold text-white">{activeProviderName}</span>
+                </div>
+              )}
               {isSearching ? (
                 <div className="flex items-center justify-center py-32">
                   <div className="w-7 h-7 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
@@ -349,19 +397,23 @@ function SearchPageInner() {
               ) : results.length > 0 ? (
                 <div>
                   <p className="text-xs text-white/40 mb-3">
-                    <span className="text-white font-medium">{results.length}</span> results
+                    <span className="text-white font-medium">{results.length}</span> {activeProviderName ? `from ${activeProviderName}` : "results"}
                   </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
+                  <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
                     {results.map((movie) => (
                       <ResultCard key={movie.publicId} movie={movie} />
                     ))}
                   </div>
                 </div>
-              ) : (
+              ) : query ? (
                 <div className="flex flex-col items-center justify-center py-24">
                   <Search size={28} className="text-white/10 mb-3" />
                   <p className="text-sm text-white/30">No results for &ldquo;{query}&rdquo;</p>
                   <p className="text-xs text-white/20 mt-1">Try a different search</p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-24">
+                  <p className="text-sm text-white/30">No content found</p>
                 </div>
               )}
             </>
