@@ -39,6 +39,9 @@ function SearchPageInner() {
   const [isLoadingTrending, setIsLoadingTrending] = useState(true);
   const [activeProvider, setActiveProvider] = useState<string>(initialProvider);
   const [activeProviderName, setActiveProviderName] = useState("");
+  const [providerMovies, setProviderMovies] = useState<Movie[]>([]);
+  const [providerTv, setProviderTv] = useState<Movie[]>([]);
+  const [providerTab, setProviderTab] = useState<"movies" | "tv">("movies");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -83,7 +86,9 @@ function SearchPageInner() {
       getProviderContent(providerId, "movie"),
       getProviderContent(providerId, "tv"),
     ]);
-    setResults([...movies, ...tv]);
+    setProviderMovies(movies);
+    setProviderTv(tv);
+    setProviderTab("movies");
     setIsSearching(false);
   };
 
@@ -381,40 +386,76 @@ function SearchPageInner() {
 
           {hasSearched && (
             <>
-              {activeProviderName && (
-                <div className="flex items-center gap-3 mb-4">
-                  <button onClick={() => { isInternalRef.current = true; router.push("/search", { scroll: false }); }} className="text-xs text-white/40 hover:text-white transition-colors flex items-center gap-1">
-                    Platforms
-                  </button>
-                  <span className="text-white/20 text-xs">/</span>
-                  <span className="text-sm font-semibold text-white">{activeProviderName}</span>
-                </div>
-              )}
-              {isSearching ? (
-                <div className="flex items-center justify-center py-32">
-                  <div className="w-7 h-7 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
-                </div>
-              ) : results.length > 0 ? (
-                <div>
-                  <p className="text-xs text-white/40 mb-3">
-                    <span className="text-white font-medium">{results.length}</span> {activeProviderName ? `from ${activeProviderName}` : "results"}
-                  </p>
-                  <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
-                    {results.map((movie) => (
-                      <ResultCard key={movie.publicId} movie={movie} />
-                    ))}
+              {activeProviderName ? (
+                <>
+                  <div className="flex items-center gap-3 mb-4">
+                    <button onClick={() => { isInternalRef.current = true; router.push("/search", { scroll: false }); }} className="text-xs text-white/40 hover:text-white transition-colors">
+                      Platforms
+                    </button>
+                    <span className="text-white/20 text-xs">/</span>
+                    <span className="text-sm font-semibold text-white">{activeProviderName}</span>
                   </div>
-                </div>
-              ) : query ? (
-                <div className="flex flex-col items-center justify-center py-24">
-                  <Search size={28} className="text-white/10 mb-3" />
-                  <p className="text-sm text-white/30">No results for &ldquo;{query}&rdquo;</p>
-                  <p className="text-xs text-white/20 mt-1">Try a different search</p>
-                </div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <button
+                      onClick={() => setProviderTab("movies")}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                        providerTab === "movies" ? "bg-white text-black" : "bg-[#141414] border border-white/10 text-white/50 hover:text-white"
+                      }`}
+                    >
+                      Movies {providerMovies.length > 0 && <span className="ml-1 text-white/40">({providerMovies.length})</span>}
+                    </button>
+                    <button
+                      onClick={() => setProviderTab("tv")}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                        providerTab === "tv" ? "bg-white text-black" : "bg-[#141414] border border-white/10 text-white/50 hover:text-white"
+                      }`}
+                    >
+                      TV Shows {providerTv.length > 0 && <span className="ml-1 text-white/40">({providerTv.length})</span>}
+                    </button>
+                  </div>
+                  {isSearching ? (
+                    <div className="flex items-center justify-center py-32">
+                      <div className="w-7 h-7 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
+                    </div>
+                  ) : (providerTab === "movies" ? providerMovies : providerTv).length > 0 ? (
+                    <div>
+                      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
+                        {(providerTab === "movies" ? providerMovies : providerTv).map((movie) => (
+                          <ResultCard key={movie.publicId} movie={movie} />
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-24">
+                      <p className="text-sm text-white/30">No {providerTab === "movies" ? "movies" : "TV shows"} available</p>
+                    </div>
+                  )}
+                </>
               ) : (
-                <div className="flex flex-col items-center justify-center py-24">
-                  <p className="text-sm text-white/30">No content found</p>
-                </div>
+                <>
+                  {isSearching ? (
+                    <div className="flex items-center justify-center py-32">
+                      <div className="w-7 h-7 border-2 border-white/10 border-t-red-600 rounded-full animate-spin" />
+                    </div>
+                  ) : results.length > 0 ? (
+                    <div>
+                      <p className="text-xs text-white/40 mb-3">
+                        <span className="text-white font-medium">{results.length}</span> results
+                      </p>
+                      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1.5">
+                        {results.map((movie) => (
+                          <ResultCard key={movie.publicId} movie={movie} />
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-24">
+                      <Search size={28} className="text-white/10 mb-3" />
+                      <p className="text-sm text-white/30">No results for &ldquo;{query}&rdquo;</p>
+                      <p className="text-xs text-white/20 mt-1">Try a different search</p>
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}
