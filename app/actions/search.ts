@@ -79,9 +79,11 @@ export async function getProviderContent(providerId: string, type: "movie" | "tv
 
 export async function getProviderContentPage(providerId: string, type: "movie" | "tv", page: number = 1): Promise<{ results: Movie[]; totalPages: number }> {
   try {
-    const data = await tmdb.getDiscover(type, { withWatchProviders: providerId });
-    const results = (data || []).slice(0, 12).map((m: any) => mapTmdbToAnix(m));
-    return { results, totalPages: page + 1 };
+    const data = await tmdb.getDiscoverPage(type, { withWatchProviders: providerId, page });
+    return {
+      results: (data.results || []).map((m: any) => mapTmdbToAnix(m)),
+      totalPages: data.totalPages,
+    };
   } catch {
     return { results: [], totalPages: 0 };
   }

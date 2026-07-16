@@ -84,22 +84,17 @@ function SearchPageInner() {
     }
   }, []);
 
-  const loadProviderContent = async (providerId: string, page: number = 1) => {
-    setIsSearching(page === 1);
+  const loadProviderContent = async (providerId: string) => {
+    setIsSearching(true);
     setHasSearched(true);
     const [movies, tv] = await Promise.all([
-      page === 1 ? getProviderContent(providerId, "movie") : getProviderContentPage(providerId, "movie", page),
-      page === 1 ? getProviderContent(providerId, "tv") : getProviderContentPage(providerId, "tv", page),
+      getProviderContentPage(providerId, "movie", 1),
+      getProviderContentPage(providerId, "tv", 1),
     ]);
-    if (page === 1) {
-      setProviderMovies(movies as Movie[]);
-      setProviderTv(tv as Movie[]);
-      setProviderPage(1);
-    } else {
-      setProviderMovies((prev) => [...prev, ...(movies as Movie[])]);
-      setProviderTv((prev) => [...prev, ...(tv as Movie[])]);
-    }
-    setProviderTotalPages((tv as any)?.totalPages || page + 1);
+    setProviderMovies(movies.results);
+    setProviderTv(tv.results);
+    setProviderPage(1);
+    setProviderTotalPages(Math.max(movies.totalPages, tv.totalPages));
     setProviderTab("movies");
     setIsSearching(false);
   };

@@ -147,7 +147,7 @@ export const tmdb = {
         const data = await fetchTMDB(`/genre/${type}/list`);
         return data?.genres || [];
     },
-    getDiscover: async (type: "movie" | "tv", options: { genreId?: string, year?: string, sortBy?: string, originalLanguage?: string, withWatchProviders?: string } = {}): Promise<Movie[]> => {
+    getDiscover: async (type: "movie" | "tv", options: { genreId?: string, year?: string, sortBy?: string, originalLanguage?: string, withWatchProviders?: string, page?: number } = {}): Promise<Movie[]> => {
         const params: Record<string, string> = {
             sort_by: options.sortBy || "popularity.desc",
             include_adult: "false",
@@ -157,15 +157,40 @@ export const tmdb = {
         if (options.originalLanguage) params.with_original_language = options.originalLanguage;
         if (options.withWatchProviders) {
             params.with_watch_providers = options.withWatchProviders;
-            params.watch_region = "US"; // Required by TMDB when filtering by provider
+            params.watch_region = "US";
         }
         if (options.year) {
             const key = type === "movie" ? "primary_release_year" : "first_air_date_year";
             params[key] = options.year;
         }
+        if (options.page) params.page = options.page.toString();
 
         const data = await fetchTMDB(`/discover/${type}`, params);
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
+    },
+    getDiscoverPage: async (type: "movie" | "tv", options: { genreId?: string, year?: string, sortBy?: string, originalLanguage?: string, withWatchProviders?: string, page?: number } = {}): Promise<{ results: Movie[]; totalPages: number }> => {
+        const params: Record<string, string> = {
+            sort_by: options.sortBy || "popularity.desc",
+            include_adult: "false",
+            "vote_count.gte": "100"
+        };
+        if (options.genreId) params.with_genres = options.genreId;
+        if (options.originalLanguage) params.with_original_language = options.originalLanguage;
+        if (options.withWatchProviders) {
+            params.with_watch_providers = options.withWatchProviders;
+            params.watch_region = "US";
+        }
+        if (options.year) {
+            const key = type === "movie" ? "primary_release_year" : "first_air_date_year";
+            params[key] = options.year;
+        }
+        if (options.page) params.page = options.page.toString();
+
+        const data = await fetchTMDB(`/discover/${type}`, params);
+        return {
+            results: (data?.results || []).map((item: any) => ({ ...item, media_type: type })),
+            totalPages: data?.total_pages || 1,
+        };
     },
     getSeasonDetails: async (tvId: string, seasonNumber: number) => {
         const data = await fetchTMDB(`/tv/${tvId}/season/${seasonNumber}`);
