@@ -203,3 +203,6 @@ html.android-apk * {
 html.android-apk .search-overlay {
   background-color: rgba(0, 0, 0, 0.95) !important;
 }
+
+.page-wipe-out { animation: wipeOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+@keyframes wipeOut { 0% { opacity: 1; transform: scale(1); filter: brightness(1); } 100% { opacity: 0; transform: scale(1.05); filter: brightness(0); } }
