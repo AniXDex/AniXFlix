@@ -15,8 +15,7 @@ import {
   History,
   Heart,
   Settings2,
-  ArrowLeft,
-  Zap
+  ArrowLeft
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -120,10 +119,6 @@ function Header() {
         </DropdownMenu>
 
         <div className="w-[1px] h-6 bg-white/10 hidden md:block mx-1"></div>
-
-        <button onClick={() => { document.body.classList.add('page-wipe-out'); setTimeout(() => window.location.href='http://localhost:8000', 400); }} title="Switch to AniXServer2" className="text-[#ff9d00] hover:text-yellow-400 hover:scale-110 transition-transform bg-white/5 p-2 rounded-full border border-[#ff9d00]/30 shadow-[0_0_15px_rgba(255,157,0,0.2)]">
-          <Zap size={20} className="fill-current" />
-        </button>
 
         <Link href="/search" className="text-white hover:text-white/80 transition-colors ml-1">
           <Search size={22} />
