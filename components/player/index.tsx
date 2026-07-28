@@ -22,8 +22,8 @@ interface MyPlayerProps {
 const ALL_SERVERS = [
   // 1 - anixhub-stream.vercel.app
   { name: "AnixHub", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://anixhub-stream.vercel.app/?tmdb_id=${id}&media_type=tv&season=${s}&episode=${e}` : `https://anixhub-stream.vercel.app/?tmdb_id=${id}&media_type=movie` },
-  // 2 - player.cinezo.live
-  { name: "Cinezo", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?autoplay=true&muted=0` : `https://player.cinezo.live/embed/movie/${id}?autoplay=true&muted=0` },
+  // 2 - streams.iqsmartgames.com
+  { name: "MultiMovies", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://streams.iqsmartgames.com/embed/tv/${id}/${s}/${e}?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4` : `https://streams.iqsmartgames.com/embed/movie/${id}?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4` },
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
