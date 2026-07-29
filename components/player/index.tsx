@@ -24,7 +24,9 @@ const ALL_SERVERS = [
   { name: "AnixHub", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://anixhub-stream.vercel.app/?tmdb_id=${id}&media_type=tv&season=${s}&episode=${e}` : `https://anixhub-stream.vercel.app/?tmdb_id=${id}&media_type=movie` },
   // 2 - rozgarlelo
   { name: "RozgarLelo", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://rozgarlelo.modiplay.xyz/embed/tmdb/tv?id=${id}&s=${s}&e=${e}` : `https://rozgarlelo.modiplay.xyz/embed/tmdb/movie?id=${id}` },
-  // 3 - streams.iqsmartgames.com
+  // 3 - screenscape.me
+  { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
+  // 4 - streams.iqsmartgames.com
   { name: "MultiMovies", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://streams.iqsmartgames.com/embed/tv/${id}/${s}/${e}?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4` : `https://streams.iqsmartgames.com/embed/movie/${id}?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4` },
 ];
 
