@@ -444,12 +444,29 @@ function SearchPageInner() {
             <>
               {activeProviderName ? (
                 <>
-                  <div className="flex items-center gap-3 mb-4">
-                    <button onClick={() => { isInternalRef.current = true; router.push("/search", { scroll: false }); }} className="text-xs text-white/40 hover:text-white transition-colors">
-                      Platforms
-                    </button>
-                    <span className="text-white/20 text-xs">/</span>
-                    <span className="text-sm font-semibold text-white">{activeProviderName}</span>
+                  <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => {
+                          isInternalRef.current = true;
+                          router.push("/search", { scroll: false });
+                        }}
+                        className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#141414] hover:bg-[#1f1f1f] text-white/80 hover:text-white border border-white/10 active:scale-95 transition-all group"
+                      >
+                        <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform text-red-500" />
+                        <span className="text-xs font-bold">Back to Platforms</span>
+                      </button>
+                      
+                      <div className="flex items-center gap-2 bg-[#141414] px-3.5 py-1.5 rounded-xl border border-white/5">
+                        {(() => {
+                          const p = PROVIDERS.find((x) => x.id === activeProvider);
+                          return p ? (
+                            <IconsClubLogo name={p.iconSlug} size={20} radius={4} className="w-5 h-5 object-contain" />
+                          ) : null;
+                        })()}
+                        <span className="text-sm font-extrabold text-white tracking-tight">{activeProviderName}</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2 mb-4">
                     <button
