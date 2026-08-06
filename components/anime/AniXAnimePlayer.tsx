@@ -48,7 +48,25 @@ export default function AniXAnimePlayer({ anilistId, anime, initialEpisode = 1, 
 
   const [episodeSearch, setEpisodeSearch] = useState("");
   const [copied, setCopied] = useState(false);
+  
+  const jwContainerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [jwLoaded, setJwLoaded] = useState(false);
+
+  // Load JWPlayer Library Script
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if ((window as any).jwplayer) {
+      setJwLoaded(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://cdn.jwplayer.com/libraries/SAHhwvZq.js";
+    script.async = true;
+    script.onload = () => setJwLoaded(true);
+    document.head.appendChild(script);
+  }, []);
 
   // Sync initial episode
   useEffect(() => {
@@ -150,6 +168,47 @@ export default function AniXAnimePlayer({ anilistId, anime, initialEpisode = 1, 
       watchData?.hls ||
       watchData?.isM3U8);
 
+  // Initialize JWPlayer when stream & library are ready
+  useEffect(() => {
+    if (typeof window === "undefined" || !streamEmbedUrl || !jwContainerRef.current) return;
+    const jw = (window as any).jwplayer;
+
+    if (typeof jw === "function" && isDirectVideo) {
+      try {
+        const subtitleTracks = (watchData?.subtitles || watchData?.tracks || []).map((sub: any) => ({
+          file: sub.url || sub.file,
+          label: sub.language || sub.label || "English",
+          kind: "captions",
+          default: sub.default || false,
+        }));
+
+        const playerInstance = jw(jwContainerRef.current).setup({
+          file: streamEmbedUrl,
+          type: streamEmbedUrl.includes(".m3u8") ? "hls" : undefined,
+          tracks: subtitleTracks.length > 0 ? subtitleTracks : undefined,
+          autostart: true,
+          width: "100%",
+          height: "100%",
+          controls: true,
+          stretching: "uniform",
+          displaytitle: true,
+          title: `${anime.title} - Episode ${selectedEpisode}`,
+          playbackRateControls: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        });
+
+        playerInstance.on("complete", () => {
+          if (autoNext && selectedEpisode < totalEpisodes) {
+            setSelectedEpisode((prev) => prev + 1);
+          }
+        });
+
+        setIsLoadingWatch(false);
+      } catch (e) {
+        console.error("JWPlayer setup error:", e);
+      }
+    }
+  }, [streamEmbedUrl, jwLoaded, isDirectVideo, selectedEpisode, audio, selectedProvider, watchData]);
+
   const handleShare = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(window.location.href);
@@ -165,13 +224,13 @@ export default function AniXAnimePlayer({ anilistId, anime, initialEpisode = 1, 
         {/* MAIN VIDEO PLAYER & CONTROLS COLUMN (LEFT/CENTER) */}
         <div className="flex-1 flex flex-col gap-4 min-w-0">
           
-          {/* THEATRE ASPECT PLAYER CONTAINER */}
+          {/* JWPLAYER / THEATRE ASPECT CONTAINER */}
           <div className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
             {isLoadingWatch && (
               <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md">
                 <Loader2 className="w-10 h-10 text-purple-500 animate-spin mb-3" />
                 <p className="text-white text-sm font-bold tracking-wide">
-                  Connecting to {PROVIDER_NAMES[selectedProvider] || selectedProvider}...
+                  Connecting to {PROVIDER_NAMES[selectedProvider] || selectedProvider} (JWPlayer)...
                 </p>
                 <p className="text-white/40 text-xs mt-1">
                   Episode {selectedEpisode} &bull; {audio.toUpperCase()}
@@ -200,37 +259,35 @@ export default function AniXAnimePlayer({ anilistId, anime, initialEpisode = 1, 
               </div>
             )}
 
-            {streamEmbedUrl ? (
-              isDirectVideo ? (
-                <video
-                  src={streamEmbedUrl}
-                  controls
-                  autoPlay
-                  onCanPlay={() => setIsLoadingWatch(false)}
-                  className="absolute inset-0 w-full h-full object-contain z-10"
-                />
-              ) : (
-                <iframe
-                  ref={iframeRef}
-                  src={streamEmbedUrl}
-                  onLoad={() => setIsLoadingWatch(false)}
-                  className="absolute inset-0 w-full h-full border-none z-10"
-                  allowFullScreen
-                  frameBorder="0"
-                  scrolling="no"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture"
-                />
-              )
-            ) : (
-              !isLoadingWatch && !watchError && (
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/95 p-6 text-center">
-                  <Sparkles className="w-10 h-10 text-purple-500 mb-2" />
-                  <h3 className="text-base font-bold text-white">Initiating Stream...</h3>
-                  <p className="text-xs text-white/50 mt-1 max-w-md">
-                    Select an episode or server below to play.
-                  </p>
-                </div>
-              )
+            {/* JWPlayer Div Container for Direct Video Streams */}
+            <div
+              id="jwplayer-container"
+              ref={jwContainerRef}
+              className={`w-full h-full ${isDirectVideo && streamEmbedUrl ? "block" : "hidden"}`}
+            />
+
+            {/* Iframe Fallback for Embed URLs */}
+            {!isDirectVideo && streamEmbedUrl && (
+              <iframe
+                ref={iframeRef}
+                src={streamEmbedUrl}
+                onLoad={() => setIsLoadingWatch(false)}
+                className="absolute inset-0 w-full h-full border-none z-10"
+                allowFullScreen
+                frameBorder="0"
+                scrolling="no"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture"
+              />
+            )}
+
+            {!streamEmbedUrl && !isLoadingWatch && !watchError && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/95 p-6 text-center">
+                <Sparkles className="w-10 h-10 text-purple-500 mb-2" />
+                <h3 className="text-base font-bold text-white">Initiating JWPlayer Stream...</h3>
+                <p className="text-xs text-white/50 mt-1 max-w-md">
+                  Select an episode or server below to play.
+                </p>
+              </div>
             )}
           </div>
 
