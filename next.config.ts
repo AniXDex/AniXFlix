@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'wsrv.nl',
       },
+      {
+        protocol: 'https',
+        hostname: 'iconsclub.xyz',
+      },
     ],
   },
   compiler: {

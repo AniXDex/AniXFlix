@@ -23,6 +23,7 @@
     "dotenv": "^17.4.2",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.42.2",
+    "hls.js": "^1.6.16",
     "lucide-react": "^1.8.0",
     "motion": "^12.38.0",
     "nanoid": "^5.1.7",

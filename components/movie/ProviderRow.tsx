@@ -13,15 +13,17 @@ import MovieCard from "./MovieCard";
 import { getMoviesByProvider, getSeriesByProvider } from "@/app/actions/provider";
 import { ChevronDown } from "lucide-react";
 
+import { IconsClubLogo } from "@/components/ui/IconsClubLogo";
+
 // TMDB Watch Provider IDs for US
 const PROVIDERS = [
-  { id: "8", name: "Netflix", color: "#E50914", short: "N" },
-  { id: "9", name: "Prime Video", color: "#00A8E1", short: "P" },
-  { id: "1899", name: "Max", color: "#000000", short: "M", border: true },
-  { id: "337", name: "Disney+", color: "#113CCF", short: "D+" },
-  { id: "350", name: "Apple TV+", color: "#000000", short: "tv", border: true },
-  { id: "531", name: "Paramount+", color: "#0064FF", short: "P+" },
-  { id: "15", name: "Hulu", color: "#1CE783", short: "H" },
+  { id: "8", name: "Netflix", iconSlug: "netflix", color: "#E50914", short: "N" },
+  { id: "9", name: "Prime Video", iconSlug: "amazon-prime-video", color: "#00A8E1", short: "P" },
+  { id: "1899", name: "Max", iconSlug: "hbo-max", color: "#000000", short: "M", border: true },
+  { id: "337", name: "Disney+", iconSlug: "disney-plus", color: "#113CCF", short: "D+" },
+  { id: "350", name: "Apple TV+", iconSlug: "apple-tv", color: "#000000", short: "tv", border: true },
+  { id: "531", name: "Paramount+", iconSlug: "paramount-plus", color: "#0064FF", short: "P+" },
+  { id: "15", name: "Hulu", iconSlug: "hulu", color: "#1CE783", short: "H" },
 ];
 
 interface Props {
@@ -89,10 +91,17 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
             <div className="relative" ref={dropdownRef}>
               <button 
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center font-bold text-white hover:text-white/80 transition-colors"
+                className="flex items-center gap-2 font-bold text-white hover:text-white/80 transition-colors"
               >
+                <IconsClubLogo
+                  name={activeProvider.iconSlug}
+                  size={24}
+                  radius={6}
+                  className="w-6 h-6 rounded-md shadow-sm"
+                  fallbackText={activeProvider.short}
+                />
                 {activeProvider.name}
-                <ChevronDown size={20} className={`ml-1 text-red-600 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={20} className={`ml-0.5 text-red-600 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {isDropdownOpen && (
@@ -101,18 +110,17 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
                     <button
                       key={provider.id}
                       onClick={() => handleProviderChange(provider)}
-                      className={`w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold transition-colors
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold transition-colors
                         ${activeProvider.id === provider.id ? 'bg-white/10 text-red-500' : 'text-white hover:bg-white/5'}
                       `}
                     >
-                      <div 
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black text-white shrink-0
-                          ${provider.border ? 'border border-white/20' : ''}
-                        `}
-                        style={{ backgroundColor: provider.color }}
-                      >
-                        {provider.short}
-                      </div>
+                      <IconsClubLogo
+                        name={provider.iconSlug}
+                        size={24}
+                        radius={6}
+                        className="w-6 h-6 rounded-md object-contain shrink-0"
+                        fallbackText={provider.short}
+                      />
                       {provider.name}
                     </button>
                   ))}

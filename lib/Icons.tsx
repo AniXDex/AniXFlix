@@ -85,3 +85,7 @@ export const ChevronDownIcon = ({ size, className }: IconProps) => {
 export const CheckIcon = ({ size, className }: IconProps) => {
   return <IoCheckmarkSharp size={size} className={className} />;
 };
+
+export { IconsClubLogo } from "@/components/ui/IconsClubLogo";
+export { getIconsClubUrl, getLogoSlug } from "@/lib/iconsclub";
+

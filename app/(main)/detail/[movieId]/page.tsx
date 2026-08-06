@@ -11,6 +11,7 @@ import WatchlistButton from "../../../../components/movie/WatchlistButton";
 import SeasonEpisodesClient from "@/components/movie/SeasonEpisodesClient";
 import PlayButton from "@/components/movie/PlayButton";
 import ContinueWatchingRow from "@/components/ContinueWatchingRow";
+import { IconsClubLogo } from "@/components/ui/IconsClubLogo";
 
 export default async function TitlePage({ params, searchParams }: { params: Promise<{ movieId: string }>, searchParams: Promise<{ v?: string }> }) {
   const { movieId } = await params;
@@ -174,6 +175,31 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
                     <span className="text-sm font-bold text-white truncate">{actor.name}</span>
                     <span className="text-xs text-white/50 truncate">{actor.character}</span>
                   </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Networks & Production Studios Section */}
+        {((details.networks && details.networks.length > 0) || (details.production_companies && details.production_companies.length > 0)) && (
+          <section className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-6 bg-red-600 rounded-full"></div>
+              <h2 className="text-xl md:text-2xl font-bold text-white">Networks & Studios</h2>
+            </div>
+            
+            <div className="flex flex-wrap items-center gap-3">
+              {(details.networks || []).map((net: any) => (
+                <div key={`net-${net.id}`} className="flex items-center gap-2.5 bg-[#141414] hover:bg-[#1f1f1f] px-3.5 py-2 rounded-xl border border-white/10 transition-colors">
+                  <IconsClubLogo name={net.name} size={26} radius={6} className="w-6 h-6 object-contain shrink-0" fallbackText={net.name.charAt(0)} />
+                  <span className="text-xs font-semibold text-white/90">{net.name}</span>
+                </div>
+              ))}
+              {(details.production_companies || []).slice(0, 4).map((comp: any) => (
+                <div key={`comp-${comp.id}`} className="flex items-center gap-2.5 bg-[#141414] hover:bg-[#1f1f1f] px-3.5 py-2 rounded-xl border border-white/5 transition-colors">
+                  <IconsClubLogo name={comp.name} size={26} radius={6} className="w-6 h-6 object-contain shrink-0" fallbackText={comp.name.charAt(0)} />
+                  <span className="text-xs font-medium text-white/70">{comp.name}</span>
                 </div>
               ))}
             </div>
