@@ -120,14 +120,23 @@ export default function AniXAnimePlayer({ anilistId, anime }: AniXAnimePlayerPro
     episodeSearch.trim() === "" || ep.toString() === episodeSearch.trim()
   );
 
-  // Extract embed/stream URL from watchData
+  // Extract stream or embed URL from watchData
   const streamEmbedUrl =
+    watchData?.stream_url ||
+    watchData?.streamUrl ||
     watchData?.url ||
     watchData?.embed ||
     watchData?.stream ||
     watchData?.sources?.[0]?.url ||
-    watchData?.streamUrl ||
+    watchData?.streams?.[0]?.url ||
     null;
+
+  const isDirectVideo =
+    streamEmbedUrl &&
+    (streamEmbedUrl.includes(".m3u8") ||
+      streamEmbedUrl.includes(".mp4") ||
+      watchData?.hls ||
+      watchData?.isM3U8);
 
   return (
     <div className="flex flex-col w-full bg-[#09090b]">
@@ -137,7 +146,7 @@ export default function AniXAnimePlayer({ anilistId, anime }: AniXAnimePlayerPro
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md">
             <Loader2 className="w-10 h-10 text-red-500 animate-spin mb-3" />
             <p className="text-white text-sm font-bold tracking-wide">
-              Loading AniXAnime Server ({PROVIDER_NAMES[selectedProvider] || selectedProvider})...
+              Connecting to {PROVIDER_NAMES[selectedProvider] || selectedProvider}...
             </p>
             <p className="text-white/40 text-xs mt-1">
               Episode {selectedEpisode} &bull; {audio.toUpperCase()}
@@ -148,16 +157,20 @@ export default function AniXAnimePlayer({ anilistId, anime }: AniXAnimePlayerPro
         {watchError && !isLoadingWatch && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 p-6 text-center">
             <AlertCircle className="w-12 h-12 text-red-500 mb-3 animate-bounce" />
-            <h3 className="text-lg font-bold text-white mb-1">Stream Load Error</h3>
+            <h3 className="text-lg font-bold text-white mb-1">Server Unavailable</h3>
             <p className="text-sm text-white/60 max-w-md mb-4">{watchError}</p>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg">
               {availableProviders.map((p) => (
                 <button
                   key={p}
                   onClick={() => setSelectedProvider(p)}
-                  className="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all"
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    selectedProvider === p
+                      ? "bg-red-600 text-white"
+                      : "bg-white/10 hover:bg-white/20 text-white/90"
+                  }`}
                 >
-                  Try {PROVIDER_NAMES[p] || p}
+                  Switch to {PROVIDER_NAMES[p] || p}
                 </button>
               ))}
             </div>
@@ -165,23 +178,34 @@ export default function AniXAnimePlayer({ anilistId, anime }: AniXAnimePlayerPro
         )}
 
         {streamEmbedUrl ? (
-          <iframe
-            ref={iframeRef}
-            src={streamEmbedUrl}
-            onLoad={() => setIsLoadingWatch(false)}
-            className="absolute inset-0 w-full h-full border-none z-10"
-            allowFullScreen
-            frameBorder="0"
-            scrolling="no"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture"
-          />
+          isDirectVideo ? (
+            <video
+              src={streamEmbedUrl}
+              controls
+              autoPlay
+              onCanPlay={() => setIsLoadingWatch(false)}
+              className="absolute inset-0 w-full h-full object-contain z-10"
+            />
+          ) : (
+            <iframe
+              ref={iframeRef}
+              src={streamEmbedUrl}
+              onLoad={() => setIsLoadingWatch(false)}
+              className="absolute inset-0 w-full h-full border-none z-10"
+              allowFullScreen
+              frameBorder="0"
+              scrolling="no"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture"
+            />
+          )
         ) : (
-          !isLoadingWatch && (
+          !isLoadingWatch &&
+          !watchError && (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/95 p-6 text-center">
               <Sparkles className="w-10 h-10 text-red-500 mb-2" />
-              <h3 className="text-base font-bold text-white">Connecting to AniXAnime Stream...</h3>
+              <h3 className="text-base font-bold text-white">Select a Server or Episode</h3>
               <p className="text-xs text-white/50 mt-1 max-w-md">
-                Select an episode or server below to initiate direct multi-provider streaming.
+                Click any provider server button below to start streaming.
               </p>
             </div>
           )

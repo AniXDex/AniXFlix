@@ -98,18 +98,6 @@ function Header() {
               </div>
             </div>
 
-            {/* ANIXANIME SERVER INDICATOR */}
-            <Link href="/anime" className="flex items-center justify-between p-3 rounded-xl bg-[#141417] border border-red-500/20 hover:border-red-500/40 transition-colors group">
-              <div className="flex items-center gap-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-white group-hover:text-red-400 transition-colors">AniXAnime Server</span>
-                  <span className="text-[10px] text-white/50">10 Provider Engine Active</span>
-                </div>
-              </div>
-              <span className="text-[10px] font-bold text-red-500 bg-red-600/10 px-2 py-0.5 rounded border border-red-500/20">Online</span>
-            </Link>
-
 
 
             <div className="flex flex-col gap-3">
