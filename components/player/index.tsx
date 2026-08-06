@@ -28,8 +28,6 @@ const ALL_SERVERS = [
   { name: "ScreenScape", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://screenscape.me/embed?tmdb=${id}&type=tv&s=${s}&e=${e}` : `https://screenscape.me/embed?tmdb=${id}&type=movie` },
   // 4 - streams.iqsmartgames.com
   { name: "MultiMovies", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://streams.iqsmartgames.com/embed/tv/${id}/${s}/${e}?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4` : `https://streams.iqsmartgames.com/embed/movie/${id}?key=e11a7debaaa4f5d25b671706ffe4d2acb56efbd4` },
-  // 5 - AniXAnime Engine Server
-  { name: "AniXAnime Server", url: (id: string, isTv: boolean, s = 1, e = 1) => isTv ? `https://anixflix-iota.vercel.app/api/anixanime/episodes/${id}` : `https://anixflix-iota.vercel.app/api/anixanime/map/${id}` },
 ];
 
 function MyPlayer({ src, title, thumbnails, tmdbId, mediaType, season = 1, episode = 1 }: MyPlayerProps) {
