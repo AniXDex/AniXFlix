@@ -12,12 +12,18 @@ import { IconsClubLogo } from "@/components/ui/IconsClubLogo";
 
 const PROVIDERS = [
   { id: "8", name: "Netflix", iconSlug: "netflix", color: "#E50914", short: "N" },
-  { id: "9", name: "Prime Video", iconSlug: "amazon-prime-video", color: "#00A8E1", short: "P" },
-  { id: "1899", name: "Max", iconSlug: "hbo-max", color: "#000000", short: "M", border: true },
-  { id: "337", name: "Disney+", iconSlug: "disney-plus", color: "#113CCF", short: "D+" },
+  { id: "9", name: "Prime Video", iconSlug: "prime-video", color: "#00A8E1", short: "P" },
+  { id: "1899", name: "Max", iconSlug: "max", color: "#000000", short: "M", border: true },
+  { id: "337", name: "Disney+", iconSlug: "disney", color: "#113CCF", short: "D+" },
   { id: "350", name: "Apple TV+", iconSlug: "apple-tv", color: "#000000", short: "tv", border: true },
-  { id: "531", name: "Paramount+", iconSlug: "paramount-plus", color: "#0064FF", short: "P+" },
+  { id: "531", name: "Paramount+", iconSlug: "paramount", color: "#0064FF", short: "P+" },
   { id: "15", name: "Hulu", iconSlug: "hulu", color: "#1CE783", short: "H" },
+  { id: "283", name: "Crunchyroll", iconSlug: "crunchyroll", color: "#F47521", short: "CR" },
+  { id: "386", name: "Peacock", iconSlug: "peacock", color: "#000000", short: "PC", border: true },
+  { id: "73", name: "Tubi", iconSlug: "tubi", color: "#FA3200", short: "TB" },
+  { id: "43", name: "Starz", iconSlug: "starz", color: "#000000", short: "ST", border: true },
+  { id: "37", name: "Showtime", iconSlug: "showtime", color: "#E50914", short: "SH" },
+  { id: "521", name: "AMC+", iconSlug: "amc", color: "#000000", short: "AMC", border: true },
 ];
 
 function SearchPageInner() {
@@ -48,6 +54,7 @@ function SearchPageInner() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [providerPage, setProviderPage] = useState(1);
   const [providerTotalPages, setProviderTotalPages] = useState(1);
+  const [showAllPlatforms, setShowAllPlatforms] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -287,13 +294,22 @@ function SearchPageInner() {
           {isInitial && (
             <>
               <div className="mb-8">
-                <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Platforms</h2>
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-xs font-semibold text-white/40 uppercase tracking-widest">Platforms</h2>
+                  <button 
+                    onClick={() => setShowAllPlatforms(!showAllPlatforms)}
+                    className="text-xs font-bold text-red-500 hover:text-red-400 flex items-center gap-1 transition-colors group"
+                  >
+                    <span>{showAllPlatforms ? "Show Less" : "See All"}</span>
+                    <ChevronRight size={14} className={`transition-transform duration-200 ${showAllPlatforms ? "-rotate-90" : "rotate-90 group-hover:translate-x-0.5"}`} />
+                  </button>
+                </div>
                 <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2">
-                  {PROVIDERS.map((provider) => (
+                  {(showAllPlatforms ? PROVIDERS : PROVIDERS.slice(0, 7)).map((provider) => (
                     <Link
                       key={provider.id}
                       href={`/search?provider=${provider.id}`}
-                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#141414] border border-white/5 active:scale-95 transition-all group hover:bg-[#1f1f1f]"
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#141414] border border-white/5 active:scale-95 transition-all group hover:bg-[#1f1f1f] hover:border-white/10"
                     >
                       <IconsClubLogo
                         name={provider.iconSlug}
