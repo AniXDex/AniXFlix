@@ -8,15 +8,16 @@ import { searchContent, searchContentPage, getTrendingContent, getProviderConten
 import { Movie } from "@/types/types";
 import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
+import { IconsClubLogo } from "@/components/ui/IconsClubLogo";
 
 const PROVIDERS = [
-  { id: "8", name: "Netflix", color: "#E50914", short: "N" },
-  { id: "9", name: "Prime Video", color: "#00A8E1", short: "P" },
-  { id: "1899", name: "Max", color: "#000000", short: "M", border: true },
-  { id: "337", name: "Disney+", color: "#113CCF", short: "D+" },
-  { id: "350", name: "Apple TV+", color: "#000000", short: "tv", border: true },
-  { id: "531", name: "Paramount+", color: "#0064FF", short: "P+" },
-  { id: "15", name: "Hulu", color: "#1CE783", short: "H" },
+  { id: "8", name: "Netflix", iconSlug: "netflix", color: "#E50914", short: "N" },
+  { id: "9", name: "Prime Video", iconSlug: "amazon-prime-video", color: "#00A8E1", short: "P" },
+  { id: "1899", name: "Max", iconSlug: "hbo-max", color: "#000000", short: "M", border: true },
+  { id: "337", name: "Disney+", iconSlug: "disney-plus", color: "#113CCF", short: "D+" },
+  { id: "350", name: "Apple TV+", iconSlug: "apple-tv", color: "#000000", short: "tv", border: true },
+  { id: "531", name: "Paramount+", iconSlug: "paramount-plus", color: "#0064FF", short: "P+" },
+  { id: "15", name: "Hulu", iconSlug: "hulu", color: "#1CE783", short: "H" },
 ];
 
 function SearchPageInner() {
@@ -292,17 +293,16 @@ function SearchPageInner() {
                     <Link
                       key={provider.id}
                       href={`/search?provider=${provider.id}`}
-                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#141414] border border-white/5 active:scale-95 transition-all"
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#141414] border border-white/5 active:scale-95 transition-all group hover:bg-[#1f1f1f]"
                     >
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold text-white ${
-                          provider.border ? 'border border-white/20' : ''
-                        }`}
-                        style={{ backgroundColor: provider.color }}
-                      >
-                        {provider.short}
-                      </div>
-                      <span className="text-[10px] font-semibold text-white/50 text-center leading-tight">{provider.name}</span>
+                      <IconsClubLogo
+                        name={provider.iconSlug}
+                        size={36}
+                        radius={10}
+                        className="w-9 h-9 object-contain rounded-xl"
+                        fallbackText={provider.short}
+                      />
+                      <span className="text-[10px] font-semibold text-white/50 group-hover:text-white/90 text-center leading-tight transition-colors">{provider.name}</span>
                     </Link>
                   ))}
                 </div>
