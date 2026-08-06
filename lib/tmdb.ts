@@ -97,27 +97,27 @@ export type Movie = {
 
 export const tmdb = {
     getTrending: async (type: "movie" | "tv" | "all" = "all"): Promise<Movie[]> => {
-        const data = await fetchTMDB(`/trending/${type}/day`);
+        const data = await fetchTMDB(`/trending/${type}/day`, { region: "IN" });
         return data?.results || [];
     },
     getTopRated: async (type: "movie" | "tv"): Promise<Movie[]> => {
-        const data = await fetchTMDB(`/${type}/top_rated`);
+        const data = await fetchTMDB(`/${type}/top_rated`, { region: "IN" });
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
     getPopular: async (type: "movie" | "tv"): Promise<Movie[]> => {
-        const data = await fetchTMDB(`/${type}/popular`);
+        const data = await fetchTMDB(`/${type}/popular`, { region: "IN" });
         return (data?.results || []).map((item: any) => ({ ...item, media_type: type }));
     },
     getDetails: async (type: "movie" | "tv", id: string) => {
         const data = await fetchTMDB(`/${type}/${id}`, {
             append_to_response: "videos,credits,recommendations,similar,release_dates,content_ratings,images,keywords,external_ids",
-            include_image_language: "en,null"
+            include_image_language: "en,hi,null"
         });
         return data || null;
     },
     search: async (query: string): Promise<Movie[]> => {
         const [multiData, companyData] = await Promise.all([
-            fetchTMDB("/search/multi", { query }),
+            fetchTMDB("/search/multi", { query, region: "IN" }),
             fetchTMDB("/search/company", { query })
         ]);
 
@@ -137,7 +137,7 @@ export const tmdb = {
         return [...multiResults, ...companyResults];
     },
     searchPage: async (query: string, page: number = 1): Promise<{ results: Movie[]; totalPages: number }> => {
-        const data = await fetchTMDB("/search/multi", { query, page: page.toString() });
+        const data = await fetchTMDB("/search/multi", { query, page: page.toString(), region: "IN" });
         return {
             results: (data?.results || []).filter((item: any) => item.media_type === "movie" || item.media_type === "tv"),
             totalPages: data?.total_pages || 1,
@@ -151,13 +151,14 @@ export const tmdb = {
         const params: Record<string, string> = {
             sort_by: options.sortBy || "popularity.desc",
             include_adult: "false",
-            "vote_count.gte": "100"
+            region: "IN",
+            watch_region: "IN"
         };
         if (options.genreId) params.with_genres = options.genreId;
         if (options.originalLanguage) params.with_original_language = options.originalLanguage;
         if (options.withWatchProviders) {
             params.with_watch_providers = options.withWatchProviders;
-            params.watch_region = "US";
+            params.watch_region = "IN";
         }
         if (options.year) {
             const key = type === "movie" ? "primary_release_year" : "first_air_date_year";
@@ -172,13 +173,14 @@ export const tmdb = {
         const params: Record<string, string> = {
             sort_by: options.sortBy || "popularity.desc",
             include_adult: "false",
-            "vote_count.gte": "100"
+            region: "IN",
+            watch_region: "IN"
         };
         if (options.genreId) params.with_genres = options.genreId;
         if (options.originalLanguage) params.with_original_language = options.originalLanguage;
         if (options.withWatchProviders) {
             params.with_watch_providers = options.withWatchProviders;
-            params.watch_region = "US";
+            params.watch_region = "IN";
         }
         if (options.year) {
             const key = type === "movie" ? "primary_release_year" : "first_air_date_year";

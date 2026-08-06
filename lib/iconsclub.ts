@@ -62,11 +62,18 @@ export function getLogoSlug(name: string): string {
   return normalized.replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
 }
 
+export const JIO_HOTSTAR_LOGO = "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/3e/7b/ef/3e7bef81-984f-4e36-9178-6890a0c47c62/AppIcon-IN-0-0-1x_U007epad-0-1-0-85-220.png/1024x1024bb.jpg";
+
 /**
  * Generates an IconsClub logo URL
  * API Spec: https://iconsclub.xyz/logo/{name}/{size}.{format}?radius={radius}&gray={1}&invert={1}
  */
 export function getIconsClubUrl(name: string, options: IconsClubOptions = {}): string {
+  const normalized = name.trim().toLowerCase();
+  if (["jiohotstar", "hotstar", "jio hotstar", "disney+", "disney plus", "disney"].includes(normalized)) {
+    return JIO_HOTSTAR_LOGO;
+  }
+
   const slug = getLogoSlug(name);
   const size = options.size || 128;
   const format = options.format || "png";

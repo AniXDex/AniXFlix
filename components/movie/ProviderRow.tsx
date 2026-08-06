@@ -19,8 +19,8 @@ import { IconsClubLogo } from "@/components/ui/IconsClubLogo";
 const PROVIDERS = [
   { id: "8", name: "Netflix", iconSlug: "netflix", color: "#E50914", short: "N" },
   { id: "9", name: "Prime Video", iconSlug: "prime-video", color: "#00A8E1", short: "P" },
+  { id: "122", name: "JioHotstar", iconSlug: "jiohotstar", color: "#113CCF", short: "JH" },
   { id: "1899", name: "Max", iconSlug: "max", color: "#000000", short: "M", border: true },
-  { id: "337", name: "Disney+", iconSlug: "disney", color: "#113CCF", short: "D+" },
   { id: "350", name: "Apple TV+", iconSlug: "apple-tv", color: "#000000", short: "tv", border: true },
   { id: "531", name: "Paramount+", iconSlug: "paramount", color: "#0064FF", short: "P+" },
   { id: "15", name: "Hulu", iconSlug: "hulu", color: "#1CE783", short: "H" },
