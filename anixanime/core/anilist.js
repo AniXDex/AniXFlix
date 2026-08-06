@@ -149,4 +149,16 @@ function forgetMedia(anilistId) {
   resolved.delete(Number(anilistId));
 }
 
-export { getMedia, forgetMedia };
+async function searchMedia(query) {
+  const fullQuery = `query($search:String){Page(page:1,perPage:20){media(search:$search,type:ANIME,sort:POPULARITY_DESC){id title{english romaji native} coverImage{large extraLarge} status format episodes seasonYear startDate{year} nextAiringEpisode{episode airingAt timeUntilAiring}}}}`;
+  const res = await fetch("https://graphql.anilist.co", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json", "User-Agent": UA },
+    body: JSON.stringify({ query: fullQuery, variables: { search: query } }),
+  }).catch(() => null);
+  if (!res || !res.ok) throw new Error("AniList search failed");
+  const json = await res.json();
+  return json.data?.Page?.media ?? [];
+}
+
+export { getMedia, forgetMedia, searchMedia };

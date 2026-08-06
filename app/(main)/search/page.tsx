@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, Clock, Star, Play, TrendingUp, Film, Tv, Sparkles, ChevronRight, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { useStore } from "@/store/useStore";
-import { searchContent, searchContentPage, getTrendingContent, getProviderContent, getProviderContentPage } from "@/app/actions/search";
+import { getTrendingContent, getTrendingAnime, searchContentPage, getProviderContentPage } from "@/app/actions/search";
 import { Movie } from "@/types/types";
 import SafeImage from "@/components/SafeImage";
 import Link from "next/link";
@@ -33,9 +33,11 @@ function SearchPageInner() {
   const { searchHistory, addSearchHistory, removeSearchHistory, clearSearchHistory } = useStore();
 
   const initialProvider = searchParams.get("provider") || "";
+  const urlFilter = searchParams.get("filter");
+  const initialFilter = (urlFilter === "movie" || urlFilter === "tv" || urlFilter === "anime") ? urlFilter : "all";
 
   const [query, setQuery] = useState(initialQuery);
-  const [filter, setFilter] = useState<"all" | "movie" | "tv" | "anime">("all");
+  const [filter, setFilter] = useState<"all" | "movie" | "tv" | "anime">(initialFilter);
   const [results, setResults] = useState<Movie[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(!!initialQuery || !!initialProvider);
@@ -76,13 +78,23 @@ function SearchPageInner() {
       return;
     }
     if (!initialQuery) {
-      getTrendingContent().then((data) => {
-        setTrendingMovies(data.trendingMovies);
-        setTrendingTv(data.trendingTv);
-        setPopularMovies(data.popularMovies);
-        setPopularTv(data.popularTv);
-        setIsLoadingTrending(false);
-      });
+      if (initialFilter === "anime") {
+        getTrendingAnime().then((data) => {
+          setTrendingMovies(data.trendingAnime);
+          setTrendingTv([]);
+          setPopularMovies(data.popularAnime);
+          setPopularTv([]);
+          setIsLoadingTrending(false);
+        });
+      } else {
+        getTrendingContent().then((data) => {
+          setTrendingMovies(data.trendingMovies);
+          setTrendingTv(data.trendingTv);
+          setPopularMovies(data.popularMovies);
+          setPopularTv(data.popularTv);
+          setIsLoadingTrending(false);
+        });
+      }
     }
   }, []);
 
@@ -192,11 +204,11 @@ function SearchPageInner() {
       debounceRef.current = setTimeout(() => {
         doSearch(val, filterRef.current);
         isInternalRef.current = true;
-        router.push(`/search?q=${encodeURIComponent(val.trim())}`, { scroll: false });
+        router.push(`/search?q=${encodeURIComponent(val.trim())}${filterRef.current !== 'all' ? `&filter=${filterRef.current}` : ''}`, { scroll: false });
       }, 400);
     } else {
       isInternalRef.current = true;
-      router.push("/search", { scroll: false });
+      router.push(`/search${filterRef.current !== 'all' ? `?filter=${filterRef.current}` : ''}`, { scroll: false });
       setResults([]);
       setHasSearched(false);
     }
@@ -206,7 +218,7 @@ function SearchPageInner() {
     e?.preventDefault();
     if (query.trim()) {
       isInternalRef.current = true;
-      router.push(`/search?q=${encodeURIComponent(query.trim())}`, { scroll: false });
+      router.push(`/search?q=${encodeURIComponent(query.trim())}${filter !== 'all' ? `&filter=${filter}` : ''}`, { scroll: false });
       doSearch(query, filter);
     }
   };
@@ -220,8 +232,32 @@ function SearchPageInner() {
   const handleFilterChange = (f: typeof filter) => {
     setFilter(f);
     filterRef.current = f;
+    
+    isInternalRef.current = true;
     if (query.trim().length > 1) {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}${f !== 'all' ? `&filter=${f}` : ''}`, { scroll: false });
       doSearch(query, f);
+    } else {
+      router.push(`/search${f !== 'all' ? `?filter=${f}` : ''}`, { scroll: false });
+      if (f === "anime") {
+        setIsLoadingTrending(true);
+        getTrendingAnime().then((data) => {
+          setTrendingMovies(data.trendingAnime);
+          setTrendingTv([]);
+          setPopularMovies(data.popularAnime);
+          setPopularTv([]);
+          setIsLoadingTrending(false);
+        });
+      } else {
+        setIsLoadingTrending(true);
+        getTrendingContent().then((data) => {
+          setTrendingMovies(data.trendingMovies);
+          setTrendingTv(data.trendingTv);
+          setPopularMovies(data.popularMovies);
+          setPopularTv(data.popularTv);
+          setIsLoadingTrending(false);
+        });
+      }
     }
   };
 
@@ -333,10 +369,10 @@ function SearchPageInner() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {searchHistory.map((histQuery) => (
-                      <button
+                      <div
                         key={histQuery}
                         onClick={() => { setQuery(histQuery); isInternalRef.current = true; router.push(`/search?q=${encodeURIComponent(histQuery)}`, { scroll: false }); doSearch(histQuery, filter); }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-white/5 rounded-lg text-sm text-white/50 active:scale-95 transition-all"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-white/5 rounded-lg text-sm text-white/50 active:scale-95 transition-all cursor-pointer hover:bg-white/5"
                       >
                         <Clock size={12} className="text-white/20" />
                         <span>{histQuery}</span>
@@ -346,7 +382,7 @@ function SearchPageInner() {
                         >
                           <X size={11} />
                         </button>
-                      </button>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -359,7 +395,7 @@ function SearchPageInner() {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-1.5">
                           <TrendingUp size={15} className="text-red-500" />
-                          <h2 className="text-sm font-bold text-white">Trending Movies</h2>
+                          <h2 className="text-sm font-bold text-white">{filter === "anime" ? "Trending Anime" : "Trending Movies"}</h2>
                         </div>
                         <Link href="/movies" className="text-xs text-white/40 hover:text-white flex items-center gap-0.5">
                           All <ArrowRight size={12} />
@@ -395,7 +431,7 @@ function SearchPageInner() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {popularMovies.length > 0 && (
                       <section>
-                        <h3 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">Popular Movies</h3>
+                        <h3 className="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">{filter === "anime" ? "Popular Anime" : "Popular Movies"}</h3>
                         <div className="flex flex-col gap-1">
                           {popularMovies.slice(0, 5).map((movie) => (
                             <MiniCard key={movie.publicId} movie={movie} />
@@ -566,7 +602,7 @@ function SearchPageInner() {
 function TrendingCard({ movie }: { movie: Movie }) {
   return (
     <Link
-      href={`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
+      href={movie.mediaType === "anime" ? `/anime/detail/${movie.publicId}` : `/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
       className="group relative aspect-[2/3] rounded-lg overflow-hidden bg-[#141414] active:scale-95 transition-all"
     >
       <SafeImage
@@ -586,7 +622,7 @@ function TrendingCard({ movie }: { movie: Movie }) {
 function MiniCard({ movie }: { movie: Movie }) {
   return (
     <Link
-      href={`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
+      href={movie.mediaType === "anime" ? `/anime/detail/${movie.publicId}` : `/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
       className="flex items-center gap-2 p-2 rounded-lg bg-[#141414] active:scale-[0.98] transition-all"
     >
       <div className="relative w-9 h-13 rounded overflow-hidden bg-[#0a0a0a] shrink-0">
@@ -609,7 +645,7 @@ function MiniCard({ movie }: { movie: Movie }) {
 function ResultCard({ movie }: { movie: Movie }) {
   return (
     <Link
-      href={`/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
+      href={movie.mediaType === "anime" ? `/anime/detail/${movie.publicId}` : `/detail/${movie.publicId}?v=${movie.mediaType === "tv" ? 2 : 1}`}
       className="group relative flex flex-col bg-[#141414] rounded-lg overflow-hidden active:scale-95 transition-all"
     >
       <div className="relative aspect-[2/3] overflow-hidden bg-[#0a0a0a]">
@@ -631,7 +667,7 @@ function ResultCard({ movie }: { movie: Movie }) {
         )}
         <div className="absolute top-2 left-2">
           <span className="text-[9px] font-bold text-white/70 bg-black/60 px-1.5 py-0.5 rounded">
-            {movie.mediaType === "tv" ? "TV" : "MOVIE"}
+            {movie.mediaType === "anime" ? "ANIME" : movie.mediaType === "tv" ? "TV" : "MOVIE"}
           </span>
         </div>
       </div>

@@ -2,10 +2,14 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import { getAnimeDetail, getAnimeList } from "@/lib/anilist";
 import AnimeCard from "@/components/anime/AnimeCard";
 import { Star, Play, Calendar, Film, Clock, Sparkles, ChevronRight, Share2, Heart, ListPlus } from "lucide-react";
+
+import AniXEpisodeList from "@/components/anime/AniXEpisodeList";
+import AnimeActionButtons from "@/components/anime/AnimeActionButtons";
+import AnimeSynopsis from "@/components/anime/AnimeSynopsis";
 
 export default async function AnimeDetailPage({
   params,
@@ -28,9 +32,6 @@ export default async function AnimeDetailPage({
     notFound();
   }
 
-  const totalEpisodes = anime.episodes || 24;
-  const episodeList = Array.from({ length: totalEpisodes }, (_, i) => i + 1);
-
   return (
     <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
       <Header />
@@ -46,11 +47,11 @@ export default async function AnimeDetailPage({
           <div className="absolute inset-0 z-0 bg-gradient-to-br from-red-950/20 via-[#09090b] to-[#09090b]"></div>
         )}
 
-        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row gap-8 items-start">
+        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
           
           {/* Cover Poster */}
-          <div className="relative w-44 md:w-64 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
-            <img src={anime.coverImage || anime.coverMedium} alt={anime.title} className="w-full h-full object-cover" />
+          <div className="relative w-48 sm:w-56 md:w-64 aspect-[2/3] shrink-0 rounded-2xl overflow-hidden shadow-2xl border border-white/10 group">
+            <img src={anime.coverImage || anime.coverMedium} alt={anime.title} className="w-full h-full object-cover object-top" />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <Link
                 href={`/anime/watch/${anime.id}?ep=1`}
@@ -61,70 +62,49 @@ export default async function AnimeDetailPage({
             </div>
           </div>
 
-          {/* Details Column */}
-          <div className="flex flex-col gap-4 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="bg-red-600/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider">
-                {anime.format || "ANIME"}
+          {/* Details Content */}
+          <div className="flex flex-col gap-3 md:gap-4 flex-1 items-center md:items-start mt-2">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-1">
+              <span className="bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-widest shadow-lg shadow-red-600/20">
+                {anime.format || "TV"}
               </span>
-              {anime.status && (
-                <span className="bg-white/10 text-white/80 px-3 py-1 rounded-full text-xs font-bold uppercase">
-                  {anime.status}
-                </span>
-              )}
-              <span className="bg-white/5 text-white/60 px-3 py-1 rounded-full text-xs font-medium">
-                AniList #{anime.id}
+              <span className="flex items-center gap-1 text-xs font-bold text-yellow-400 bg-yellow-400/10 px-2 py-0.5 rounded">
+                <Star size={12} className="fill-yellow-400" />
+                {anime.averageScore ? (anime.averageScore / 10).toFixed(1) : "NR"}
+              </span>
+              <span className="text-white/60 text-xs font-semibold px-2 py-0.5 rounded bg-white/5 flex items-center gap-1">
+                <Film size={12} />
+                {anime.status || "Unknown"}
+              </span>
+              <span className="text-white/60 text-xs font-semibold px-2 py-0.5 rounded bg-white/5 flex items-center gap-1">
+                <Calendar size={12} />
+                {anime.year || "TBA"}
               </span>
             </div>
-
-            <h1 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-none">
+            
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400 leading-tight">
               {anime.title}
             </h1>
-            {anime.english && anime.english !== anime.title && (
-              <p className="text-base text-white/50 font-medium -mt-2">{anime.english}</p>
+            
+            {/* Quick Actions */}
+            <AnimeActionButtons anime={anime} />
+
+            {/* Next Airing Info */}
+            {anime.nextAiringEpisode && (
+              <div className="mt-2 flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 px-4 py-2 rounded-xl">
+                <Sparkles size={14} className="text-purple-400" />
+                <span className="text-xs font-medium text-purple-200">
+                  Episode {anime.nextAiringEpisode.episode} releasing in{" "}
+                  <strong className="text-purple-400 font-bold">
+                    {Math.floor((anime.nextAiringEpisode.timeUntilAiring || 0) / 86400)}d{" "}
+                    {Math.floor(((anime.nextAiringEpisode.timeUntilAiring || 0) % 86400) / 3600)}h
+                  </strong>
+                </span>
+              </div>
             )}
 
-            {/* Quick Stats Bar */}
-            <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-white/70 py-1">
-              {anime.averageScore && (
-                <div className="flex items-center gap-1.5 bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 px-3 py-1.5 rounded-xl">
-                  <Star size={14} className="fill-yellow-400" />
-                  <span>{(anime.averageScore / 10).toFixed(1)} / 10</span>
-                </div>
-              )}
-              {anime.year && (
-                <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
-                  <Calendar size={14} className="text-red-500" />
-                  <span>{anime.year}</span>
-                </div>
-              )}
-              {anime.episodes && (
-                <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
-                  <Film size={14} className="text-red-500" />
-                  <span>{anime.episodes} Episodes</span>
-                </div>
-              )}
-              {anime.duration && (
-                <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
-                  <Clock size={14} className="text-red-500" />
-                  <span>{anime.duration} min/ep</span>
-                </div>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                href={`/anime/watch/${anime.id}?ep=1`}
-                className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 rounded-xl shadow-xl shadow-red-600/30 active:scale-95 transition-all text-sm"
-              >
-                <Play size={18} className="fill-white" />
-                <span>Watch Episode 1</span>
-              </Link>
-            </div>
-
             {/* Genres */}
-            <div className="flex flex-wrap gap-2 pt-2">
+            <div className="flex flex-wrap justify-center md:justify-start gap-2 pt-2">
               {anime.genres.map((genre) => (
                 <span key={genre} className="bg-[#141417] border border-white/10 text-white/80 text-xs font-semibold px-3 py-1 rounded-lg">
                   {genre}
@@ -133,39 +113,14 @@ export default async function AnimeDetailPage({
             </div>
 
             {/* Description */}
-            {anime.description && (
-              <div className="mt-2 bg-[#141417]/80 p-4 rounded-xl border border-white/5">
-                <h3 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-1">Synopsis</h3>
-                <p className="text-xs md:text-sm text-white/70 leading-relaxed max-h-40 overflow-y-auto pr-2">
-                  {anime.description}
-                </p>
-              </div>
-            )}
+            {anime.description && <AnimeSynopsis description={anime.description} />}
           </div>
         </div>
       </div>
 
       {/* EPISODE SELECTION SECTION */}
-      <div className="max-w-7xl mx-auto w-full px-4 md:px-14 xl:px-20 py-10 flex flex-col gap-6">
-        <div className="flex items-center justify-between border-b border-white/5 pb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-1.5 h-6 bg-red-600 rounded-full"></div>
-            <h2 className="text-xl font-extrabold text-white">Episodes ({totalEpisodes})</h2>
-          </div>
-          <span className="text-xs font-semibold text-white/40">Select episode to play</span>
-        </div>
-
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2.5">
-          {episodeList.map((ep) => (
-            <Link
-              key={ep}
-              href={`/anime/watch/${anime.id}?ep=${ep}`}
-              className="flex flex-col items-center justify-center py-3 rounded-xl bg-[#141417] hover:bg-red-600 text-white/80 hover:text-white border border-white/5 font-extrabold text-xs transition-all active:scale-95 group"
-            >
-              <span>EP {ep}</span>
-            </Link>
-          ))}
-        </div>
+      <div className="max-w-7xl mx-auto w-full px-4 md:px-14 xl:px-20 py-10">
+        <AniXEpisodeList anilistId={anilistId} anime={anime} />
       </div>
 
       {/* RECOMMENDED ANIME ROW */}
@@ -184,7 +139,6 @@ export default async function AnimeDetailPage({
         </div>
       )}
 
-      <Footer />
     </div>
   );
 }

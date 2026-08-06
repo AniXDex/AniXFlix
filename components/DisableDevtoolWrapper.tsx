@@ -3,9 +3,10 @@ import React, { useEffect } from "react";
 import DisableDevtool from "disable-devtool";
 
 export default function DisableDevtoolWrapper() {
+  /* TEMPORARILY DISABLED FOR DEVTOOLS ACCESS:
   useEffect(() => {
     DisableDevtool({
-      // Bypass: https://anixflix.com/?anix-dd
+      // Bypass: http://localhost:3000/?anix-dd
       tkName: "anix-dd",
       disableMenu: true,
       clearLog: true,
@@ -15,6 +16,7 @@ export default function DisableDevtoolWrapper() {
       disablePaste: true,
     });
   }, []);
+  */
 
   return null;
 }

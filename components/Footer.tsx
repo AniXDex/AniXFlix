@@ -33,10 +33,6 @@ function Footer() {
             <Link href="/dmca" className="hover:text-white transition-colors">
               DMCA
             </Link>
-            <span>&middot;</span>
-            <a href="https://iconsclub.xyz/api" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/80 transition-colors">
-              Logos powered by <span className="font-semibold text-white/60 underline underline-offset-2">IconsClub</span>
-            </a>
           </div>
         </div>
 

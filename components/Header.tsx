@@ -120,7 +120,7 @@ function Header() {
 
         <div className="w-[1px] h-6 bg-white/10 hidden md:block mx-1"></div>
 
-        <Link href="/search" className="text-white hover:text-white/80 transition-colors ml-1">
+        <Link href={pathname.startsWith("/anime") ? "/search?filter=anime" : "/search"} className="text-white hover:text-white/80 transition-colors ml-1">
           <Search size={22} />
         </Link>
 

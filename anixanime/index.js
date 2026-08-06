@@ -1,4 +1,4 @@
-import { getMedia }                from "./core/anilist.js";
+import { getMedia, searchMedia } from "./core/anilist.js";
 import { mapAnimeIds }             from "./core/mapper.js";
 import mangaHandler                from "./providers/allmanga.js";
 import reanimeHandler              from "./providers/reanime.js";
@@ -47,14 +47,19 @@ async function cachedWatch(cacheKey, handlerFn) {
   }
 
   const promise = (async () => {
-    const response = await handlerFn();
-    if (response.status === 200) {
-      try {
-        const data = await response.clone().json();
-        await setAsync(cacheKey, data, WATCH_TTL);
-      } catch {}
+    try {
+      const response = await handlerFn();
+      if (response.status === 200) {
+        try {
+          const data = await response.clone().json();
+          await setAsync(cacheKey, data, WATCH_TTL);
+        } catch {}
+        return response;
+      }
+      return json({ error: "Provider error" }, 404);
+    } catch (e) {
+      return json({ error: e.message || "Provider error" }, 404);
     }
-    return response;
   })();
 
   watchInflight.set(cacheKey, promise);
@@ -78,7 +83,100 @@ export default {
       });
     }
 
-    let m = path.match(/^\/map\/(\d+)\/?$/);
+    let m = path.match(/^\/proxy\/?$/);
+    if (m) {
+      const targetUrl = url.searchParams.get("url");
+      const referer = url.searchParams.get("referer") || "https://flixcloud.cc/";
+      if (!targetUrl) return json({ error: "Missing url parameter" }, 400);
+
+      let originHeader = "https://flixcloud.cc/";
+      try {
+        originHeader = new URL(referer).origin;
+      } catch {}
+
+      try {
+        const upstreamRes = await fetch(targetUrl, {
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Referer": referer,
+            "Origin": originHeader,
+          },
+        });
+
+        const contentType = upstreamRes.headers.get("content-type") || "";
+        const isM3U8 = targetUrl.includes(".m3u8") || contentType.includes("mpegurl") || contentType.includes("m3u8");
+
+        if (isM3U8) {
+          const text = await upstreamRes.text();
+          const baseUrl = targetUrl.substring(0, targetUrl.lastIndexOf("/") + 1);
+          const targetUrlObj = new URL(targetUrl);
+          const lines = text.split("\n");
+
+          const rewrittenLines = lines.map((line) => {
+            const trimmed = line.trim();
+            if (!trimmed) return line;
+
+            if (trimmed.startsWith("#EXT-X-KEY")) {
+              return line.replace(/URI=["']([^"']+)["']/gi, (_, keyUri) => {
+                let fullKeyUrl;
+                try {
+                  fullKeyUrl = new URL(keyUri, targetUrlObj).toString();
+                } catch {
+                  return `URI="${keyUri}"`;
+                }
+                return `URI="${url.origin}/api/anixanime/proxy?url=${encodeURIComponent(fullKeyUrl)}&referer=${encodeURIComponent(referer)}"`;
+              });
+            }
+
+            if (trimmed.startsWith("#")) return line;
+
+            let segmentUrl = trimmed;
+            if (!segmentUrl.startsWith("http")) {
+              segmentUrl = new URL(segmentUrl, baseUrl).href;
+            }
+            return `${url.origin}/api/anixanime/proxy?url=${encodeURIComponent(segmentUrl)}&referer=${encodeURIComponent(referer)}`;
+          });
+
+          if (!rewrittenLines[0] || !rewrittenLines[0].trim().startsWith("#EXTM3U")) {
+            rewrittenLines.unshift("#EXTM3U");
+          }
+
+          return new Response(rewrittenLines.join("\n"), {
+            status: 200,
+            headers: {
+              "Content-Type": "application/vnd.apple.mpegurl",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Headers": "*",
+            },
+          });
+        }
+
+        const blob = await upstreamRes.arrayBuffer();
+        return new Response(blob, {
+          status: upstreamRes.status,
+          headers: {
+            "Content-Type": contentType || "video/mp2t",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "*",
+          },
+        });
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    m = path.match(/^\/search\/(.+)\/?$/);
+    if (m) {
+      const query = decodeURIComponent(m[1]);
+      try {
+        const results = await searchMedia(query);
+        return json(results);
+      } catch (e) {
+        return json({ error: e.message }, 500);
+      }
+    }
+
+    m = path.match(/^\/map\/(\d+)\/?$/);
     if (m) {
       const anilistId = m[1];
       const cacheKey  = `map:${anilistId}`;

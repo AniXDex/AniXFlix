@@ -1,7 +1,7 @@
 export interface ContinueWatchingItem {
   tmdbId: string;
   publicId: string;
-  mediaType: "movie" | "tv";
+  mediaType: "movie" | "tv" | "anime";
   title: string;
   posterUrl: string | null;
   backdropUrl: string | null;
@@ -33,7 +33,7 @@ export interface Movie {
   logoUrl: string | null;
   createdAt: Date;
   rating: string | null;
-  mediaType?: "movie" | "tv";
+  mediaType?: "movie" | "tv" | "anime";
 }
 
 export interface User {
