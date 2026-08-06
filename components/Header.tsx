@@ -89,14 +89,26 @@ function Header() {
                   </div>
                   <span className="text-[11px] text-white/80 group-hover:text-white font-medium">TV Shows</span>
                 </Link>
-                <Link href="/anime" className="flex flex-col items-center gap-2 group">
-                  <div className="w-14 h-14 rounded-2xl border border-white/5 flex items-center justify-center bg-transparent group-hover:bg-white/5 transition-colors">
+                <Link href="/anime" className="flex flex-col items-center gap-2 group relative">
+                  <div className="w-14 h-14 rounded-2xl border border-red-500/20 flex items-center justify-center bg-red-950/20 group-hover:bg-red-900/30 transition-colors">
                      <Wind size={24} className="text-red-500" />
                   </div>
                   <span className="text-[11px] text-white/80 group-hover:text-white font-medium">Anime</span>
                 </Link>
               </div>
             </div>
+
+            {/* ANIXANIME SERVER INDICATOR */}
+            <Link href="/anime" className="flex items-center justify-between p-3 rounded-xl bg-[#141417] border border-red-500/20 hover:border-red-500/40 transition-colors group">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold text-white group-hover:text-red-400 transition-colors">AniXAnime Server</span>
+                  <span className="text-[10px] text-white/50">10 Provider Engine Active</span>
+                </div>
+              </div>
+              <span className="text-[10px] font-bold text-red-500 bg-red-600/10 px-2 py-0.5 rounded border border-red-500/20">Online</span>
+            </Link>
 
 
 
