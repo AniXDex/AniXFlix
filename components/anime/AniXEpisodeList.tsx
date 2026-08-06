@@ -16,7 +16,9 @@ export default function AniXEpisodeList({
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(true);
   
   const [episodeSearch, setEpisodeSearch] = useState("");
-  const [visibleCount, setVisibleCount] = useState(20);
+  const [episodeRangeIndex, setEpisodeRangeIndex] = useState(0);
+  const [showRangeDropdown, setShowRangeDropdown] = useState(false);
+  const EPS_PER_PAGE = 40;
 
   useEffect(() => {
     let isMounted = true;
@@ -105,8 +107,16 @@ export default function AniXEpisodeList({
     (ep.title && ep.title.toLowerCase().includes(episodeSearch.toLowerCase()))
   );
 
+  const ranges: { start: number; end: number }[] = [];
+  for (let i = 0; i < normalizedEpisodes.length; i += EPS_PER_PAGE) {
+    ranges.push({
+      start: i + 1,
+      end: Math.min(i + EPS_PER_PAGE, normalizedEpisodes.length),
+    });
+  }
+
   const filteredEpisodes = episodeSearch.trim() === "" 
-    ? searchedEpisodes.slice(0, visibleCount)
+    ? searchedEpisodes.slice(episodeRangeIndex * EPS_PER_PAGE, (episodeRangeIndex + 1) * EPS_PER_PAGE)
     : searchedEpisodes;
 
   return (
@@ -117,7 +127,41 @@ export default function AniXEpisodeList({
           <h2 className="text-xl font-extrabold text-white">Episodes ({normalizedEpisodes.length})</h2>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 relative">
+          {ranges.length > 0 && episodeSearch.trim() === "" && (
+            <div className="relative shrink-0">
+              <button
+                onClick={() => setShowRangeDropdown(!showRangeDropdown)}
+                className={`flex items-center justify-between gap-2 bg-[#09090b] border ${showRangeDropdown ? "border-purple-500" : "border-white/10"} rounded-xl py-2 px-3 text-xs font-bold text-white outline-none cursor-pointer hover:bg-white/5 transition-all min-w-[90px]`}
+              >
+                <span>{ranges[episodeRangeIndex]?.start}-{ranges[episodeRangeIndex]?.end}</span>
+                <ChevronRight size={14} className={`text-white/40 transition-transform ${showRangeDropdown ? "-rotate-90" : "rotate-90"}`} />
+              </button>
+
+              {showRangeDropdown && (
+                <div className="absolute right-0 top-full mt-2 w-40 bg-[#18181b] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 p-2 flex flex-col gap-1 max-h-[300px] overflow-y-auto custom-scrollbar">
+                  {ranges.map((range, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setEpisodeRangeIndex(idx);
+                        setShowRangeDropdown(false);
+                      }}
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-colors ${
+                        episodeRangeIndex === idx
+                          ? "bg-purple-600 text-white"
+                          : "text-white/70 hover:bg-white/10 hover:text-white"
+                      }`}
+                    >
+                      <span>{range.start} - {range.end}</span>
+                      {episodeRangeIndex === idx && <Check size={14} />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          
           <div className="relative shrink-0 hidden sm:block">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40" size={14} />
             <input
@@ -166,16 +210,6 @@ export default function AniXEpisodeList({
                 </Link>
               );
             })}
-          </div>
-          
-          {episodeSearch.trim() === "" && visibleCount < searchedEpisodes.length && (
-            <button
-              onClick={() => setVisibleCount((prev) => prev + 20)}
-              className="mx-auto bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-3 rounded-full font-bold text-sm transition-all active:scale-95"
-            >
-              Load More
-            </button>
-          )}
         </div>
       )}
     </div>
