@@ -75,7 +75,7 @@ export function getIconsClubUrl(name: string, options: IconsClubOptions = {}): s
   }
 
   const slug = getLogoSlug(name);
-  const size = options.size || 128;
+  const size = options.size ? Math.max(options.size, 256) : 256;
   const format = options.format || "png";
 
   let url = `https://iconsclub.xyz/logo/${encodeURIComponent(slug)}/${size}.${format}`;

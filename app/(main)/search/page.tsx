@@ -311,14 +311,15 @@ function SearchPageInner() {
                       href={`/search?provider=${provider.id}`}
                       className="flex flex-col items-center gap-2 p-3 rounded-xl bg-[#141414] border border-white/5 active:scale-95 transition-all group hover:bg-[#1f1f1f] hover:border-white/10"
                     >
-                      <IconsClubLogo
-                        name={provider.iconSlug}
-                        size={36}
-                        radius={10}
-                        className="w-9 h-9 object-contain rounded-xl"
-                        fallbackText={provider.short}
-                      />
-                      <span className="text-[10px] font-semibold text-white/50 group-hover:text-white/90 text-center leading-tight transition-colors">{provider.name}</span>
+                      <div className="w-10 h-10 flex items-center justify-center p-1 rounded-xl bg-black/40 border border-white/5 shrink-0 overflow-hidden">
+                        <IconsClubLogo
+                          name={provider.iconSlug}
+                          size={128}
+                          className="w-full h-full object-contain"
+                          fallbackText={provider.short}
+                        />
+                      </div>
+                      <span className="text-[10px] font-semibold text-white/60 group-hover:text-white text-center leading-tight transition-colors">{provider.name}</span>
                     </Link>
                   ))}
                 </div>
@@ -461,7 +462,7 @@ function SearchPageInner() {
                         {(() => {
                           const p = PROVIDERS.find((x) => x.id === activeProvider);
                           return p ? (
-                            <IconsClubLogo name={p.iconSlug} size={20} radius={4} className="w-5 h-5 object-contain" />
+                            <IconsClubLogo name={p.iconSlug} size={64} className="w-5 h-5 object-contain" />
                           ) : null;
                         })()}
                         <span className="text-sm font-extrabold text-white tracking-tight">{activeProviderName}</span>

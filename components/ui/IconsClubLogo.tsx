@@ -45,8 +45,8 @@ export function IconsClubLogo({
       width={size}
       height={size}
       onError={() => setError(true)}
-      className={`inline-block object-contain transition-opacity duration-200 ${className}`}
-      style={style}
+      className={`inline-block object-contain max-w-full max-h-full transition-opacity duration-200 ${className}`}
+      style={{ objectFit: "contain", ...style }}
       loading="lazy"
       {...props}
     />

@@ -95,9 +95,8 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
               >
                 <IconsClubLogo
                   name={activeProvider.iconSlug}
-                  size={24}
-                  radius={6}
-                  className="w-6 h-6 rounded-md shadow-sm"
+                  size={64}
+                  className="w-6 h-6 object-contain"
                   fallbackText={activeProvider.short}
                 />
                 {activeProvider.name}
@@ -116,9 +115,8 @@ function ProviderRow({ initialMovies, initialSeries }: Props) {
                     >
                       <IconsClubLogo
                         name={provider.iconSlug}
-                        size={24}
-                        radius={6}
-                        className="w-6 h-6 rounded-md object-contain shrink-0"
+                        size={64}
+                        className="w-6 h-6 object-contain shrink-0"
                         fallbackText={provider.short}
                       />
                       {provider.name}
