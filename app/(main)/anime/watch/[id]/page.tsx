@@ -9,11 +9,15 @@ import { Star, ShieldCheck, Sparkles, Film, Calendar, Clock } from "lucide-react
 
 export default async function AniXAnimeWatchPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ ep?: string }>;
 }) {
   const { id } = await params;
+  const sParams = await searchParams;
   const anilistId = Number(id);
+  const initialEp = sParams.ep ? Math.max(1, Number(sParams.ep)) : 1;
 
   if (isNaN(anilistId)) {
     notFound();
@@ -29,12 +33,17 @@ export default async function AniXAnimeWatchPage({
   }
 
   return (
-    <div className="bg-[#09090b] min-h-screen text-white">
+    <div className="bg-[#09090b] min-h-screen text-white flex flex-col">
       <Header />
 
-      {/* DEDICATED ANIXANIME PLAYER */}
+      {/* ANIXANIME PLAYER WATCH INTERFACE */}
       <div className="pt-20">
-        <AniXAnimePlayer anilistId={anilistId} anime={anime} />
+        <AniXAnimePlayer
+          anilistId={anilistId}
+          anime={anime}
+          initialEpisode={initialEp}
+          similarAnime={similarAnime}
+        />
       </div>
 
       {/* ANIME DETAILS SECTION */}

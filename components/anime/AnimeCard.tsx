@@ -16,7 +16,7 @@ export default function AnimeCard({ anime }: AnimeCardProps) {
 
   return (
     <Link
-      href={`/anime/watch/${anime.id}`}
+      href={`/anime/detail/${anime.id}`}
       className="group relative flex flex-col bg-[#141417] rounded-xl overflow-hidden active:scale-95 transition-all duration-300 border border-white/5 hover:border-red-500/30 hover:shadow-xl"
     >
       <div className="relative aspect-[2/3] overflow-hidden bg-[#09090b]">
