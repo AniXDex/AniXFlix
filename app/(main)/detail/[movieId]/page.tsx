@@ -10,6 +10,7 @@ import { mapTmdbToAnix } from "@/lib/mapTmdbToAnix";
 import WatchlistButton from "../../../../components/movie/WatchlistButton";
 import SeasonEpisodesClient from "@/components/movie/SeasonEpisodesClient";
 import PlayButton from "@/components/movie/PlayButton";
+import LatentSpecialButton from "@/components/movie/LatentSpecialButton";
 import ContinueWatchingRow from "@/components/ContinueWatchingRow";
 import { IconsClubLogo } from "@/components/ui/IconsClubLogo";
 
@@ -34,7 +35,35 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
   }
 
   if (!details || details.success === false) {
-    notFound();
+    if (movieId === "264022") {
+      details = {
+        id: 264022,
+        name: "India's Got Latent",
+        title: "India's Got Latent",
+        overview: "India's Got Latent is an Indian comedy talent show created, produced, and hosted by stand-up comedian Samay Raina, featuring unconventional performers and an unfiltered celebrity panel.",
+        first_air_date: "2024-06-14",
+        vote_average: 8.9,
+        media_type: "tv",
+        backdrop_path: null,
+        genres: [{ id: 35, name: "Comedy" }, { id: 10764, name: "Reality" }],
+        credits: { 
+          cast: [
+            { id: 1, name: "Samay Raina", character: "Host / Creator", profile_path: null },
+            { id: 2, name: "Balraj Singh Ghai", character: "Judge / Co-Host", profile_path: null }
+          ] 
+        },
+        images: { backdrops: [], logos: [] },
+        seasons: [
+          { id: 101, season_number: 1, episode_count: 8, name: "Season 1" },
+          { id: 102, season_number: 2, episode_count: 6, name: "Season 2" }
+        ],
+        recommendations: { results: [] },
+        similar: { results: [] }
+      };
+      isTv = true;
+    } else {
+      notFound();
+    }
   }
 
   const mappedMovie = mapTmdbToAnix(details);
@@ -128,6 +157,10 @@ export default async function TitlePage({ params, searchParams }: { params: Prom
 
           <div className="flex items-center gap-3 md:gap-4 flex-wrap">
             <PlayButton data={{ tmdbId: movieId, mediaType: isTv ? "tv" : "movie", season: 1, episode: 1 }} />
+            
+            {(movieId === "264022" || details?.name?.toLowerCase().includes("latent") || mappedMovie?.title?.toLowerCase().includes("latent")) && (
+              <LatentSpecialButton />
+            )}
             
             <WatchlistButton movie={mappedMovie} />
             
