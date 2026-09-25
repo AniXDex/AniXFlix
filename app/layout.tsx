@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import ContextProvider from "@/providers/ContextProvider";
-import ModalProvider from "@/providers/ModalProvider";
-import QueryProvider from "@/providers/QueryProvider";
 import { Toaster } from "react-hot-toast";
 import DisableDevtoolWrapper from "@/components/DisableDevtoolWrapper";
 import { Analytics } from "@vercel/analytics/react";
@@ -40,20 +37,14 @@ export default function RootLayout({
         geist.variable,
       )}
     >
-      <ContextProvider>
-        <body className="min-h-full flex flex-col w-full overflow-x-hidden">
-          <DisableDevtoolWrapper />
-          <Toaster />
-          <QueryProvider>
-            <ModalProvider>
-              <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
-                <main>{children}</main>
-              </div>
-            </ModalProvider>
-            <Analytics />
-          </QueryProvider>
-        </body>
-      </ContextProvider>
+      <body className="min-h-full flex flex-col w-full overflow-x-hidden">
+        <DisableDevtoolWrapper />
+        <Toaster />
+        <div className="relative flex flex-col min-h-screen w-full overflow-x-hidden">
+          <main>{children}</main>
+        </div>
+        <Analytics />
+      </body>
     </html>
   );
 }

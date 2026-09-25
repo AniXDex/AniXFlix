@@ -7,7 +7,6 @@ import { searchContent } from "@/app/actions/search";
 import { Movie } from "@/types/types";
 import SafeImage from "@/components/SafeImage";
 import { useRouter, usePathname } from "next/navigation";
-import { useGlobalContext } from "@/context/globalContext";
 
 interface SearchModalProps {
   isOpen: boolean;

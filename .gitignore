@@ -18,6 +18,7 @@
 # misc
 .DS_Store
 *.pem
+tsconfig.tsbuildinfo
 
 # debug
 npm-debug.log*
@@ -31,6 +32,9 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# Private servers (local only, never pushed to public GitHub)
+/private-servers/
 
 # Flutter App Wrapper (Android Only)
 /AniXFlixApk/ios/

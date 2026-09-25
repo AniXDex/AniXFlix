@@ -2,7 +2,6 @@
 import MoviesRow from "@/components/movie/MoviesRow";
 import ProviderRow from "@/components/movie/ProviderRow";
 import ContinueWatchingRow from "@/components/ContinueWatchingRow";
-import { useGlobalContext } from "@/context/globalContext";
 import { Star, Play, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -35,7 +34,6 @@ export default function HomeClient({
   netflix, netflixSeries
 }: HomeClientProps) {
   const router = useRouter();
-  const { openModal } = useGlobalContext();
   const [featuredIndex, setFeaturedIndex] = useState(0);
 
   // Filter out movies without backdrops to ensure hero always looks good
